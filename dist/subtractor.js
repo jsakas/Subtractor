@@ -77,15 +77,39 @@ module.exports = __webpack_require__(1);
 "use strict";
 
 
+var _Osc = __webpack_require__(2);
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Subtractor = function Subtractor() {
   _classCallCheck(this, Subtractor);
 
   console.log('Subtractor constructed');
+  var osc1 = new _Osc.Osc();
 };
 
 window.Subtractor = Subtractor;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Osc = function Osc() {
+  _classCallCheck(this, Osc);
+
+  console.log('Osc constructed');
+};
+
+exports.Osc = Osc;
 
 /***/ })
 /******/ ]);
