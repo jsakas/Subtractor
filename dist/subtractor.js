@@ -85,5 +85,7 @@ var Subtractor = function Subtractor() {
   console.log('Subtractor constructed');
 };
 
+window.Subtractor = Subtractor;
+
 /***/ })
 /******/ ]);

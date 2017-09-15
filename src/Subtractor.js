@@ -3,3 +3,5 @@ class Subtractor {
     console.log('Subtractor constructed')
   }
 }
+
+window.Subtractor = Subtractor
