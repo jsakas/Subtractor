@@ -14,7 +14,8 @@ class Subtractor {
   }
 
   handleKeys() {
-    window.addEventListener('keydown', (eDown) => {
+    let keyWasPressed = []
+    window.addEventListener('keydown', (eKeyDown) => {
       const octaveKeys = new Map([
         ['a', 0],
         ['w', 1],
@@ -30,30 +31,35 @@ class Subtractor {
         ['j', 11],
         ['k', 12]
       ])
-      if (octaveKeys.has(eDown.key)) {
-        const note = octaveKeys.get(eDown.key) + (this.octave * 12)
-        const oscillators = this.startPolyNote(note)
+      if (octaveKeys.has(eKeyDown.key) && !keyWasPressed[eKeyDown.key]) {
+        const note = octaveKeys.get(eKeyDown.key) + (this.octave * 12)
+        const polyNoteOscillators = this.startPolyNote(note)
 
-        // on keyup, stop the oscillators
-        const stopOscillators = function(eUp) {
-          if (eDown.key === eUp.key) {
-            oscillators.forEach(osc => osc.stop())
-            window.removeEventListener('keyup', stopOscillators)
+        // on note-keyup, stop the oscillators
+        const stopThisPolyNote = function(eNoteKeyUp) {
+          if (eKeyDown.key === eNoteKeyUp.key) {
+            polyNoteOscillators.forEach(osc => osc.stop())
+            window.removeEventListener('keyup', stopThisPolyNote)
           }
         }
-        window.addEventListener('keyup', stopOscillators)
+        window.addEventListener('keyup', stopThisPolyNote)
       }
 
-      if (eDown.key == 'z' && this.octave > 0) {
+      if (eKeyDown.key == 'z' && this.octave > 0) {
         this.octave--;
       }
-      if (eDown.key == 'x' && this.octave < 12) {
+      if (eKeyDown.key == 'x' && this.octave < 12) {
         this.octave++;
       }
+
+      keyWasPressed[eKeyDown.key] = true
+    })
+    window.addEventListener('keyup', (eKeyUp) => {
+      keyWasPressed[eKeyUp.key] = false
     })
   }
 
-  startPolyNote(note, key) {
+  startPolyNote(note) {
     // how far below the root note to start adding detuned notes
     const noteOffset = Math.floor((this.polyphony - 1) / 2) * -1
     // number of intervals on the upper side of the root note
