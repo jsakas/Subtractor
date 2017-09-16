@@ -9,23 +9,47 @@ class Subtractor {
     this.octave = 5   // floats work for this which is cool
     this.polyphony = 1  // integer between 1 and 10
     this.detune = 0     // float, between 0 and 1 is a half-step
+    this.waveform = 'sawtooth'
 
     this.handleKeys()
     this.setupControls()
     this.updateUI()
   }
 
+  intToWaveform(i) {
+    switch(i) {
+      case 1:
+        return 'sine'
+      case 2:
+        return 'square'
+      case 3:
+        return 'sawtooth'
+      case 4:
+        return 'triangle'
+      default:
+        return 'sine'
+    }
+  }
+
   updateUI() {
+    const waveform = document.getElementById('waveform-value')
     const polyphony = document.getElementById('polyphony-value')
     const detune = document.getElementById('detune-value')
 
     polyphony.innerText = this.polyphony
     detune.innerText = this.detune
+    waveform.innerText = this.waveform
   }
 
   setupControls() {
+    const waveform = document.getElementById('waveform')
     const polyphony = document.getElementById('polyphony')
     const detune = document.getElementById('detune')
+
+    waveform.addEventListener('change', (e) => {
+      this.waveform = this.intToWaveform(parseInt(e.target.value))
+      this.updateUI()
+    })
 
     polyphony.addEventListener('change', (e) => {
       this.polyphony = parseInt(e.target.value)
@@ -36,7 +60,6 @@ class Subtractor {
       this.detune = e.target.value / 100
       this.updateUI()
     })
-
   }
 
   handleKeys() {
@@ -104,7 +127,7 @@ class Subtractor {
   
   startFreqOscillator(freq) {
     const oscillator = this.context.createOscillator()
-    oscillator.type = 'sawtooth';
+    oscillator.type = this.waveform;
     oscillator.frequency.value = freq;
     oscillator.connect(this.context.destination);
     oscillator.start();
