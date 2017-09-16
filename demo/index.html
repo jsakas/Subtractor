@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf-8">
 <title>Subtractor</title>
+
+<style>
+  div {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+  }
+</style>
+
 </head>
 
 <body>
@@ -10,6 +19,49 @@
 <div id="subtractor"></div>
 
 <script src="../dist/subtractor.js" type="text/javascript"></script>
+
+<div>
+  <label for="waveform">Waveform</label>
+  <input type="range" value="3" min="1" max="4" id="waveform" />
+  <span id="waveform-value"></span>
+</div>
+
+<div>
+  <label for="polyphony">Polyphony</label>
+  <input type="range" value="1" min="1" max="10" id="polyphony" />
+  <span id="polyphony-value"></span>
+</div>
+
+<div>
+  <label for="detune">Detune</label>
+  <input type="range" value="0" min="0" max="100" id="detune" />
+  <span id="detune-value"></span>
+</div>
+
+<div>
+  <label for="filterType">Filter Type</label>
+  <input type="range" value="1" min="1" max="8" id="filterType" />
+  <span id="filter-type-value"></span>
+</div>
+
+<div>
+  <label for="filterFreq">Filter Freq</label>
+  <input type="range" value="22050" min="10" max="22050" id="filterFreq" />
+  <span id="filter-freq-value"></span>
+</div>
+
+<div>
+  <label for="filterQ">Filter Q</label>
+  <input type="range" value="1" min="0" max="500" id="filterQ" />
+  <span id="filter-q-value"></span>
+</div>
+
+<div>
+  <label for="filterGain">Filter Gain</label>
+  <input type="range" value="0" min="-40" max="40" id="filterGain" />
+  <span id="filter-gain-value"></span>
+</div>
+
 
 <script>
   var subtractor = new Subtractor();
