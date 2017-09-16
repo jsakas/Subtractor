@@ -1,9 +1,9 @@
 import { Osc } from './Osc'
+import { Filter } from './Filter'
 
 class Subtractor {
   constructor() {
     console.log('Subtractor constructed')
-    const osc1 = new Osc()  // unused atm
     this.context = new AudioContext()
 
     this.octave = 5   // floats work for this which is cool
@@ -13,7 +13,17 @@ class Subtractor {
 
     this.handleKeys()
     this.setupControls()
+
+    this.filter1 = new Filter(this.context, 1, 22050, 0)
+
     this.updateUI()
+  }
+
+  // route an oscillator thru the pipeline of modifiers.
+  // e.g. gains, filter, distortions etc.
+  pipeline(osc) {
+    osc.connect(this.filter1.filter)
+    this.filter1.filter.connect(this.context.destination);
   }
 
   intToWaveform(i) {
@@ -35,16 +45,28 @@ class Subtractor {
     const waveform = document.getElementById('waveform-value')
     const polyphony = document.getElementById('polyphony-value')
     const detune = document.getElementById('detune-value')
+    const filterType = document.getElementById('filter-type-value')
+    const filterFreq = document.getElementById('filter-freq-value')
+    const filterGain = document.getElementById('filter-gain-value')
+    const filterQ = document.getElementById('filter-q-value')
 
     polyphony.innerText = this.polyphony
     detune.innerText = this.detune
     waveform.innerText = this.waveform
+    filterType.innerText = this.filter1.getType()
+    filterFreq.innerText = this.filter1.getFreq()
+    filterGain.innerText = this.filter1.getGain()
+    filterQ.innerText = this.filter1.getQ()
   }
 
   setupControls() {
     const waveform = document.getElementById('waveform')
     const polyphony = document.getElementById('polyphony')
     const detune = document.getElementById('detune')
+    const filterType = document.getElementById('filterType')
+    const filterFreq = document.getElementById('filterFreq')
+    const filterGain = document.getElementById('filterGain')
+    const filterQ = document.getElementById('filterQ')
 
     waveform.addEventListener('change', (e) => {
       this.waveform = this.intToWaveform(parseInt(e.target.value))
@@ -58,6 +80,26 @@ class Subtractor {
 
     detune.addEventListener('change', (e) => {
       this.detune = e.target.value / 100
+      this.updateUI()
+    })
+
+    filterType.addEventListener('change', (e) => {
+      this.filter1.setType(e.target.value)
+      this.updateUI()
+    })
+
+    filterFreq.addEventListener('change', (e) => {
+      this.filter1.setFreq(e.target.value)
+      this.updateUI()
+    })
+
+    filterGain.addEventListener('change', (e) => {
+      this.filter1.setGain(e.target.value)
+      this.updateUI()
+    })
+
+    filterQ.addEventListener('change', (e) => {
+      this.filter1.setQ(e.target.value)
       this.updateUI()
     })
   }
@@ -127,10 +169,10 @@ class Subtractor {
   
   startFreqOscillator(freq) {
     const oscillator = this.context.createOscillator()
-    oscillator.type = this.waveform;
-    oscillator.frequency.value = freq;
-    oscillator.connect(this.context.destination);
-    oscillator.start();
+    oscillator.type = this.waveform
+    oscillator.frequency.value = freq
+    this.pipeline(oscillator)
+    oscillator.start()
     return oscillator
   }
 
