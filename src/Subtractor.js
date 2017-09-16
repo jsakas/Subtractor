@@ -6,11 +6,37 @@ class Subtractor {
     const osc1 = new Osc()  // unused atm
     this.context = new AudioContext()
 
-    this.octave = 5.1   // floats work for this which is cool
-    this.polyphony = 3  // integer between 1 and 10
-    this.detune = 2     // float, between 0 and 1 is a half-step
+    this.octave = 5   // floats work for this which is cool
+    this.polyphony = 1  // integer between 1 and 10
+    this.detune = 0     // float, between 0 and 1 is a half-step
 
     this.handleKeys()
+    this.setupControls()
+    this.updateUI()
+  }
+
+  updateUI() {
+    const polyphony = document.getElementById('polyphony-value')
+    const detune = document.getElementById('detune-value')
+
+    polyphony.innerText = this.polyphony
+    detune.innerText = this.detune
+  }
+
+  setupControls() {
+    const polyphony = document.getElementById('polyphony')
+    const detune = document.getElementById('detune')
+
+    polyphony.addEventListener('change', (e) => {
+      this.polyphony = parseInt(e.target.value)
+      this.updateUI()
+    })
+
+    detune.addEventListener('change', (e) => {
+      this.detune = e.target.value / 100
+      this.updateUI()
+    })
+
   }
 
   handleKeys() {
