@@ -60,8 +60,6 @@ class Subtractor {
   }
 
   startPolyNote(note) {
-    // how far below the root note to start adding detuned notes
-    const noteOffset = Math.floor((this.polyphony - 1) / 2) * -1
     // number of intervals on the upper side of the root note
     const numIntervals = Math.floor(this.polyphony / 2)
     // width of interval based on the detune and polyphony measured in notes
@@ -72,14 +70,14 @@ class Subtractor {
 
     // create n=polyphony oscillators
     return Array(this.polyphony).fill()
-      // notes starting at the offset are spread by interval
-      .map((_,i) => note + (noteOffset + i) * interval)
+      .map((_,i) => note + (numIntervals - i) * interval)
+      .reverse()
       .map(this.getNoteFreq)
       .map(this.startFreqOscillator.bind(this))
   }
   
   startFreqOscillator(freq) {
-    let oscillator = this.context.createOscillator()
+    const oscillator = this.context.createOscillator()
     oscillator.type = 'sawtooth';
     oscillator.frequency.value = freq;
     oscillator.connect(this.context.destination);
