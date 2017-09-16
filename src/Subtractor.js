@@ -26,20 +26,22 @@ class Subtractor {
     ])
 
 
-    let octave = 6
+    this.octave = 6
+    this.polyphony = 3 // between 1 and 10
+    this.detune = .5 // between 0 and 1
 
     window.addEventListener('keydown', (e) => {
       if (octaveKeys.has(e.key)) {
-        const note = octaveKeys.get(e.key) + (octave * 12)
-        const freq = this.getNoteFreq(note)
-        this.playFreq(freq, e.key)
+        const note = octaveKeys.get(e.key) + (this.octave * 12)
+        
+        this.playNote(note, e.key)
       }
 
-      if (e.key == 'z' && octave > 0) {
-        octave--;
+      if (e.key == 'z' && this.octave > 0) {
+        this.octave--;
       }
-      if (e.key == 'x' && octave < 12) {
-        octave++;
+      if (e.key == 'x' && this.octave < 12) {
+        this.octave++;
       }
     })
 
@@ -50,24 +52,41 @@ class Subtractor {
         // do nothing
       }
     })
-
   }
 
-  playFreq(freq, key) {
-    var oscillator = this.context.createOscillator()
-    oscillator.type = 'sawtooth';
-    oscillator.frequency.value = freq;
-    oscillator.connect(this.context.destination);
-    oscillator.start();
+  playNote(note, key) {
+    const noteOffset = Math.floor((this.polyphony - 1) / 2) * -1
+    const numIntervals = Math.floor(this.polyphony / 2)
+    let interval = this.detune / numIntervals
+
+    if (interval == Infinity) {
+      interval = 0
+    }
+
+    let notes = []
+    for (var i = 0; i < this.polyphony; i++) {
+       notes.push(note + (i + noteOffset) * interval)
+    }
+    let freqs = notes.map(this.getNoteFreq)
+    let oscs = freqs.map(this.playFreq.bind(this))
 
     const fn = function(e) {
       if (e.key === key) {
-        oscillator.stop();
+        oscs.forEach(osc => osc.stop())
         window.removeEventListener('keyup', fn)
       }
     }
 
     window.addEventListener('keyup', fn)
+  }
+
+  playFreq(freq) {
+    var oscillator = this.context.createOscillator()
+    oscillator.type = 'sawtooth';
+    oscillator.frequency.value = freq;
+    oscillator.connect(this.context.destination);
+    oscillator.start();
+    return oscillator
   }
 
   getNoteFreq(note) {
