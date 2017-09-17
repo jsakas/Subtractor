@@ -1,4 +1,3 @@
-import { Osc } from './Osc'
 import { Filter } from './Filter'
 
 class Subtractor {
@@ -6,17 +5,17 @@ class Subtractor {
     console.log('Subtractor constructed')
 
     const presets = {
-      harmonic: [
-        'sawtooth', 5.1, 3, 2,
-        'lowpass', 1000, 5, 0,
-        'triangle', 1,
-      ],
-      full: [
+      'full': [
         'sawtooth', 4.5, 5, .2,
         'lowpass', 1000, 5, 0,
         'triangle', 4,
       ],
-      simple: [
+      'harmonic': [
+        'sawtooth', 5.1, 3, 2,
+        'lowpass', 1000, 5, 0,
+        'triangle', 1,
+      ],
+      'simple': [
         'sawtooth', 5, 1, 0,
         'lowpass', 1200, 5, 0,
         'sine', 0,
@@ -25,9 +24,9 @@ class Subtractor {
     this.selectedPreset = presets.full
 
     this.waveform  = this.selectedPreset[0]
-    this.octave    = this.selectedPreset[1]  // floats work for this which is cool because you can change the key
-    this.polyphony = this.selectedPreset[2]  // integer between 1 and 10
-    this.detune    = this.selectedPreset[3]  // float, between 0 and 1 is a half-step
+    this.octave    = this.selectedPreset[1]
+    this.polyphony = this.selectedPreset[2]
+    this.detune    = this.selectedPreset[3]
 
     this.context = new AudioContext()
     this.amplifier = this.context.createGain()
@@ -62,7 +61,7 @@ class Subtractor {
   }
 
   intToWaveform(i) {
-    switch(i) {
+    switch (i) {
       case 1:
         return 'sine'
       case 2:
