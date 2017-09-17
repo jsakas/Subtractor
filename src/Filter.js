@@ -34,7 +34,7 @@ class Filter {
     }
 
     setQ(value) {
-      this.filter.Q.value = value * .1
+      this.filter.Q.value = value / 10
     }
 
     setGain(value) {
@@ -45,12 +45,25 @@ class Filter {
       return this.filter.type
     }
 
+    getTypeInput() {
+      for (const [key, value] of this.filterTypes) {
+        if (value === this.getType()) {
+          return key
+        }
+      }
+      return 0
+    }
+
     getFreq() {
       return this.filter.frequency.value
     }
 
     getQ() {
       return this.filter.Q.value
+    }
+
+    getQInput() {
+      return this.getQ() * 10
     }
 
     getGain() {

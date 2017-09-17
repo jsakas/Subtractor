@@ -63,44 +63,59 @@ class Subtractor {
   pipeline(osc) {
     osc.connect(this.filter1.filter)
   }
-
+  
   intToWaveform(i) {
-    switch (i) {
-      case 1:
-        return 'sine'
-      case 2:
-        return 'square'
-      case 3:
-        return 'sawtooth'
-      case 4:
-        return 'triangle'
-      default:
-        return 'sine'
-    }
+    return ['sine','square','sawtooth','triangle'][i - 1] || 'sine'
+  }
+
+  waveformToInt(w) {
+    return ['sine','square','sawtooth','triangle'].indexOf(w) + 1
   }
 
   updateUI() {
-    const octave = document.getElementById('octave-value')
-    const waveform = document.getElementById('waveform-value')
-    const polyphony = document.getElementById('polyphony-value')
-    const detune = document.getElementById('detune-value')
-    const filterType = document.getElementById('filter-type-value')
-    const filterFreq = document.getElementById('filter-freq-value')
-    const filterGain = document.getElementById('filter-gain-value')
-    const filterQ = document.getElementById('filter-q-value')
-    const lfoType = document.getElementById('lfo-type-value')
-    const lfoFreq = document.getElementById('lfo-freq-value')
+    const l_octave = document.getElementById('octave-value')    
+    const l_waveform = document.getElementById('waveform-value')
+    const l_polyphony = document.getElementById('polyphony-value')
+    const l_detune = document.getElementById('detune-value')
+    const l_filterType = document.getElementById('filter-type-value')
+    const l_filterFreq = document.getElementById('filter-freq-value')
+    const l_filterGain = document.getElementById('filter-gain-value')
+    const l_filterQ = document.getElementById('filter-q-value')
+    const l_lfoType = document.getElementById('lfo-type-value')
+    const l_lfoFreq = document.getElementById('lfo-freq-value')
 
-    octave.innerText = this.octave
-    polyphony.innerText = this.polyphony
-    detune.innerText = this.detune
-    waveform.innerText = this.waveform
-    filterType.innerText = this.filter1.getType()
-    filterFreq.innerText = this.filter1.getFreq()
-    filterGain.innerText = this.filter1.getGain()
-    filterQ.innerText = this.filter1.getQ()
-    lfoType.innerText = this.lfo.type
-    lfoFreq.innerText = this.lfo.frequency.value
+    const s_octave = document.getElementById('octave')    
+    const s_waveform = document.getElementById('waveform')
+    const s_polyphony = document.getElementById('polyphony')
+    const s_detune = document.getElementById('detune')
+    const s_filterType = document.getElementById('filterType')
+    const s_filterFreq = document.getElementById('filterFreq')
+    const s_filterGain = document.getElementById('filterGain')
+    const s_filterQ = document.getElementById('filterQ')
+    const s_lfoType = document.getElementById('lfoType')
+    const s_lfoFreq = document.getElementById('lfoFreq')
+    
+    l_octave.innerText = this.octave    
+    l_polyphony.innerText = this.polyphony
+    l_detune.innerText = this.detune
+    l_waveform.innerText = this.waveform
+    l_filterType.innerText = this.filter1.getType()
+    l_filterFreq.innerText = this.filter1.getFreq()
+    l_filterGain.innerText = this.filter1.getGain()
+    l_filterQ.innerText = this.filter1.getQ()
+    l_lfoType.innerText = this.lfo.type
+    l_lfoFreq.innerText = this.lfo.frequency.value
+    
+    s_octave.value = this.octave * 10    
+    s_polyphony.value = this.polyphony
+    s_detune.value = this.detune * 100 // see setupControls, divided by 100
+    s_waveform.value = this.waveformToInt(this.waveform)
+    s_filterType.value = this.filter1.getTypeInput()
+    s_filterFreq.value = this.filter1.getFreq()
+    s_filterGain.value = this.filter1.getGain()
+    s_filterQ.value = this.filter1.getQInput()
+    s_lfoType.value = this.waveformToInt(this.lfo.type)
+    s_lfoFreq.value = this.lfo.frequency.value
   }
 
   setupControls() {
