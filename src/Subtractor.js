@@ -84,6 +84,8 @@ class Subtractor {
     const filterFreq = document.getElementById('filter-freq-value')
     const filterGain = document.getElementById('filter-gain-value')
     const filterQ = document.getElementById('filter-q-value')
+    const lfoType = document.getElementById('lfo-type-value')
+    const lfoFreq = document.getElementById('lfo-freq-value')
 
     polyphony.innerText = this.polyphony
     detune.innerText = this.detune
@@ -92,6 +94,8 @@ class Subtractor {
     filterFreq.innerText = this.filter1.getFreq()
     filterGain.innerText = this.filter1.getGain()
     filterQ.innerText = this.filter1.getQ()
+    lfoType.innerText = this.lfo.type
+    lfoFreq.innerText = this.lfo.frequency.value
   }
 
   setupControls() {
@@ -102,6 +106,8 @@ class Subtractor {
     const filterFreq = document.getElementById('filterFreq')
     const filterGain = document.getElementById('filterGain')
     const filterQ = document.getElementById('filterQ')
+    const lfoType = document.getElementById('lfoType')
+    const lfoFreq = document.getElementById('lfoFreq')
 
     waveform.addEventListener('change', (e) => {
       this.waveform = this.intToWaveform(parseInt(e.target.value))
@@ -135,6 +141,16 @@ class Subtractor {
 
     filterQ.addEventListener('change', (e) => {
       this.filter1.setQ(e.target.value)
+      this.updateUI()
+    })
+    
+    lfoType.addEventListener('change', (e) => {
+      this.lfo.type = this.intToWaveform(parseInt(e.target.value))
+      this.updateUI()
+    })
+
+    lfoFreq.addEventListener('change', (e) => {
+      this.lfo.frequency.value = e.target.value
       this.updateUI()
     })
   }
