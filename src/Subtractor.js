@@ -4,17 +4,53 @@ import { Filter } from './Filter'
 class Subtractor {
   constructor() {
     console.log('Subtractor constructed')
+
+    const presets = {
+      harmonic: [
+        'sawtooth', 5.1, 3, 2,
+        'lowpass', 1000, 5, 0,
+        'triangle', 1,
+      ],
+      full: [
+        'sawtooth', 4.5, 5, .2,
+        'lowpass', 1000, 5, 0,
+        'triangle', 4,
+      ],
+      simple: [
+        'sawtooth', 5, 1, 0,
+        'lowpass', 1200, 5, 0,
+        'sine', 0,
+      ],
+    }
+    this.selectedPreset = presets.full
+
+    this.waveform  = this.selectedPreset[0]
+    this.octave    = this.selectedPreset[1]  // floats work for this which is cool because you can change the key
+    this.polyphony = this.selectedPreset[2]  // integer between 1 and 10
+    this.detune    = this.selectedPreset[3]  // float, between 0 and 1 is a half-step
+
     this.context = new AudioContext()
+    this.amplifier = this.context.createGain()
+    this.filter1 = new Filter(this.context)
+    this.lfo = this.context.createOscillator()
 
-    this.octave = 5   // floats work for this which is cool
-    this.polyphony = 1  // integer between 1 and 10
-    this.detune = 0     // float, between 0 and 1 is a half-step
-    this.waveform = 'sawtooth'
+    this.filter1.filter.type = this.selectedPreset[4]
+    this.filter1.filter.frequency.value = this.selectedPreset[5]
+    this.filter1.filter.Q.value = this.selectedPreset[6]
+    this.filter1.filter.gain.value = this.selectedPreset[7]
 
+    this.lfo.type = this.selectedPreset[8]
+    this.lfo.frequency.value = this.selectedPreset[9]
+
+    this.amplifier.connect(this.context.destination)
+    this.filter1.filter.connect(this.amplifier)
+    this.lfo.connect(this.amplifier.gain)
+
+    this.lfo.start()
+
+    
     this.handleKeys()
     this.setupControls()
-
-    this.filter1 = new Filter(this.context, 1, 22050, 0)
 
     this.updateUI()
   }
@@ -23,7 +59,6 @@ class Subtractor {
   // e.g. gains, filter, distortions etc.
   pipeline(osc) {
     osc.connect(this.filter1.filter)
-    this.filter1.filter.connect(this.context.destination);
   }
 
   intToWaveform(i) {
@@ -120,7 +155,12 @@ class Subtractor {
         ['h', 9],
         ['u', 10],
         ['j', 11],
-        ['k', 12]
+        ['k', 12],
+        ['o', 13],
+        ['l', 14],
+        ['p', 15],
+        [';', 16],
+        ['\'', 17],
       ])
       if (octaveKeys.has(eKeyDown.key) && !keyWasPressed[eKeyDown.key]) {
         const note = octaveKeys.get(eKeyDown.key) + (this.octave * 12)
