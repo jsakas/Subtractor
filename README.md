@@ -1,11 +1,14 @@
 # Subtractor ∿🎹🎧
 A WebAudio API Synth
 
+## development
+
 ```shell
-npm run start
+npm install
+npm start
 ```
 
-open [localhost:8000/demo](localhost:8000/demo)
+Then open [localhost:8000/demo](localhost:8000/demo)
 
 ---
 
