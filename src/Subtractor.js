@@ -108,47 +108,47 @@ class Subtractor {
     const lfoType = document.getElementById('lfoType')
     const lfoFreq = document.getElementById('lfoFreq')
 
-    waveform.addEventListener('change', (e) => {
+    waveform.addEventListener('input', (e) => {
       this.waveform = this.intToWaveform(parseInt(e.target.value))
       this.updateUI()
     })
 
-    polyphony.addEventListener('change', (e) => {
+    polyphony.addEventListener('input', (e) => {
       this.polyphony = parseInt(e.target.value)
       this.updateUI()
     })
 
-    detune.addEventListener('change', (e) => {
+    detune.addEventListener('input', (e) => {
       this.detune = e.target.value / 100
       this.updateUI()
     })
 
-    filterType.addEventListener('change', (e) => {
+    filterType.addEventListener('input', (e) => {
       this.filter1.setType(e.target.value)
       this.updateUI()
     })
 
-    filterFreq.addEventListener('change', (e) => {
+    filterFreq.addEventListener('input', (e) => {
       this.filter1.setFreq(e.target.value)
       this.updateUI()
     })
 
-    filterGain.addEventListener('change', (e) => {
+    filterGain.addEventListener('input', (e) => {
       this.filter1.setGain(e.target.value)
       this.updateUI()
     })
 
-    filterQ.addEventListener('change', (e) => {
+    filterQ.addEventListener('input', (e) => {
       this.filter1.setQ(e.target.value)
       this.updateUI()
     })
     
-    lfoType.addEventListener('change', (e) => {
+    lfoType.addEventListener('input', (e) => {
       this.lfo.type = this.intToWaveform(parseInt(e.target.value))
       this.updateUI()
     })
 
-    lfoFreq.addEventListener('change', (e) => {
+    lfoFreq.addEventListener('input', (e) => {
       this.lfo.frequency.value = e.target.value
       this.updateUI()
     })
