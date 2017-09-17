@@ -10,6 +10,12 @@ npm start
 
 Then open [localhost:8000/demo](http://localhost:8000/demo)
 
+## testing
+run Jest:
+```shell
+npm test
+```
+
 ---
 
 ## keyboard shortcuts
