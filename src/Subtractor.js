@@ -1,5 +1,6 @@
 import { Filter } from './Filter'
 import { Oscilloscope } from './Oscilloscope'
+import { Slider } from './components/Slider'
 
 class Subtractor {
   constructor() {
