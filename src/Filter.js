@@ -25,7 +25,7 @@ class Filter {
       if (this.filterTypes.has(key)) {
         this.filter.type = this.filterTypes.get(key)
       } else {
-        console.log(`Filter key ${key} not recognized`)
+        throw Error(`Filter key ${key} not recognized`)
       }
     }
 
