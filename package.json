@@ -4,7 +4,8 @@
   "description": "A JavaScript replicate of Reasons Subtractor synthesizer",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint src"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,7 @@
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
     "coffeescript": "^1.12.7",
+    "eslint": "^4.7.0",
     "webpack": "^3.5.6"
   }
 }
