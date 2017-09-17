@@ -1,18 +1,11 @@
 # Subtractor ∿🎹🎧
 A WebAudio API Synth
 
-## build
 ```shell
-npm i
-`npm bin`/webpack --watch
+npm run start
 ```
-## serve
-```shell
-python -m SimpleHTTPServer 8000
-```
-```shell
-open localhost:8000
-```
+
+open [localhost:8000/demo](localhost:8000/demo)
 
 ---
 

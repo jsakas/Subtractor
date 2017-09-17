@@ -9,7 +9,10 @@ module.exports =
         path: path.resolve(__dirname, 'dist')
     resolve:
         alias:
-            'web-audio-test-api': '../node_modules/web-audio-test-api'
+            'web-audio-test-api': path.resolve(__dirname, 'node_modules/web-audio-test-api')
+    devServer:
+        contentBase: path.join(__dirname),
+        port: 8000
     module:
         rules: [
             test: /\.js$/

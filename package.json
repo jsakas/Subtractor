@@ -4,6 +4,7 @@
   "description": "A JavaScript replicate of Reasons Subtractor synthesizer",
   "main": "index.js",
   "scripts": {
+    "start": "./node_modules/.bin/webpack --watch & ./node_modules/.bin/webpack-dev-server",
     "test": "./node_modules/.bin/jest --coverage",
     "lint": "./node_modules/.bin/eslint src",
     "postinstall": "cp hooks/* .git/hooks/ || exit 0"
@@ -19,6 +20,7 @@
     "eslint": "^4.7.0",
     "jest": "^21.1.0",
     "web-audio-test-api": "^0.5.2",
-    "webpack": "^3.5.6"
+    "webpack": "^3.5.6",
+    "webpack-dev-server": "^2.8.2"
   }
 }
