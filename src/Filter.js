@@ -41,19 +41,19 @@ class Filter {
       this.filter.gain.value = value
     }
 
-    getType(value) {
+    getType() {
       return this.filter.type
     }
 
-    getFreq(value) {
+    getFreq() {
       return this.filter.frequency.value
     }
 
-    getQ(value) {
+    getQ() {
       return this.filter.Q.value
     }
 
-    getGain(value) {
+    getGain() {
       return this.filter.gain.value
     }
 }

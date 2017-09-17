@@ -1,0 +1,33 @@
+#!/bin/sh
+
+linter='eslint'
+
+if [[ ! -x "$(npm bin)/$linter" ]]; then
+  echo "please run `npm i` to install $linter."
+  echo "please \`npm i\` to install $linter for this pre-commit hook"
+  exit 1
+fi
+
+repo=$(basename $(git rev-parse --show-toplevel))
+changed_files=''
+for file in $(git diff --name-only --cached --diff-filter=d | grep '^src/'); do
+  changed_files="$changed_files $file"
+done
+changed_files=$( echo "$changed_files" | sed 's/^ //' )
+
+if [[ ! "$changed_files" ]]; then
+  echo "Skipping $linter -- no src/**/*.js files are staged. 👍"
+  echo
+  exit 0
+fi
+
+echo "linting changes to /src ..."
+echo "$changed_files"
+"$(npm bin)/$linter" $changed_files
+
+if [[ "$?" == 0 ]]; then
+  echo "\033[32m$linter passed\033[0m"
+else
+  echo "\033[41m$linter failed\033[0m"
+  exit 1
+fi
