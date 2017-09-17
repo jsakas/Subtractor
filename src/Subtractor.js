@@ -6,25 +6,29 @@ class Subtractor {
 
     const presets = {
       'full': [
-        'sawtooth', 4.5, 5, .2,
+        4.5,
+        'sawtooth', 5, .2,
         'lowpass', 1000, 5, 0,
         'triangle', 4,
       ],
       'harmonic': [
-        'sawtooth', 5.1, 3, 2,
+        5.1,
+        'sawtooth', 3, 2,
         'lowpass', 1000, 5, 0,
         'triangle', 1,
       ],
       'simple': [
-        'sawtooth', 5, 1, 0,
+        5,
+        'sawtooth', 1, 0,
         'lowpass', 1200, 5, 0,
         'sine', 0,
       ],
     }
     this.selectedPreset = presets.full
 
-    this.waveform  = this.selectedPreset[0]
-    this.octave    = this.selectedPreset[1]
+    this.octave    = this.selectedPreset[0]
+    
+    this.waveform  = this.selectedPreset[1]
     this.polyphony = this.selectedPreset[2]
     this.detune    = this.selectedPreset[3]
 
@@ -76,6 +80,7 @@ class Subtractor {
   }
 
   updateUI() {
+    const octave = document.getElementById('octave-value')
     const waveform = document.getElementById('waveform-value')
     const polyphony = document.getElementById('polyphony-value')
     const detune = document.getElementById('detune-value')
@@ -86,6 +91,7 @@ class Subtractor {
     const lfoType = document.getElementById('lfo-type-value')
     const lfoFreq = document.getElementById('lfo-freq-value')
 
+    octave.innerText = this.octave
     polyphony.innerText = this.polyphony
     detune.innerText = this.detune
     waveform.innerText = this.waveform
@@ -98,6 +104,7 @@ class Subtractor {
   }
 
   setupControls() {
+    const octave = document.getElementById('octave')
     const waveform = document.getElementById('waveform')
     const polyphony = document.getElementById('polyphony')
     const detune = document.getElementById('detune')
@@ -107,7 +114,12 @@ class Subtractor {
     const filterQ = document.getElementById('filterQ')
     const lfoType = document.getElementById('lfoType')
     const lfoFreq = document.getElementById('lfoFreq')
-
+    
+    octave.addEventListener('input', (e) => {
+      this.octave = e.target.value / 10
+      this.updateUI()
+    })
+    
     waveform.addEventListener('input', (e) => {
       this.waveform = this.intToWaveform(parseInt(e.target.value))
       this.updateUI()
@@ -192,10 +204,12 @@ class Subtractor {
       }
 
       if (eKeyDown.key == 'z' && this.octave > 0) {
-        this.octave--;
+        this.octave--
+        this.updateUI()
       }
       if (eKeyDown.key == 'x' && this.octave < 12) {
-        this.octave++;
+        this.octave++
+        this.updateUI()
       }
 
       keyWasPressed[eKeyDown.key] = true
