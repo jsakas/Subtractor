@@ -26,9 +26,9 @@ class Slider extends HTMLElement {
     this.range.max = this.max
     this.range.value = this.value
     this.range.addEventListener('input', (e) => { 
-      this.setAttribute('value', e.target.value)
-      this.value = e.target.value
-      this.oninput(this.value)
+      this.setAttribute('value', parseInt(e.target.value))
+      this.value = parseInt(e.target.value)
+      this.oninput(parseInt(this.value))
     })
 
     this.span = document.createElement('span')

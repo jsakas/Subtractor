@@ -58,12 +58,9 @@ class Subtractor {
     this.lfo.connect(this.amplifier.gain)
 
     this.lfo.start()
+    this.oscilloscope.start()
 
-    
     this.handleKeys()
-    this.setupControls()
-
-    this.updateUI()
   }
 
   // route an oscillator thru the pipeline of modifiers.
@@ -85,117 +82,24 @@ class Subtractor {
     this.octave = value
   }
 
-  updateUI() {
-    return
-    const l_octave = document.getElementById('octave-value')    
-    const l_waveform = document.getElementById('waveform-value')
-    const l_polyphony = document.getElementById('polyphony-value')
-    const l_detune = document.getElementById('detune-value')
-    const l_filterType = document.getElementById('filter-type-value')
-    const l_filterFreq = document.getElementById('filter-freq-value')
-    const l_filterGain = document.getElementById('filter-gain-value')
-    const l_filterQ = document.getElementById('filter-q-value')
-    const l_lfoType = document.getElementById('lfo-type-value')
-    const l_lfoFreq = document.getElementById('lfo-freq-value')
-
-    const s_octave = document.getElementById('octave')    
-    const s_waveform = document.getElementById('waveform')
-    const s_polyphony = document.getElementById('polyphony')
-    const s_detune = document.getElementById('detune')
-    const s_filterType = document.getElementById('filterType')
-    const s_filterFreq = document.getElementById('filterFreq')
-    const s_filterGain = document.getElementById('filterGain')
-    const s_filterQ = document.getElementById('filterQ')
-    const s_lfoType = document.getElementById('lfoType')
-    const s_lfoFreq = document.getElementById('lfoFreq')
-    
-    l_octave.innerText = this.octave    
-    l_polyphony.innerText = this.polyphony
-    l_detune.innerText = this.detune
-    l_waveform.innerText = this.waveform
-    l_filterType.innerText = this.filter1.getType()
-    l_filterFreq.innerText = this.filter1.getFreq()
-    l_filterGain.innerText = this.filter1.getGain()
-    l_filterQ.innerText = this.filter1.getQ()
-    l_lfoType.innerText = this.lfo.type
-    l_lfoFreq.innerText = this.lfo.frequency.value
-    
-    s_octave.value = this.octave * 10    
-    s_polyphony.value = this.polyphony
-    s_detune.value = this.detune * 100 // see setupControls, divided by 100
-    s_waveform.value = this.waveformToInt(this.waveform)
-    s_filterType.value = this.filter1.getTypeInput()
-    s_filterFreq.value = this.filter1.getFreq()
-    s_filterGain.value = this.filter1.getGain()
-    s_filterQ.value = this.filter1.getQInput()
-    s_lfoType.value = this.waveformToInt(this.lfo.type)
-    s_lfoFreq.value = this.lfo.frequency.value
+  setWaveform(value) {
+    this.waveform = this.intToWaveform(parseInt(value))
   }
 
-  setupControls() {
-    return
-    const octave = document.getElementById('octave')
-    const waveform = document.getElementById('waveform')
-    const polyphony = document.getElementById('polyphony')
-    const detune = document.getElementById('detune')
-    const filterType = document.getElementById('filterType')
-    const filterFreq = document.getElementById('filterFreq')
-    const filterGain = document.getElementById('filterGain')
-    const filterQ = document.getElementById('filterQ')
-    const lfoType = document.getElementById('lfoType')
-    const lfoFreq = document.getElementById('lfoFreq')
+  setPolyphony(value) {
+    this.polyphony = value
+  }
 
-    octave.addEventListener('input', (e) => {
-      this.octave = e.target.value / 10
-      this.updateUI()
-    })
-    
-    waveform.addEventListener('input', (e) => {
-      this.waveform = this.intToWaveform(parseInt(e.target.value))
-      this.updateUI()
-    })
+  setDetune(value) {
+    this.detune = value / 100
+  }
 
-    polyphony.addEventListener('input', (e) => {
-      this.polyphony = parseInt(e.target.value)
-      this.updateUI()
-    })
+  setLfoType(value) {
+    this.lfo.type = this.intToWaveform(parseInt(value))
+  }
 
-    detune.addEventListener('input', (e) => {
-      this.detune = e.target.value / 100
-      this.updateUI()
-    })
-
-    filterType.addEventListener('input', (e) => {
-      this.filter1.setType(e.target.value)
-      this.updateUI()
-    })
-
-    filterFreq.addEventListener('input', (e) => {
-      this.filter1.setFreq(e.target.value)
-      this.updateUI()
-    })
-
-    filterGain.addEventListener('input', (e) => {
-      this.filter1.setGain(e.target.value)
-      this.updateUI()
-    })
-
-    filterQ.addEventListener('input', (e) => {
-      this.filter1.setQ(e.target.value)
-      this.updateUI()
-    })
-    
-    lfoType.addEventListener('input', (e) => {
-      this.lfo.type = this.intToWaveform(parseInt(e.target.value))
-      this.updateUI()
-    })
-
-    lfoFreq.addEventListener('input', (e) => {
-      this.lfo.frequency.value = e.target.value
-      this.updateUI()
-    })
-
-    this.oscilloscope.start()
+  setLfoFreq(value) {
+    this.lfo.frequency.value = value
   }
 
   handleKeys() {
