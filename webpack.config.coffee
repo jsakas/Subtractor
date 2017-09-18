@@ -21,4 +21,7 @@ module.exports =
                 path.resolve(__dirname, "src")
             ]
             loader: 'babel-loader'
+        ,
+            test: /\.scss$/,
+            use: ['css-loader' ]
         ]

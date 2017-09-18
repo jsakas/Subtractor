@@ -1,3 +1,5 @@
+import styles from '../sass/slider.scss';
+
 class Slider extends HTMLElement {
   connectedCallback() {
     const shadow = this.attachShadow({ 'mode': 'open', })
@@ -8,6 +10,10 @@ class Slider extends HTMLElement {
     this.max = this.getAttribute('max')
     this.value = this.getAttribute('value')
     this.oninput = new Function('value', this.getAttribute('oninput'))
+
+    this.stylesheet = document.createElement('style')
+    this.stylesheet.type = 'text/css'
+    this.stylesheet.innerText = styles.toString()
 
     this.div = document.createElement('div')
 
@@ -33,6 +39,7 @@ class Slider extends HTMLElement {
     this.div.appendChild(this.label)
     this.div.appendChild(this.range)
     this.div.appendChild(this.span)
+    this.div.appendChild(this.stylesheet)
     shadow.appendChild(this.div)
   }
 
