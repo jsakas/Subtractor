@@ -1,10 +1,6 @@
 class Slider extends HTMLElement {
-  constructor() {
-    super()
-  }
-
   connectedCallback() {
-    const shadow = this.attachShadow({ mode: 'open' })
+    const shadow = this.attachShadow({ 'mode': 'open', })
 
     this.id = this.getAttribute('id')
     this.name = this.getAttribute('name')
@@ -46,7 +42,7 @@ class Slider extends HTMLElement {
       'name',
       'min',
       'max',
-      'value'
+      'value',
     ]
   }
 
