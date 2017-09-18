@@ -34,11 +34,8 @@
   var subtractor = new Subtractor();
 </script>
 
-<div>
-  <label for="octave">Octave</label>
-  <x-slider name="Octave" value="5" min="0" max="12" fn="subtractor.setOctave(this.value)"></x-slider>
-  <span id="octave-value"></span>
-</div>
+
+<x-slider id="octave" name="Octave" value="5" min="0" max="12" oninput="subtractor.setOctave(value)"></x-slider>
 
 <div>
   <p>
