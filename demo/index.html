@@ -30,9 +30,13 @@
 
 <x-slider></x-slider>
 
+<script>
+  var subtractor = new Subtractor();
+</script>
+
 <div>
   <label for="octave">Octave</label>
-  <input type="range" value="5" min="0" max="120" id="octave" />
+  <x-slider name="Octave" value="5" min="0" max="12" fn="subtractor.setOctave(this.value)"></x-slider>
   <span id="octave-value"></span>
 </div>
 
@@ -94,10 +98,6 @@
     <span id="lfo-freq-value"></span>
   </p>
 </div>
-
-<script>
-  var subtractor = new Subtractor();
-</script>
 
 </body>
 

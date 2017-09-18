@@ -80,7 +80,13 @@ class Subtractor {
     return ['sine','square','sawtooth','triangle'].indexOf(w) + 1
   }
 
+  setOctave(value) {
+    console.log('setOctave', value)
+    this.octave = value
+  }
+
   updateUI() {
+    return
     const l_octave = document.getElementById('octave-value')    
     const l_waveform = document.getElementById('waveform-value')
     const l_polyphony = document.getElementById('polyphony-value')
@@ -127,6 +133,7 @@ class Subtractor {
   }
 
   setupControls() {
+    return
     const octave = document.getElementById('octave')
     const waveform = document.getElementById('waveform')
     const polyphony = document.getElementById('polyphony')
