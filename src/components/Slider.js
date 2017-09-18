@@ -1,6 +1,10 @@
 import styles from '../sass/slider.scss';
 
 class Slider extends HTMLElement {
+  static get observedAttributes() {
+    return ['id', 'name', 'min', 'max', 'value', ]
+  }
+
   connectedCallback() {
     const shadow = this.attachShadow({ 'mode': 'open', })
 
@@ -41,16 +45,6 @@ class Slider extends HTMLElement {
     this.div.appendChild(this.span)
     shadow.appendChild(this.stylesheet)
     shadow.appendChild(this.div)
-  }
-
-  static get observedAttributes() {
-    return [
-      'id',
-      'name',
-      'min',
-      'max',
-      'value',
-    ]
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
