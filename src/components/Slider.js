@@ -13,7 +13,7 @@ class Slider extends HTMLElement {
 
     this.stylesheet = document.createElement('style')
     this.stylesheet.type = 'text/css'
-    this.stylesheet.innerText = styles.toString()
+    this.stylesheet.textContent = styles.toString()
 
     this.div = document.createElement('div')
 
@@ -39,7 +39,7 @@ class Slider extends HTMLElement {
     this.div.appendChild(this.label)
     this.div.appendChild(this.range)
     this.div.appendChild(this.span)
-    this.div.appendChild(this.stylesheet)
+    shadow.appendChild(this.stylesheet)
     shadow.appendChild(this.div)
   }
 

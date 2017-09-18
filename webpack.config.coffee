@@ -23,5 +23,9 @@ module.exports =
             loader: 'babel-loader'
         ,
             test: /\.scss$/,
-            use: ['css-loader' ]
+            use: [
+                loader: "css-loader" # translates CSS into CommonJS
+            ,
+                loader: "sass-loader" # compiles Sass to CSS  
+            ]
         ]
