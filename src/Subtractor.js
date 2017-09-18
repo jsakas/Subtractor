@@ -36,6 +36,7 @@ class Subtractor {
     this.amplifier = this.context.createGain()
     this.filter1 = new Filter(this.context)
     this.lfo = this.context.createOscillator()
+    this.lfoAmp = this.context.createGain()
 
     this.filter1.filter.type = this.selectedPreset[4]
     this.filter1.filter.frequency.value = this.selectedPreset[5]
@@ -47,7 +48,8 @@ class Subtractor {
 
     this.amplifier.connect(this.context.destination)
     this.filter1.filter.connect(this.amplifier)
-    this.lfo.connect(this.amplifier.gain)
+    this.lfo.connect(this.lfoAmp)
+    this.lfoAmp.connect(this.amplifier.gain)
 
     this.lfo.start()
 
@@ -83,6 +85,7 @@ class Subtractor {
     const l_filterQ = document.getElementById('filter-q-value')
     const l_lfoType = document.getElementById('lfo-type-value')
     const l_lfoFreq = document.getElementById('lfo-freq-value')
+    const l_lfoAmp = document.getElementById('lfo-amp-value')
 
     const s_octave = document.getElementById('octave')    
     const s_waveform = document.getElementById('waveform')
@@ -94,6 +97,7 @@ class Subtractor {
     const s_filterQ = document.getElementById('filterQ')
     const s_lfoType = document.getElementById('lfoType')
     const s_lfoFreq = document.getElementById('lfoFreq')
+    const s_lfoAmp = document.getElementById('lfoAmp')
     
     l_octave.innerText = this.octave    
     l_polyphony.innerText = this.polyphony
@@ -105,6 +109,7 @@ class Subtractor {
     l_filterQ.innerText = this.filter1.getQ()
     l_lfoType.innerText = this.lfo.type
     l_lfoFreq.innerText = this.lfo.frequency.value
+    l_lfoAmp.innerText = this.lfoAmp.gain.value
     
     s_octave.value = this.octave * 10    
     s_polyphony.value = this.polyphony
@@ -116,6 +121,7 @@ class Subtractor {
     s_filterQ.value = this.filter1.getQInput()
     s_lfoType.value = this.waveformToInt(this.lfo.type)
     s_lfoFreq.value = this.lfo.frequency.value
+    s_lfoAmp.value = this.lfoAmp.gain.value
   }
 
   setupControls() {
@@ -129,6 +135,7 @@ class Subtractor {
     const filterQ = document.getElementById('filterQ')
     const lfoType = document.getElementById('lfoType')
     const lfoFreq = document.getElementById('lfoFreq')
+    const lfoAmp = document.getElementById('lfoAmp')
     
     octave.addEventListener('input', (e) => {
       this.octave = e.target.value / 10
@@ -177,6 +184,11 @@ class Subtractor {
 
     lfoFreq.addEventListener('input', (e) => {
       this.lfo.frequency.value = e.target.value
+      this.updateUI()
+    })
+
+    lfoAmp.addEventListener('input', (e) => {
+      this.lfoAmp.gain.value = e.target.value
       this.updateUI()
     })
   }
