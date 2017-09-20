@@ -3,22 +3,14 @@ class Oscilloscope {
       console.log('Oscilloscope constructed')
       this.context = context
       this.analyzer = context.createAnalyser()
-    }
+      this.draw = () => {
+        requestAnimationFrame(this.draw)
 
-    start(canvas) {
-      this.analyzer.fftSize = 2048
-      const analyzerBufferLength = this.analyzer.frequencyBinCount
-      const analyzerDataArray = new Uint8Array(analyzerBufferLength)
+        const canvasWidth = this.canvas.width
+        const canvasHeight = this.canvas.height
+        const canvasContext = this.canvas.getContext('2d')
 
-      const canvasWidth = canvas.width
-      const canvasHeight = canvas.height
-      const canvasContext = canvas.getContext('2d')
-      const boundAnalyzer = this.analyzer
-
-      const draw = function() {
-        requestAnimationFrame(draw)
-
-        boundAnalyzer.getByteTimeDomainData(analyzerDataArray)
+        this.analyzer.getByteTimeDomainData(this.analyzerDataArray)
 
         canvasContext.fillStyle = 'rgb(200, 200, 200)'
         canvasContext.fillRect(0, 0, canvasWidth, canvasHeight)
@@ -26,10 +18,10 @@ class Oscilloscope {
         canvasContext.strokeStyle = 'rgb(0, 0, 0)'
         canvasContext.beginPath()
 
-        let sliceWidth = Number(canvasWidth) * 1.0 / analyzerBufferLength
+        let sliceWidth = Number(canvasWidth) * 1.0 / this.analyzerBufferLength
         let x = 0
-        for (let i = 0; i < analyzerBufferLength; i++) {
-            let v = analyzerDataArray[i] / 128.0
+        for (let i = 0; i < this.analyzerBufferLength; i++) {
+            let v = this.analyzerDataArray[i] / 128.0
             let y = v * canvasHeight/2
             if (i === 0) {
               canvasContext.moveTo(x, y)
@@ -42,7 +34,14 @@ class Oscilloscope {
         canvasContext.lineTo(canvasWidth, canvasHeight/2)
         canvasContext.stroke()
       }
-      draw()
+    }
+
+    start(canvas) {
+      this.analyzer.fftSize = 2048
+      this.analyzerBufferLength = this.analyzer.frequencyBinCount
+      this.analyzerDataArray = new Uint8Array(this.analyzerBufferLength)
+      this.canvas = canvas
+      this.draw()
     }
 }
 
