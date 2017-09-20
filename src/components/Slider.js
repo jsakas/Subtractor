@@ -128,14 +128,6 @@ class Slider extends HTMLElement {
     _this.sliderInput.value = inputValue
     _this.sliderInput.dispatchEvent(new Event('input'))
   }
-
-
-  attributeChangedCallback(attr, oldValue, newValue) {
-    if (attr == 'value' && this.span) {
-      this.span.innerText = newValue
-    }
-  }
-
 }
 
 window.customElements.define('x-slider', Slider)
