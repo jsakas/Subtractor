@@ -1,9 +1,9 @@
-import styles from '../sass/slider.scss';
 import { percentToPoint, pointToPercent } from '../utils/maths'
+import styles from '../sass/slider.scss';
 
 class Slider extends HTMLElement {
   static get observedAttributes() {
-    return ['id', 'name', 'min', 'max', 'value', ]
+    return ['id', 'name', 'min', 'max', 'value',]
   }
 
   connectedCallback() {
@@ -15,7 +15,9 @@ class Slider extends HTMLElement {
     this.oninput = new Function('value', this.getAttribute('oninput'))
     this.template = `
       <label for="slider__input" class="slider" id="slider">
-        <input class="slider__input" id="slider__input" type="range" min="${this.min}" max="${this.max}" value="${this.value}" />
+        <input class="slider__input" id="slider__input" type="range" 
+          min="${this.min}" max="${this.max}" value="${this.value}" 
+        />
         <div class="slider__control" id="slider__control">
           <div class="slider__range" id="slider__range"></div>
           <div class="slider__knob" id="slider__knob"></div>
@@ -25,7 +27,7 @@ class Slider extends HTMLElement {
       </label>
     `
 
-    //create shadow dom
+    // create shadow dom
     this.shadow = this.attachShadow({ 'mode': 'open', })
     
     // create style sheet node
@@ -63,7 +65,7 @@ class Slider extends HTMLElement {
       const currentTop = parseInt(this.sliderKnob.style.top)
       const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentTop, currentValue)
       this.shadow.addEventListener('mousemove', boundMousemove)
-      this.shadow.addEventListener('mouseup', (e) => {
+      this.shadow.addEventListener('mouseup', () => {
         this.shadow.removeEventListener('mousemove', boundMousemove)
       })
     })
@@ -106,9 +108,7 @@ class Slider extends HTMLElement {
   }
 
   mousemove (_this, x, y, oldTop, oldValue, e) {
-    const xDiff = (e.clientX - parseInt(x))
     const yDiff = (e.clientY - parseInt(y))
-    
     const top = _this.calculateTop(
       oldTop,
       0,
