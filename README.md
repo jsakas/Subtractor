@@ -1,7 +1,8 @@
 # Subtractor ∿🎹🎧
+
 A WebAudio API Synth
 
-## development
+## Development
 
 ```shell
 npm install
@@ -10,15 +11,13 @@ npm start
 
 Then open [localhost:8000/demo](http://localhost:8000/demo)
 
-## testing
+## Testing
 run Jest:
 ```shell
 npm test
 ```
 
----
-
-## keyboard shortcuts
+## Keyboard Shortcuts
 ### Play Notes
 ```
 _WE_TYU_OP_
@@ -30,3 +29,7 @@ ASDFGHJKL;'
 `Tab` / `Shift`+`Tab`
 ### Move Slider
 `Up` / `Down`
+
+# About
+
+This project is an experiment in audio synthesis and web technologies by the engineering team at [Beatport](https://www.beatport.com)
