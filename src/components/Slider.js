@@ -80,7 +80,6 @@ class Slider extends HTMLElement {
       this.sliderValue.innerText = inputValue
 
       // call the oninput function passed in as an HTML attribute
-      console.log('call oninput')
       this.oninput(parseInt(inputValue))
     })
 

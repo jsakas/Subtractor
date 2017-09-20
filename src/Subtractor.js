@@ -79,7 +79,6 @@ class Subtractor {
   }
 
   setOctave(value) {
-    console.log('setOctave', value)
     this.octave = value
   }
 
