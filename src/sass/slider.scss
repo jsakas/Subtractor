@@ -33,7 +33,7 @@
   &__knob {
     position: absolute;
     top: 0;
-    // transition: top 1s;
+    transition: top .3s;
     width: $width;
     height: 10px;
     border-radius: 3px;

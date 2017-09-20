@@ -61,11 +61,13 @@ class Slider extends HTMLElement {
   setupEvents() {
     this.sliderKnob.addEventListener('mousedown', (e) => {
       this.sliderInput.dispatchEvent(new Event('focus'))
+      this.sliderKnob.style.transition = 'none'
       const currentValue = parseInt(this.sliderInput.value)
       const currentTop = parseInt(this.sliderKnob.style.top)
       const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentTop, currentValue)
       this.shadow.addEventListener('mousemove', boundMousemove)
       this.shadow.addEventListener('mouseup', () => {
+        this.sliderKnob.style.transition = ''
         this.shadow.removeEventListener('mousemove', boundMousemove)
       })
     })
