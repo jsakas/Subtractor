@@ -12,6 +12,11 @@
         },
         "sourceType": "module"
     },
+    "globals": {
+        "describe": true,
+        "test": true,
+        "expect": true
+    },
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-newline": "error",
