@@ -36,6 +36,9 @@ class Subtractor {
     this.amplifier = this.context.createGain()
     this.filter1 = new Filter(this.context)
     this.lfo = this.context.createOscillator()
+    this.lfoOffset = this.context.createConstantSource()
+    this.lfoGain = this.context.createGain()
+    this.lfoGain.gain.value = -0.5
     this.lfoAmp = this.context.createGain()
 
     this.filter1.filter.type = this.selectedPreset[4]
@@ -46,10 +49,14 @@ class Subtractor {
     this.lfo.type = this.selectedPreset[8]
     this.lfo.frequency.value = this.selectedPreset[9]
 
-    this.amplifier.connect(this.context.destination)
-    this.filter1.filter.connect(this.amplifier)
-    this.lfo.connect(this.lfoAmp)
+    this.lfo.connect(this.lfoGain)
+    this.lfoOffset.connect(this.lfoGain)
+    this.lfoOffset.start()
+    this.lfoGain.connect(this.lfoAmp)
     this.lfoAmp.connect(this.amplifier.gain)
+    this.filter1.filter.connect(this.amplifier)
+    this.amplifier.connect(this.context.destination)
+
 
     this.lfo.start()
 
