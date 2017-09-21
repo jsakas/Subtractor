@@ -45,24 +45,24 @@
 
 <section>
   <h2>Oscillator</h2>
-  <x-slider id="octave" name="Octave" value="5" min="0" max="9" oninput="subtractor.setOctave(value)"></x-slider>
-  <x-slider id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.setWaveform(value)"></x-slider>
-  <x-slider id="polyphony" name="Polyphony" value="1" min="1" max="10" oninput="subtractor.setPolyphony(value)"></x-slider>
-  <x-slider id="detune" name="Detune" value="0" min="0" max="100" oninput="subtractor.setDetune(value)"></x-slider>
+  <x-fader id="octave" name="Octave" value="5" min="0" max="9" oninput="subtractor.setOctave(value)"></x-fader>
+  <x-fader id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.setWaveform(value)"></x-fader>
+  <x-fader id="polyphony" name="Polyphony" value="1" min="1" max="10" oninput="subtractor.setPolyphony(value)"></x-fader>
+  <x-fader id="detune" name="Detune" value="0" min="0" max="100" oninput="subtractor.setDetune(value)"></x-fader>
 </section>
 
 <section>
   <h2>Filter</h2>
-  <x-slider id="filter-type" name="Fiter Type" value="1" min="1" max="8" oninput="subtractor.filter1.setType(value)"></x-slider>
-  <x-slider id="filter-freq" name="Fiter Freq" value="22050" min="10" max="22050" oninput="subtractor.filter1.setFreq(value)"></x-slider>
-  <x-slider id="filter-q" name="Fiter Q" value="1" min="0" max="500" oninput="subtractor.filter1.setQ(value)"></x-slider>
-  <x-slider id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" oninput="subtractor.filter1.setGain(value)"></x-slider>
+  <x-fader id="filter-type" name="Fiter Type" value="1" min="1" max="8" oninput="subtractor.filter1.setType(value)"></x-fader>
+  <x-fader id="filter-freq" name="Fiter Freq" value="22050" min="10" max="22050" oninput="subtractor.filter1.setFreq(value)"></x-fader>
+  <x-fader id="filter-q" name="Fiter Q" value="1" min="0" max="500" oninput="subtractor.filter1.setQ(value)"></x-fader>
+  <x-fader id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" oninput="subtractor.filter1.setGain(value)"></x-fader>
 </section>
 
 <section>
   <h2>LFO</h2>
-  <x-slider id="lfo-type" name="LFO Type" value="1" min="1" max="4" oninput="subtractor.setLfoType(value)"></x-slider>
-  <x-slider id="lfo-freq" name="LFO Freq" value="0" min="0" max="100" oninput="subtractor.setLfoFreq(value)"></x-slider>
+  <x-fader id="lfo-type" name="LFO Type" value="1" min="1" max="4" oninput="subtractor.setLfoType(value)"></x-fader>
+  <x-fader id="lfo-freq" name="LFO Freq" value="0" min="0" max="100" oninput="subtractor.setLfoFreq(value)"></x-fader>
 </section>
 </div>
 

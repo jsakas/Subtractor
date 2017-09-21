@@ -1,7 +1,7 @@
 import { percentToPoint, pointToPercent } from '../utils/maths'
-import styles from '../sass/slider.scss';
+import styles from '../sass/fader.scss';
 
-class Slider extends HTMLElement {
+class Fader extends HTMLElement {
   static get observedAttributes() {
     return ['id', 'name', 'min', 'max', 'value',]
   }
@@ -14,16 +14,16 @@ class Slider extends HTMLElement {
     this.value = this.getAttribute('value')
     this.oninput = new Function('value', this.getAttribute('oninput'))
     this.template = `
-      <label for="slider__input" class="slider" id="slider">
-        <input class="slider__input" id="slider__input" type="range" 
+      <label for="fader__input" class="fader" id="fader">
+        <input class="fader__input" id="fader__input" type="range" 
           min="${this.min}" max="${this.max}" value="${this.value}" 
         />
-        <div class="slider__control" id="slider__control">
-          <div class="slider__range" id="slider__range"></div>
-          <div class="slider__knob" id="slider__knob"></div>
+        <div class="fader__control" id="fader__control">
+          <div class="fader__range" id="fader__range"></div>
+          <div class="fader__knob" id="fader__knob"></div>
         </div>
-        <div class="slider__name" id="slider__name">${this.name}</div>
-        <div class="slider__value" id="slider__value"></div>
+        <div class="fader__name" id="fader__name">${this.name}</div>
+        <div class="fader__value" id="fader__value"></div>
       </label>
     `
 
@@ -43,15 +43,15 @@ class Slider extends HTMLElement {
     this.shadow.appendChild(this.templateDOM)
     // ^^ DOM is now constructed
 
-    this.slider = this.shadow.getElementById('slider')
-    this.sliderControl = this.shadow.getElementById('slider__control')
-    this.sliderKnob = this.shadow.getElementById('slider__knob')
-    this.sliderRange = this.shadow.getElementById('slider__range')
-    this.sliderInput = this.shadow.getElementById('slider__input')
-    this.sliderValue = this.shadow.getElementById('slider__value')
+    this.fader = this.shadow.getElementById('fader')
+    this.faderControl = this.shadow.getElementById('fader__control')
+    this.faderKnob = this.shadow.getElementById('fader__knob')
+    this.faderRange = this.shadow.getElementById('fader__range')
+    this.faderInput = this.shadow.getElementById('fader__input')
+    this.faderValue = this.shadow.getElementById('fader__value')
 
-    this.rangeRect = this.sliderRange.getBoundingClientRect()
-    this.knobRect = this.sliderKnob.getBoundingClientRect()
+    this.rangeRect = this.faderRange.getBoundingClientRect()
+    this.knobRect = this.faderKnob.getBoundingClientRect()
     this.maxTop = this.rangeRect.height - this.knobRect.height 
 
     this.setupEvents()
@@ -59,20 +59,20 @@ class Slider extends HTMLElement {
   }
 
   setupEvents() {
-    this.sliderKnob.addEventListener('mousedown', (e) => {
-      this.sliderInput.dispatchEvent(new Event('focus'))
-      this.sliderKnob.style.transition = 'none'
-      const currentValue = parseInt(this.sliderInput.value)
-      const currentTop = parseInt(this.sliderKnob.style.top)
+    this.faderKnob.addEventListener('mousedown', (e) => {
+      this.faderInput.dispatchEvent(new Event('focus'))
+      this.faderKnob.style.transition = 'none'
+      const currentValue = parseInt(this.faderInput.value)
+      const currentTop = parseInt(this.faderKnob.style.top)
       const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentTop, currentValue)
       this.shadow.addEventListener('mousemove', boundMousemove)
       this.shadow.addEventListener('mouseup', () => {
-        this.sliderKnob.style.transition = ''
+        this.faderKnob.style.transition = ''
         this.shadow.removeEventListener('mousemove', boundMousemove)
       })
     })
 
-    this.sliderInput.addEventListener('input', (e) => {
+    this.faderInput.addEventListener('input', (e) => {
       const inputValue = parseInt(e.target.value)
       const inputMax = parseInt(e.target.max)
       const inputMin = parseInt(e.target.min) 
@@ -80,20 +80,20 @@ class Slider extends HTMLElement {
       const percent = pointToPercent(inputMin, inputMax, inputValue)
       const top = this.maxTop * (1 - percent)
       
-      this.sliderKnob.style.top = `${parseInt(top)}px`
-      this.sliderValue.innerText = inputValue
+      this.faderKnob.style.top = `${parseInt(top)}px`
+      this.faderValue.innerText = inputValue
 
       // call the oninput function passed in as an HTML attribute
       this.oninput(parseInt(inputValue))
     })
 
-    this.sliderInput.addEventListener('change', (e) => {
+    this.faderInput.addEventListener('change', (e) => {
       const inputValue = parseInt(e.target.value)
-      this.sliderValue.innerText = inputValue
+      this.faderValue.innerText = inputValue
     })
 
     // trigger input event so `top` style is set in DOM
-    this.sliderInput.dispatchEvent(new Event('input'))
+    this.faderInput.dispatchEvent(new Event('input'))
 
   }
 
@@ -118,17 +118,17 @@ class Slider extends HTMLElement {
       yDiff
     )
 
-    _this.sliderKnob.style.top = `${top}px`
+    _this.faderKnob.style.top = `${top}px`
     
     const percentage = pointToPercent(0, _this.maxTop, top)
     const inputValue = percentToPoint(
-      parseInt(_this.sliderInput.min), 
-      parseInt(_this.sliderInput.max), 
+      parseInt(_this.faderInput.min), 
+      parseInt(_this.faderInput.max), 
       1 - percentage
     )
-    _this.sliderInput.value = inputValue
-    _this.sliderInput.dispatchEvent(new Event('input'))
+    _this.faderInput.value = inputValue
+    _this.faderInput.dispatchEvent(new Event('input'))
   }
 }
 
-window.customElements.define('x-slider', Slider)
+window.customElements.define('x-fader', Fader)

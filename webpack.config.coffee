@@ -3,7 +3,7 @@ path = require('path')
 module.exports =
     entry: [
         './src/Subtractor.js'
-        './src/components/Slider.js'
+        './src/components/Fader.js'
     ]
     output:
         filename: 'subtractor.js'
