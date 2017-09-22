@@ -37,7 +37,11 @@ class Subtractor {
     this.amplifier = this.context.createGain()
     this.filter1 = new Filter(this.context)
     this.lfo = this.context.createOscillator()
-    this.oscilloscope = new Oscilloscope(this.context)
+    
+    this.oscilloscope = new Oscilloscope(
+      this.context, 
+      document.getElementById('oscilloscope')
+    )
 
     this.filter1.filter.type = this.selectedPreset[4]
     this.filter1.filter.frequency.value = this.selectedPreset[5]
@@ -132,7 +136,6 @@ class Subtractor {
     const filterQ = document.getElementById('filterQ')
     const lfoType = document.getElementById('lfoType')
     const lfoFreq = document.getElementById('lfoFreq')
-    const oscilloscope = document.getElementById('oscilloscope')
 
     octave.addEventListener('input', (e) => {
       this.octave = e.target.value / 10
@@ -184,7 +187,7 @@ class Subtractor {
       this.updateUI()
     })
 
-    this.oscilloscope.start(oscilloscope)
+    this.oscilloscope.start()
   }
 
   handleKeys() {
