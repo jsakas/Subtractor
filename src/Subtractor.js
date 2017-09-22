@@ -38,10 +38,7 @@ class Subtractor {
     this.filter1 = new Filter(this.context)
     this.lfo = this.context.createOscillator()
     
-    this.oscilloscope = new Oscilloscope(
-      this.context, 
-      document.getElementById('oscilloscope')
-    )
+
 
     this.filter1.filter.type = this.selectedPreset[4]
     this.filter1.filter.frequency.value = this.selectedPreset[5]
@@ -52,13 +49,14 @@ class Subtractor {
     this.lfo.frequency.value = this.selectedPreset[9]
 
     this.amplifier.connect(this.context.destination)
-    this.amplifier.connect(this.oscilloscope.analyzer)
     this.filter1.filter.connect(this.amplifier)
     this.lfo.connect(this.amplifier.gain)
 
     this.lfo.start()
-    this.oscilloscope.start()
 
+    // only start the oscilloscope once the DOM is ready
+    document.addEventListener('DOMContentLoaded', () => this.startOscilloscope())
+    
     this.handleKeys()
   }
 
@@ -139,11 +137,9 @@ class Subtractor {
 
       if (eKeyDown.key == 'z' && this.octave > 0) {
         this.octave--
-        this.updateUI()
       }
       if (eKeyDown.key == 'x' && this.octave < 12) {
         this.octave++
-        this.updateUI()
       }
 
       keyWasPressed[eKeyDown.key] = true
@@ -151,6 +147,20 @@ class Subtractor {
     window.addEventListener('keyup', (eKeyUp) => {
       keyWasPressed[eKeyUp.key] = false
     })
+  }
+
+  startOscilloscope() {
+    try {
+      const canvas = document.getElementById('oscilloscope')
+      const oscilloscope = new Oscilloscope(
+        this.context, 
+        canvas
+      )
+      this.amplifier.connect(oscilloscope.analyzer)
+      oscilloscope.start()
+    } catch (e) {
+      console.log('Failed to start Oscilloscope')
+    }
   }
 
   startPolyNote(note) {

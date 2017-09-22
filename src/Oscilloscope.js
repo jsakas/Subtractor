@@ -16,7 +16,7 @@ class Oscilloscope {
 
       this.analyzer.getByteTimeDomainData(this.analyzerDataArray)
 
-      canvasContext.fillStyle = 'rgb(200, 200, 200)'
+      canvasContext.fillStyle = 'rgb(255, 255, 255)'
       canvasContext.fillRect(0, 0, this.width, this.height)
       canvasContext.lineWidth = 2
       canvasContext.strokeStyle = 'rgb(0, 0, 0)'
