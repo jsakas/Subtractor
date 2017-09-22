@@ -1,6 +1,6 @@
 .fader {
   $width: 20px;
-  $height: 100px;
+  $height: 200px;
   display: inline-flex;
   align-items: center;
   flex-direction: column;
@@ -9,8 +9,8 @@
   border-radius: 3px;
   padding: 3px;
 
-  &__input:focus + &__control &__range {
-    background: rgba(#94d500, 0.5);
+  &__input:focus + &__control &__knob {
+    background: rgba(#94d500, 1);
   }
 
   &__control {

@@ -64,7 +64,7 @@ class Fader extends HTMLElement {
       this.faderKnob.style.transition = 'none'
       const currentValue = parseInt(this.faderInput.value)
       const currentTop = parseInt(this.faderKnob.style.top)
-      const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentTop, currentValue)
+      const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentValue)
       document.addEventListener('mousemove', boundMousemove)
       document.addEventListener('mouseup', () => {
         this.faderKnob.style.transition = ''
@@ -94,39 +94,18 @@ class Fader extends HTMLElement {
 
     // trigger input event so `top` style is set in DOM
     this.faderInput.dispatchEvent(new Event('input'))
-
   }
 
-  calculateTop (currentTop, topMin, topMax, changeVal) {
-    let newTop = currentTop + changeVal
-    if (newTop < topMin) {
-      newTop = topMin
-    }
-    if (newTop > topMax) {
-      newTop = topMax
-    }
-    
-    return newTop
-  }
-
-  mousemove (_this, x, y, oldTop, oldValue, e) {
+  mousemove (_this, x, y, oldValue, e) {
     const yDiff = (e.clientY - parseInt(y))
-    const top = _this.calculateTop(
-      oldTop,
-      0,
-      _this.rangeRect.height - _this.knobRect.height,
-      yDiff
-    )
+    const range = _this.max - _this.min
+    const changeInterval = range / _this.rangeRect.height
 
-    _this.faderKnob.style.top = `${top}px`
-    
-    const percentage = pointToPercent(0, _this.maxTop, top)
-    const inputValue = percentToPoint(
-      parseInt(_this.faderInput.min), 
-      parseInt(_this.faderInput.max), 
-      1 - percentage
-    )
-    _this.faderInput.value = inputValue
+    let newValue = oldValue - (changeInterval * yDiff)
+    if (newValue > _this.max) { newValue = _this.max }
+    if (newValue < _this.min) { newValue = _this.min }
+
+    _this.faderInput.value = newValue
     _this.faderInput.dispatchEvent(new Event('input'))
   }
 }

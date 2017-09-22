@@ -10,7 +10,7 @@
   padding: 3px;
 
   &__input:focus + &__control &__knob {
-    background: rgba(#94d500, 0.5);
+    background: rgba(#94d500, 1);
   }
 
   &__control {
