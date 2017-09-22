@@ -4,6 +4,7 @@ module.exports =
     entry: [
         './src/Subtractor.js'
         './src/components/Fader.js'
+        './src/components/Knob.js'
     ]
     output:
         filename: 'subtractor.js'

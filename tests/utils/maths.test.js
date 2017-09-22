@@ -1,4 +1,4 @@
-import { percentToPoint, pointToPercent } from '../../src/utils/maths'
+import { percentToPoint, pointToPercent, percentToDegree, degreeToPercent } from '../../src/utils/maths'
 
 describe('percentToPoint', () => {
   test('returns 127 for 1 in range [-127, 127]', () => {
@@ -73,6 +73,30 @@ describe('pointToPercent', () => {
 
   test('returns .5 for 60 in range [10, 110]', () => {
     expect(pointToPercent(10, 110, 60)).toBe(.5)
+  })
+})
+
+describe('percentToDegree', () => {
+  test('returns 0 for 0 in range [0, 360]', () => {
+    expect(percentToDegree(0, 360, 0)).toBe(0)
+  })
+  test('returns 1 for 360 in range [0, 360]', () => {
+    expect(percentToDegree(0, 360, 360)).toBe(1)
+  })
+  test('returns .5 for 180 in range [0, 360]', () => {
+    expect(percentToDegree(0, 360, 180)).toBe(.5)
+  })
+})
+
+describe('degreeToPercent', () => {
+  test('returns 0 for 0 in range [0, 360]', () => {
+    expect(degreeToPercent(0, 360, 0)).toBe(0)
+  })
+  test('returns 360 for 1 in range [0, 360]', () => {
+    expect(degreeToPercent(0, 360, 1)).toBe(360)
+  })
+  test('returns 180 for .5 in range [0, 360]', () => {
+    expect(degreeToPercent(0, 360, .5)).toBe(180)
   })
 })
 

@@ -23,4 +23,12 @@ const pointToPercent = function(min, max, point) {
     : percent
 }
 
-export { percentToPoint, pointToPercent }
+const percentToDegree = function(min, max, percent) {
+  return 0
+}
+
+const degreeToPercent = function(min, max, degree) {
+  return 0
+}
+
+export { percentToPoint, pointToPercent, percentToDegree, degreeToPercent }
