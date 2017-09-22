@@ -1,7 +1,5 @@
 import { Filter } from './Filter'
 import { Oscilloscope } from './Oscilloscope'
-import { Slider } from './components/Slider'
-import styles from './sass/section.scss'
 
 class Subtractor {
   constructor() {
