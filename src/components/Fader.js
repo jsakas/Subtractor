@@ -65,10 +65,10 @@ class Fader extends HTMLElement {
       const currentValue = parseInt(this.faderInput.value)
       const currentTop = parseInt(this.faderKnob.style.top)
       const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentTop, currentValue)
-      this.shadow.addEventListener('mousemove', boundMousemove)
-      this.shadow.addEventListener('mouseup', () => {
+      document.addEventListener('mousemove', boundMousemove)
+      document.addEventListener('mouseup', () => {
         this.faderKnob.style.transition = ''
-        this.shadow.removeEventListener('mousemove', boundMousemove)
+        document.removeEventListener('mousemove', boundMousemove)
       })
     })
 

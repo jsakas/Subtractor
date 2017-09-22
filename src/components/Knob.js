@@ -60,12 +60,11 @@ class Knob extends HTMLElement {
       this.knobInput.dispatchEvent(new Event('focus'))
       this.knobKnob.style.transition = 'none'
       const currentValue = parseInt(this.knobInput.value)
-      const currentTop = parseInt(this.knobKnob.style.top)
-      const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentTop, currentValue)
-      this.shadow.addEventListener('mousemove', boundMousemove)
-      this.shadow.addEventListener('mouseup', () => {
+      const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentValue)
+      document.addEventListener('mousemove', boundMousemove)
+      document.addEventListener('mouseup', () => {
         this.knobKnob.style.transition = ''
-        this.shadow.removeEventListener('mousemove', boundMousemove)
+        document.removeEventListener('mousemove', boundMousemove)
       })
     })
 
@@ -75,10 +74,9 @@ class Knob extends HTMLElement {
       const inputMin = parseInt(e.target.min) 
       
       const percent = pointToPercent(inputMin, inputMax, inputValue)
-      // const top = this.maxTop * (1 - percent)
-      
-      // this.knobKnob.style.transform = `rotateZ: ${parseInt(rotate)}px`
-      console.log('change knob', percent)
+      const degree = percentToPoint(-150, 150, percent)
+
+      this.knobKnob.style.transform = `rotateZ(${parseInt(degree)}deg)`
       this.knobValue.innerText = inputValue
 
       // call the oninput function passed in as an HTML attribute
@@ -92,27 +90,18 @@ class Knob extends HTMLElement {
 
     // trigger input event so `top` style is set in DOM
     this.knobInput.dispatchEvent(new Event('input'))
-
   }
 
-  mousemove (_this, x, y, oldTop, oldValue, e) {
+  mousemove (_this, x, y, oldValue, e) {
     const yDiff = (e.clientY - parseInt(y))
-    // const top = _this.calculateTop(
-    //   oldTop,
-    //   0,
-    //   _this.rangeRect.height - _this.knobRect.height,
-    //   yDiff
-    // )
+    const range = _this.max - _this.min
+    const changeInterval = range / 100
 
-    // _this.knobKnob.style.top = `${top}px`
-    
-    // const percentage = pointToPercent(0, _this.maxTop, top)
-    // const inputValue = percentToPoint(
-    //   parseInt(_this.knobInput.min), 
-    //   parseInt(_this.knobInput.max), 
-    //   1 - percentage
-    // )
-    // _this.knobInput.value = inputValue
+    let newValue = oldValue - (changeInterval * yDiff)
+    if (newValue > _this.max) { newValue = _this.max }
+    if (newValue < _this.min) { newValue = _this.min }
+
+    _this.knobInput.value = newValue
     _this.knobInput.dispatchEvent(new Event('input'))
   }
 }

@@ -45,6 +45,10 @@
   &__name, &__value {
     font-family: sans-serif;
     font-size: 10px;
+
+    &::selection {
+      background: none;
+    }
   }
 
   &__input {

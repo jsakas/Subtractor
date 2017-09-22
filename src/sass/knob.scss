@@ -9,7 +9,7 @@
   border-radius: 3px;
   padding: 3px;
 
-  &__input:focus + &__control &__range {
+  &__input:focus + &__control &__knob {
     background: rgba(#94d500, 0.5);
   }
 
@@ -22,7 +22,7 @@
   &__knob {
     position: absolute;
     top: 0;
-    transition: top .3s;
+    transition: transform .3s;
     width: $width;
     height: $height;
     border-radius: 50%;
@@ -45,13 +45,17 @@
   &__name, &__value {
     font-family: sans-serif;
     font-size: 10px;
+
+    &::selection {
+      background: none;
+    }
   }
 
   &__input {
     // the browser won't tab focus hidden fields, so we fake hide it
-    // opacity: 0;
-    // width: 0;
-    // height: 0;
-    // overflow: hidden;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
   }
 }
