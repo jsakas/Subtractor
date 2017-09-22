@@ -1,4 +1,5 @@
 import { Filter } from './Filter'
+import { Oscilloscope } from './Oscilloscope'
 
 class Subtractor {
   constructor() {
@@ -36,6 +37,11 @@ class Subtractor {
     this.amplifier = this.context.createGain()
     this.filter1 = new Filter(this.context)
     this.lfo = this.context.createOscillator()
+    
+    this.oscilloscope = new Oscilloscope(
+      this.context, 
+      document.getElementById('oscilloscope')
+    )
 
     this.filter1.filter.type = this.selectedPreset[4]
     this.filter1.filter.frequency.value = this.selectedPreset[5]
@@ -46,6 +52,7 @@ class Subtractor {
     this.lfo.frequency.value = this.selectedPreset[9]
 
     this.amplifier.connect(this.context.destination)
+    this.amplifier.connect(this.oscilloscope.analyzer)
     this.filter1.filter.connect(this.amplifier)
     this.lfo.connect(this.amplifier.gain)
 
@@ -129,7 +136,7 @@ class Subtractor {
     const filterQ = document.getElementById('filterQ')
     const lfoType = document.getElementById('lfoType')
     const lfoFreq = document.getElementById('lfoFreq')
-    
+
     octave.addEventListener('input', (e) => {
       this.octave = e.target.value / 10
       this.updateUI()
@@ -179,6 +186,8 @@ class Subtractor {
       this.lfo.frequency.value = e.target.value
       this.updateUI()
     })
+
+    this.oscilloscope.start()
   }
 
   handleKeys() {
