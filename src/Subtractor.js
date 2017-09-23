@@ -37,11 +37,6 @@ class Subtractor {
     this.amplifier = this.context.createGain()
     this.filter1 = new Filter(this.context)
     this.lfo = this.context.createOscillator()
-    
-    this.oscilloscope = new Oscilloscope(
-      this.context, 
-      document.getElementById('oscilloscope')
-    )
 
     this.filter1.filter.type = this.selectedPreset[4]
     this.filter1.filter.frequency.value = this.selectedPreset[5]
@@ -52,17 +47,15 @@ class Subtractor {
     this.lfo.frequency.value = this.selectedPreset[9]
 
     this.amplifier.connect(this.context.destination)
-    this.amplifier.connect(this.oscilloscope.analyzer)
     this.filter1.filter.connect(this.amplifier)
     this.lfo.connect(this.amplifier.gain)
 
     this.lfo.start()
 
+    // only start the oscilloscope once the DOM is ready
+    document.addEventListener('DOMContentLoaded', () => this.startOscilloscope())
     
     this.handleKeys()
-    this.setupControls()
-
-    this.updateUI()
   }
 
   // route an oscillator thru the pipeline of modifiers.
@@ -79,115 +72,28 @@ class Subtractor {
     return ['sine','square','sawtooth','triangle'].indexOf(w) + 1
   }
 
-  updateUI() {
-    const l_octave = document.getElementById('octave-value')    
-    const l_waveform = document.getElementById('waveform-value')
-    const l_polyphony = document.getElementById('polyphony-value')
-    const l_detune = document.getElementById('detune-value')
-    const l_filterType = document.getElementById('filter-type-value')
-    const l_filterFreq = document.getElementById('filter-freq-value')
-    const l_filterGain = document.getElementById('filter-gain-value')
-    const l_filterQ = document.getElementById('filter-q-value')
-    const l_lfoType = document.getElementById('lfo-type-value')
-    const l_lfoFreq = document.getElementById('lfo-freq-value')
-
-    const s_octave = document.getElementById('octave')    
-    const s_waveform = document.getElementById('waveform')
-    const s_polyphony = document.getElementById('polyphony')
-    const s_detune = document.getElementById('detune')
-    const s_filterType = document.getElementById('filterType')
-    const s_filterFreq = document.getElementById('filterFreq')
-    const s_filterGain = document.getElementById('filterGain')
-    const s_filterQ = document.getElementById('filterQ')
-    const s_lfoType = document.getElementById('lfoType')
-    const s_lfoFreq = document.getElementById('lfoFreq')
-    
-    l_octave.innerText = this.octave    
-    l_polyphony.innerText = this.polyphony
-    l_detune.innerText = this.detune
-    l_waveform.innerText = this.waveform
-    l_filterType.innerText = this.filter1.getType()
-    l_filterFreq.innerText = this.filter1.getFreq()
-    l_filterGain.innerText = this.filter1.getGain()
-    l_filterQ.innerText = this.filter1.getQ()
-    l_lfoType.innerText = this.lfo.type
-    l_lfoFreq.innerText = this.lfo.frequency.value
-    
-    s_octave.value = this.octave * 10    
-    s_polyphony.value = this.polyphony
-    s_detune.value = this.detune * 100 // see setupControls, divided by 100
-    s_waveform.value = this.waveformToInt(this.waveform)
-    s_filterType.value = this.filter1.getTypeInput()
-    s_filterFreq.value = this.filter1.getFreq()
-    s_filterGain.value = this.filter1.getGain()
-    s_filterQ.value = this.filter1.getQInput()
-    s_lfoType.value = this.waveformToInt(this.lfo.type)
-    s_lfoFreq.value = this.lfo.frequency.value
+  setOctave(value) {
+    this.octave = value
   }
 
-  setupControls() {
-    const octave = document.getElementById('octave')
-    const waveform = document.getElementById('waveform')
-    const polyphony = document.getElementById('polyphony')
-    const detune = document.getElementById('detune')
-    const filterType = document.getElementById('filterType')
-    const filterFreq = document.getElementById('filterFreq')
-    const filterGain = document.getElementById('filterGain')
-    const filterQ = document.getElementById('filterQ')
-    const lfoType = document.getElementById('lfoType')
-    const lfoFreq = document.getElementById('lfoFreq')
+  setWaveform(value) {
+    this.waveform = this.intToWaveform(parseInt(value))
+  }
 
-    octave.addEventListener('input', (e) => {
-      this.octave = e.target.value / 10
-      this.updateUI()
-    })
-    
-    waveform.addEventListener('input', (e) => {
-      this.waveform = this.intToWaveform(parseInt(e.target.value))
-      this.updateUI()
-    })
+  setPolyphony(value) {
+    this.polyphony = value
+  }
 
-    polyphony.addEventListener('input', (e) => {
-      this.polyphony = parseInt(e.target.value)
-      this.updateUI()
-    })
+  setDetune(value) {
+    this.detune = value / 100
+  }
 
-    detune.addEventListener('input', (e) => {
-      this.detune = e.target.value / 100
-      this.updateUI()
-    })
+  setLfoType(value) {
+    this.lfo.type = this.intToWaveform(parseInt(value))
+  }
 
-    filterType.addEventListener('input', (e) => {
-      this.filter1.setType(e.target.value)
-      this.updateUI()
-    })
-
-    filterFreq.addEventListener('input', (e) => {
-      this.filter1.setFreq(e.target.value)
-      this.updateUI()
-    })
-
-    filterGain.addEventListener('input', (e) => {
-      this.filter1.setGain(e.target.value)
-      this.updateUI()
-    })
-
-    filterQ.addEventListener('input', (e) => {
-      this.filter1.setQ(e.target.value)
-      this.updateUI()
-    })
-    
-    lfoType.addEventListener('input', (e) => {
-      this.lfo.type = this.intToWaveform(parseInt(e.target.value))
-      this.updateUI()
-    })
-
-    lfoFreq.addEventListener('input', (e) => {
-      this.lfo.frequency.value = e.target.value
-      this.updateUI()
-    })
-
-    this.oscilloscope.start()
+  setLfoFreq(value) {
+    this.lfo.frequency.value = value
   }
 
   handleKeys() {
@@ -229,11 +135,9 @@ class Subtractor {
 
       if (eKeyDown.key == 'z' && this.octave > 0) {
         this.octave--
-        this.updateUI()
       }
       if (eKeyDown.key == 'x' && this.octave < 12) {
         this.octave++
-        this.updateUI()
       }
 
       keyWasPressed[eKeyDown.key] = true
@@ -241,6 +145,20 @@ class Subtractor {
     window.addEventListener('keyup', (eKeyUp) => {
       keyWasPressed[eKeyUp.key] = false
     })
+  }
+
+  startOscilloscope() {
+    try {
+      const canvas = document.getElementById('oscilloscope')
+      const oscilloscope = new Oscilloscope(
+        this.context, 
+        canvas
+      )
+      this.amplifier.connect(oscilloscope.analyzer)
+      oscilloscope.start()
+    } catch (e) {
+      console.log('Failed to start Oscilloscope')
+    }
   }
 
   startPolyNote(note) {
@@ -276,4 +194,5 @@ class Subtractor {
   }
 }
 
+export { Subtractor }
 window.Subtractor = Subtractor

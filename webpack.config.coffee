@@ -3,6 +3,8 @@ path = require('path')
 module.exports =
     entry: [
         './src/Subtractor.js'
+        './src/components/Fader.js'
+        './src/components/Knob.js'
     ]
     output:
         filename: 'subtractor.js'
@@ -20,4 +22,11 @@ module.exports =
                 path.resolve(__dirname, "src")
             ]
             loader: 'babel-loader'
+        ,
+            test: /\.scss$/,
+            use: [
+                loader: "css-loader" # translates CSS into CommonJS
+            ,
+                loader: "sass-loader" # compiles Sass to CSS  
+            ]
         ]

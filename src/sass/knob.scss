@@ -1,0 +1,61 @@
+.knob {
+  $width: 30px;
+  $height: 30px;
+  display: inline-flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 3px;
+
+  &__input:focus + &__control &__knob {
+    background: rgba(#94d500, 1);
+  }
+
+  &__control {
+    position: relative;
+    width: $width;
+    height: $height;
+  }
+
+  &__knob {
+    position: absolute;
+    top: 0;
+    transition: transform .3s;
+    width: $width;
+    height: $height;
+    border-radius: 50%;
+    border: 1px solid black;
+    background: white;
+    box-sizing: border-box;
+
+    &:before {
+      display: block;
+      content: '';
+      width: 3px;
+      height: 10px;
+      background: black;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  &__name, &__value {
+    font-family: sans-serif;
+    font-size: 10px;
+
+    &::selection {
+      background: none;
+    }
+  }
+
+  &__input {
+    // the browser won't tab focus hidden fields, so we fake hide it
+    opacity: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+}

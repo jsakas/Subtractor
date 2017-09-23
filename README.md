@@ -25,9 +25,9 @@ ASDFGHJKL;'
 ```
 ### Change Octave
 `Z` / `X`
-### Select Slider
+### Select Fader
 `Tab` / `Shift`+`Tab`
-### Move Slider
+### Move Fader
 `Up` / `Down`
 
 # About

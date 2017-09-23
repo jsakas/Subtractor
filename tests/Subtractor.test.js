@@ -1,5 +1,6 @@
+import 'web-audio-test-api'
 import { Subtractor } from '../src/Subtractor'
 
-test('True is true', () => {
-  expect(true).toBe(true);
+test('Subtractor is a function', () => {
+  expect(typeof Subtractor).toBe('function')
 })
