@@ -34,23 +34,17 @@ class Subtractor {
     this.detune    = this.selectedPreset[3]
 
     this.context = new AudioContext()
-    this.amplifier = this.context.createGain()
+    this.masterGain = this.context.createGain()
+
     this.filter1 = new Filter(this.context)
-    this.lfo = this.context.createOscillator()
 
     this.filter1.filter.type = this.selectedPreset[4]
     this.filter1.filter.frequency.value = this.selectedPreset[5]
     this.filter1.filter.Q.value = this.selectedPreset[6]
     this.filter1.filter.gain.value = this.selectedPreset[7]
 
-    this.lfo.type = this.selectedPreset[8]
-    this.lfo.frequency.value = this.selectedPreset[9]
-
-    this.amplifier.connect(this.context.destination)
-    this.filter1.filter.connect(this.amplifier)
-    this.lfo.connect(this.amplifier.gain)
-
-    this.lfo.start()
+    this.filter1.filter.connect(this.masterGain)
+    this.masterGain.connect(this.context.destination)
 
     // only start the oscilloscope once the DOM is ready
     document.addEventListener('DOMContentLoaded', () => this.startOscilloscope())
@@ -88,12 +82,8 @@ class Subtractor {
     this.detune = value / 100
   }
 
-  setLfoType(value) {
-    this.lfo.type = this.intToWaveform(parseInt(value))
-  }
-
-  setLfoFreq(value) {
-    this.lfo.frequency.value = value
+  setMasterGain(value) {
+    this.masterGain.gain.value = value * .01
   }
 
   handleKeys() {
@@ -154,7 +144,7 @@ class Subtractor {
         this.context, 
         canvas
       )
-      this.amplifier.connect(oscilloscope.analyzer)
+      this.masterGain.connect(oscilloscope.analyzer)
       oscilloscope.start()
     } catch (e) {
       console.log('Failed to start Oscilloscope')

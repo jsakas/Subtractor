@@ -60,9 +60,8 @@
       <x-knob id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" oninput="subtractor.filter1.setGain(value)"></x-knob>
     </section>
     <section>
-      <h2>LFO</h2>
-      <x-knob id="lfo-type" name="LFO Type" value="1" min="1" max="4" oninput="subtractor.setLfoType(value)"></x-knob>
-      <x-knob id="lfo-freq" name="LFO Freq" value="0" min="0" max="100" oninput="subtractor.setLfoFreq(value)"></x-knob>
+      <h2>Master</h2>
+      <x-fader id="lfo-type" name="Gain" value="80" min="1" max="100" oninput="subtractor.setMasterGain(value)"></x-fader>
     </section>
     <canvas id="oscilloscope" class="oscilloscope"></canvas>
   </div>
