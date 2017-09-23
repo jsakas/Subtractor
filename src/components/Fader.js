@@ -28,7 +28,7 @@ class Fader extends HTMLElement {
     `
 
     // create shadow dom
-    this.shadow = this.attachShadow({ 'mode': 'open', })
+    this.shadow = this.attachShadow({ 'mode': 'open' })
     
     // create style sheet node
     this.stylesheet = document.createElement('style')

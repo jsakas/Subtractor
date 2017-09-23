@@ -13,9 +13,11 @@
         "sourceType": "module"
     },
     "globals": {
+        "jest": true,
         "describe": true,
         "test": true,
-        "expect": true
+        "expect": true,
+        "beforeEach": true
     },
     "rules": {
         "accessor-pairs": "error",
@@ -53,7 +55,7 @@
         "class-methods-use-this": "off",
         "comma-dangle": ["error", {
             "arrays": "ignore",
-            "objects": "always",
+            "objects": "only-multiline",
             "imports": "never",
             "exports": "never",
             "functions": "ignore"
@@ -253,7 +255,7 @@
             "error",
             "last"
         ],
-        "sort-imports": "error",
+        "sort-imports": "off",
         "sort-keys": "error",
         "sort-vars": "error",
         "space-before-blocks": "error",
