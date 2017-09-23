@@ -2,7 +2,6 @@ import { Osc } from './Osc'
 import { Filter } from './Filter'
 import { Oscilloscope } from './Oscilloscope'
 
-import { getNoteFreq } from './utils/maths'
 import { keyboardKeys } from './utils/keyboard'
 
 
@@ -17,6 +16,11 @@ class Subtractor {
     // when MIDI is integrated. 
     this.octave = 4
 
+    // here polyphony refers to the number of oscs started for each key press,
+    // detune refers to the spread of frequencies across the poly notes
+    this.polyphony = 1
+    this.detune = 0
+
     this.masterGain = this.context.createGain()
     this.filter1.filter.connect(this.masterGain)
     this.masterGain.connect(this.context.destination)
@@ -25,13 +29,6 @@ class Subtractor {
     document.addEventListener('DOMContentLoaded', () => this.startOscilloscope())
     
     this.handleKeys()
-  }
-
-  // route an oscillator thru the pipeline of modifiers.
-  // e.g. gains, filter, distortions etc.
-  pipeline(osc) {
-    osc.connect(this.filter1.filter)
-    return osc
   }
 
   setOctave(value) {
@@ -92,36 +89,23 @@ class Subtractor {
   }
 
   startPolyNote(note) {
-    // number of intervals on the upper side of the root note
-    const numIntervals = Math.floor(this.polyphony / 2)
-    // width of interval based on the detune and polyphony measured in notes
-    const interval = numIntervals == 0
-      ? 0
-      : this.detune / numIntervals
-      // ternary gaurds interval being Infinity
-
-    return [this.osc1, this.osc2].map((osc) => {
+    let returnOscs = [this.osc1, this.osc2].map((osc) => {
       if (!osc.enabled) { 
-        return
+        return []
       }
-      return this.pipeline(osc.start(note))
+      return osc.start(note, this.polyphony, this.detune)
+                .map(startedOsc => this.pipeline(startedOsc))
     })
 
-    // create n=polyphony oscillators
-    // return Array(this.polyphony).fill()
-    //   .map((_,i) => note + (numIntervals - i) * interval)
-    //   .reverse()
-    //   .map(this.getNoteFreq)
-    //   .map(this.startFreqOscillator.bind(this))
+    // osc.start returns an array of osc references, 
+    return [].concat(...returnOscs)
   }
-  
-  startFreqOscillator(freq) {
-    const oscillator = this.context.createOscillator()
-    oscillator.type = this.waveform
-    oscillator.frequency.value = freq
-    this.pipeline(oscillator)
-    oscillator.start()
-    return oscillator
+
+  // route an oscillator thru the pipeline of modifiers.
+  // e.g. gains, filter, distortions etc.
+  pipeline(osc) {
+    osc.connect(this.filter1.filter)
+    return osc
   }
 
   startOscilloscope() {

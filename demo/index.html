@@ -45,11 +45,11 @@
 
   <div class="subtractor">
     <h1>Subtractor</h1>
-<!--     <section>
-      <h2>Poly</h2>
-      <x-knob id="polyphony" name="Polyphony" value="1" min="1" max="10" oninput="subtractor.setPolyphony(value)"></x-knob>
+    <section>
+      <h2>Super</h2>
+      <x-knob id="polyphony" name="Poly" value="1" min="1" max="10" oninput="subtractor.setPolyphony(value)"></x-knob>
       <x-knob id="detune" name="Detune" value="0" min="0" max="100" oninput="subtractor.setDetune(value)"></x-knob>
-    </section> -->
+    </section>
     <section>
       <h2>Osc 1</h2>
       <x-knob id="enabled" name="On" value="1" min="0" max="1" oninput="subtractor.osc1.setEnabled(value)"></x-knob>
@@ -75,7 +75,6 @@
     </section>
     <section>
       <h2>Master</h2>
-      <x-knob id="octave" name="Octave" value="3" min="1" max="9" oninput="subtractor.setOctave(value)"></x-knob>
       <x-fader id="lfo-type" name="Gain" value="50" min="1" max="100" oninput="subtractor.setMasterGain(value)"></x-fader>
     </section>
     <canvas id="oscilloscope" class="oscilloscope"></canvas>
