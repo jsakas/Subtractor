@@ -1,4 +1,5 @@
 import { Filter } from './Filter'
+import { keyboardKeys } from './utils/keyboard'
 import { Oscilloscope } from './Oscilloscope'
 
 class Subtractor {
@@ -89,28 +90,8 @@ class Subtractor {
   handleKeys() {
     let keyWasPressed = []
     window.addEventListener('keydown', (eKeyDown) => {
-      const octaveKeys = new Map([
-        ['a', 0],
-        ['w', 1],
-        ['s', 2],
-        ['e', 3],
-        ['d', 4],
-        ['f', 5],
-        ['t', 6],
-        ['g', 7],
-        ['y', 8],
-        ['h', 9],
-        ['u', 10],
-        ['j', 11],
-        ['k', 12],
-        ['o', 13],
-        ['l', 14],
-        ['p', 15],
-        [';', 16],
-        ['\'', 17],
-      ])
-      if (octaveKeys.has(eKeyDown.key) && !keyWasPressed[eKeyDown.key]) {
-        const note = octaveKeys.get(eKeyDown.key) + (this.octave * 12)
+      if (keyboardKeys.has(eKeyDown.key) && !keyWasPressed[eKeyDown.key]) {
+        const note = keyboardKeys.get(eKeyDown.key) + (this.octave * 12)
         const polyNoteOscillators = this.startPolyNote(note)
 
         // on note-keyup, stop the oscillators
