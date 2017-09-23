@@ -33,6 +33,14 @@
       display: inline-block;
       margin: 0;
     }
+
+    .preset h3 {
+      display: inline-block;
+    }
+
+    .preset .preset-select {
+      display: inline-block;
+    }
   </style>
 </head>
 
@@ -45,6 +53,21 @@
 
   <div class="subtractor">
     <h1>Subtractor</h1>
+
+    <div class="preset">
+    <h3>Preset</h3>
+    <select class="preset-select">
+      <option>Init</option>
+      <optgroup label="Synth">
+        <option value="super-saw">Super Saw</option>
+        <option value="big-funky-synth">Big Funky Synth</option>
+      </optgroup>
+      <optgroup label="Bass">
+        <option value="classic-reese">Classic Reese</option>
+        <option value="electro-fifth">Electro Fifth</option>
+      </optgroup>
+    </select>
+    </div>
     <section>
       <h2>Super</h2>
       <x-knob id="polyphony" name="Poly" value="1" min="1" max="10" oninput="subtractor.setPolyphony(value)"></x-knob>

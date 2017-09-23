@@ -1,0 +1,27 @@
+{
+  "name": "Super Saw",
+  "author": "Jon Sakas",
+  "description": "A huge saw... hit chords!"
+  "settings" : {
+    "super": {
+      "poly": 4,
+      "detune": 30,
+    },
+    "osc1": {
+      "waveform": "sawtooth",
+      "octave": 0,
+      "semi": 0,
+      "cent": 0
+    },
+    "osc1": {
+      "waveform": "sawtooth",
+      "octave": 0,
+      "semi": 0,
+      "cent": 0
+    },
+    "filter1": {
+      "type": "lowpass",
+      "frequency": 20050
+    }
+  }
+}
