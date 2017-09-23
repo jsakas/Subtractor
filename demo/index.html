@@ -46,11 +46,19 @@
   <div class="subtractor">
     <h1>Subtractor</h1>
     <section>
-      <h2>Oscillator</h2>
-      <x-knob id="octave" name="Octave" value="5" min="0" max="9" oninput="subtractor.setOctave(value)"></x-knob>
-      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.setWaveform(value)"></x-knob>
+      <h2>Poly</h2>
       <x-knob id="polyphony" name="Polyphony" value="1" min="1" max="10" oninput="subtractor.setPolyphony(value)"></x-knob>
       <x-knob id="detune" name="Detune" value="0" min="0" max="100" oninput="subtractor.setDetune(value)"></x-knob>
+    </section>
+    <section>
+      <h2>Osc 1</h2>
+      <x-knob id="octave" name="Octave" value="5" min="0" max="9" oninput="subtractor.osc1.setOctave(value)"></x-knob>
+      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.osc1.setWaveform(value)"></x-knob>      
+    </section>
+    <section>
+      <h2>Osc 2</h2>
+      <x-knob id="octave" name="Octave" value="5" min="0" max="9" oninput="subtractor.osc2.setOctave(value)"></x-knob>
+      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.osc2.setWaveform(value)"></x-knob>      
     </section>
     <section>
       <h2>Filter</h2>
