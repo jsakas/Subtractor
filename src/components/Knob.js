@@ -98,8 +98,12 @@ class Knob extends HTMLElement {
     const changeInterval = range / 100
 
     let newValue = oldValue - (changeInterval * yDiff)
-    if (newValue > _this.max) { newValue = _this.max }
-    if (newValue < _this.min) { newValue = _this.min }
+    if (newValue > _this.max) { 
+      newValue = _this.max 
+    }
+    if (newValue < _this.min) { 
+      newValue = _this.min 
+    }
 
     _this.knobInput.value = newValue
     _this.knobInput.dispatchEvent(new Event('input'))

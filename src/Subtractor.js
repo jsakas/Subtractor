@@ -37,8 +37,6 @@ class Subtractor {
     this.amplifier = this.context.createGain()
     this.filter1 = new Filter(this.context)
     this.lfo = this.context.createOscillator()
-    
-
 
     this.filter1.filter.type = this.selectedPreset[4]
     this.filter1.filter.frequency.value = this.selectedPreset[5]
@@ -196,4 +194,5 @@ class Subtractor {
   }
 }
 
+export { Subtractor }
 window.Subtractor = Subtractor

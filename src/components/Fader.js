@@ -1,4 +1,4 @@
-import { percentToPoint, pointToPercent } from '../utils/maths'
+import { pointToPercent } from '../utils/maths'
 import styles from '../sass/fader.scss';
 
 class Fader extends HTMLElement {
@@ -63,7 +63,6 @@ class Fader extends HTMLElement {
       this.faderInput.dispatchEvent(new Event('focus'))
       this.faderKnob.style.transition = 'none'
       const currentValue = parseInt(this.faderInput.value)
-      const currentTop = parseInt(this.faderKnob.style.top)
       const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentValue)
       document.addEventListener('mousemove', boundMousemove)
       document.addEventListener('mouseup', () => {
@@ -102,8 +101,12 @@ class Fader extends HTMLElement {
     const changeInterval = range / _this.rangeRect.height
 
     let newValue = oldValue - (changeInterval * yDiff)
-    if (newValue > _this.max) { newValue = _this.max }
-    if (newValue < _this.min) { newValue = _this.min }
+    if (newValue > _this.max) { 
+      newValue = _this.max 
+    }
+    if (newValue < _this.min) { 
+      newValue = _this.min 
+    }
 
     _this.faderInput.value = newValue
     _this.faderInput.dispatchEvent(new Event('input'))
