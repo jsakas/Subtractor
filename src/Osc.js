@@ -9,7 +9,6 @@ class Osc {
       this.octave = 0
       this.semi = 0
       this.detune = 0
-      this.freq = 0
     }
 
     // returns an array of oscillator nodes depending on the polyphony value
@@ -24,10 +23,9 @@ class Osc {
 
       // shift the base note based on oscillator octave and semitone settings
       const shiftedNote = note + (this.octave * 12) + this.semi
-      this.freq = getNoteFreq(shiftedNote)
       
       return Array(polyphony).fill()
-        .map((_,i) => note + (numIntervals - i) * interval)
+        .map((_,i) => shiftedNote + (numIntervals - i) * interval)
         .reverse()
         .map(getNoteFreq)
         .map(this.startFreqOscillator.bind(this))
