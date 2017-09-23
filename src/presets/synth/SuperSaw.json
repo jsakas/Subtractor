@@ -1,7 +1,7 @@
 {
   "name": "Super Saw",
   "author": "Jon Sakas",
-  "description": "A huge saw... hit chords!"
+  "description": "A huge saw... hit chords!",
   "settings" : {
     "super": {
       "poly": 4,

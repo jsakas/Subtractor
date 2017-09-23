@@ -12,6 +12,10 @@ class Subtractor {
     this.osc2       = new Osc(this.context, false)
     this.filter1    = new Filter(this.context)
 
+    this.name = ''
+    this.description = ''
+    this.author = ''
+
     // octave value is used only for the qwerty controls, this value should not be used
     // when MIDI is integrated. 
     this.octave = 4
@@ -120,6 +124,56 @@ class Subtractor {
     } catch (e) {
       console.log('Failed to start Oscilloscope')
     }
+  }
+
+  // take a preset object and load it into the synth
+  //
+  loadPrest() {
+
+  }
+
+  // take the current synth settings and return an object
+  //
+  getPreset() {
+    return {
+      "name": this.name,
+      "author": this.author,
+      "description": this.description,
+      "settings" : {
+        "master": {
+          gain: this.masterGain.gain
+        },
+        "super": {
+          "polyphony": this.polyphony,
+          "detune": this.detune,
+        },
+        "osc1": {
+          "enabled": this.osc1.getEnabled(),
+          "waveform": this.osc1.getWaveform(),
+          "octave": this.osc1.getOctave(),
+          "semi": this.osc1.getSemi(),
+          "cent": this.osc1.getDetune()
+        },
+        "osc2": {
+          "enabled": this.osc1.getEnabled(),
+          "waveform": this.osc1.getWaveform(),
+          "octave": this.osc1.getOctave(),
+          "semi": this.osc1.getSemi(),
+          "cent": this.osc1.getDetune()
+        },
+        "filter1": {
+          "type": this.filter1.getType(),
+          "frequency": this.filter1.getFreq(),
+          "q": this.filter1.getQ(),
+          "gain": this.filter1.getGain()
+        }
+      }
+    }
+  }
+
+  // take a preset object and save the file to your fs
+  savePreset() {
+
   }
 }
 
