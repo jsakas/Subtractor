@@ -205,9 +205,18 @@ class Subtractor {
     }
   }
 
-  // take a preset object and save the file to your fs
+  // Download the current preset as JSON file
+  //
   savePreset() {
+    const preset = this.getPreset()
+    const json = JSON.stringify(preset, null, ' ')
+    const blob = new Blob([json], { type: 'application/json' })
+    const objectURL = URL.createObjectURL(blob)
 
+    const a = document.createElement('a')
+    a.download = `${preset.name || 'Untitled'}.json`
+    a.href = objectURL
+    a.click()
   }
 }
 
