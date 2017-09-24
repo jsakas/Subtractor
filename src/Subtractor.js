@@ -7,6 +7,36 @@ import { Oscilloscope } from './Oscilloscope'
 import { keyboardKeys } from './utils/keyboard'
 
 
+class Observable {
+  constructor() {
+    self.observers = []
+  }
+
+  registerObserver(observer) {
+    self.observers.push(observer)
+  }
+
+  notifyObservers() {
+    self.observers.forEach(observer => {
+      observer.notify(this)
+    })
+  }
+}
+
+class Observer {
+  constructor(observable) {
+    observable.registerObserver(this)
+  }
+
+  notify(observable) {
+    console.log('Got update from', observable)
+  }
+}
+
+const subject = new Observable()
+const observer = new Observer(subject)
+subject.notifyObservers()
+
 class Subtractor {
   constructor() {
     this.context    = new AudioContext()
