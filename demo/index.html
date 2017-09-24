@@ -56,18 +56,16 @@
 
     <div class="preset">
     <h3>Preset</h3>
-    <select class="preset-select">
-      <option>Init</option>
+    <select class="preset-select" onchange="subtractor.setPresetFromSelect(this.value)">
+      <option value="init">Init</option>
       <optgroup label="Synth">
-        <option value="super-saw">Super Saw</option>
-        <option value="big-funky-synth">Big Funky Synth</option>
+        <option value="SuperSaw">Super Saw</option>
       </optgroup>
       <optgroup label="Bass">
-        <option value="classic-reese">Classic Reese</option>
-        <option value="electro-fifth">Electro Fifth</option>
+        <option value="Reese">Reese</option>
       </optgroup>
     </select>
-    <button onclick="console.log('preset', subtractor.getPreset())">Log Preset</button>
+    <button onclick="console.log('current preset', JSON.stringify(subtractor.getPreset()))">Log Preset</button>
     </div>
     <section>
       <h2>Super</h2>

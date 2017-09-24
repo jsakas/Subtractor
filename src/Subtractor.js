@@ -1,3 +1,5 @@
+import * as Presets from './presets'
+
 import { Osc } from './Osc'
 import { Filter } from './Filter'
 import { Oscilloscope } from './Oscilloscope'
@@ -126,10 +128,42 @@ class Subtractor {
     }
   }
 
+  setPresetFromSelect(preset) {
+    this.loadPreset(Presets[preset])
+  }
+
   // take a preset object and load it into the synth
   //
-  loadPrest() {
+  loadPreset(preset) {
+    // TODO - Need a way to safely `try` to set each thing
+    //
+    // globals
+    this.name = preset.name
+    this.author = preset.author
+    this.description = preset.description
+    this.masterGain.gain.value = preset.settings.master.gain
+    this.polyphony = preset.settings.super.polyphony
+    this.detune = preset.settings.super.detune
 
+    // osc 1
+    this.osc1.setEnabled(preset.settings.osc1.enabled)
+    this.osc1.setWaveform(preset.settings.osc1.waveform)
+    this.osc1.setOctave(preset.settings.osc1.octave)
+    this.osc1.setSemi(preset.settings.osc1.semi)
+    this.osc1.setDetune(preset.settings.osc1.cent)
+
+    // osc 2
+    this.osc2.setEnabled(preset.settings.osc2.enabled)
+    this.osc2.setWaveform(preset.settings.osc2.waveform)
+    this.osc2.setOctave(preset.settings.osc2.octave)
+    this.osc2.setSemi(preset.settings.osc2.semi)
+    this.osc2.setDetune(preset.settings.osc2.cent)
+
+    // filter 1
+    this.filter1.setType(preset.settings.filter1.type)
+    this.filter1.setFreq(preset.settings.filter1.frequency)
+    this.filter1.setQ(preset.settings.filter1.q)
+    this.filter1.setGain(preset.settings.filter1.gain)
   }
 
   // take the current synth settings and return an object
@@ -141,7 +175,7 @@ class Subtractor {
       "description": this.description,
       "settings" : {
         "master": {
-          gain: this.masterGain.gain
+          gain: this.masterGain.gain.value
         },
         "super": {
           "polyphony": this.polyphony,

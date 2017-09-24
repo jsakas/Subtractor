@@ -1,25 +1,25 @@
 {
-  "name": "Super Saw",
-  "author": "Jon Sakas",
+  "name": "",
+  "author": "",
   "description": "",
   "settings": {
     "master": {
-      "gain": 0.3
+      "gain": 0.5
     },
     "super": {
-      "polyphony": 3,
-      "detune": 0.31
+      "polyphony": 1,
+      "detune": 0
     },
     "osc1": {
       "enabled": 1,
-      "waveform": 3,
+      "waveform": 1,
       "octave": 0,
       "semi": 0,
       "cent": 0
     },
     "osc2": {
       "enabled": 1,
-      "waveform": 3,
+      "waveform": 1,
       "octave": 0,
       "semi": 0,
       "cent": 0

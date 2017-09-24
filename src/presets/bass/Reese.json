@@ -1,33 +1,33 @@
 {
-  "name": "Super Saw",
+  "name": "Reese",
   "author": "Jon Sakas",
   "description": "",
   "settings": {
     "master": {
-      "gain": 0.3
+      "gain": 0.12
     },
     "super": {
       "polyphony": 3,
-      "detune": 0.31
+      "detune": 0.46
     },
     "osc1": {
       "enabled": 1,
       "waveform": 3,
-      "octave": 0,
+      "octave": -2,
       "semi": 0,
       "cent": 0
     },
     "osc2": {
       "enabled": 1,
       "waveform": 3,
-      "octave": 0,
+      "octave": -2,
       "semi": 0,
       "cent": 0
     },
     "filter1": {
       "type": "lowpass",
-      "frequency": 22050,
-      "q": 0.10000000149011612,
+      "frequency": 450,
+      "q": 5.099999904632568,
       "gain": 0
     }
   }

@@ -20,6 +20,11 @@ class Filter {
     }
 
     setType(value) {
+      if (typeof value == 'string') {
+        this.filter.type == value
+        return
+      }
+
       const key = parseInt(value)
       if (this.filterTypes.has(key)) {
         this.filter.type = this.filterTypes.get(key)
