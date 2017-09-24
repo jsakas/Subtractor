@@ -1,6 +1,5 @@
 class Filter {
     constructor(context, type=1, freq=22050, gain=0) {
-      console.log('Filter constructed')
       this.context = context
       this.filter = context.createBiquadFilter()
 

@@ -1,6 +1,5 @@
 class Oscilloscope {
     constructor(audioContext, canvas) {
-      console.log('Oscilloscope constructed')
       this.audioContext = audioContext
       this.analyzer = audioContext.createAnalyser()
       this.canvas = canvas

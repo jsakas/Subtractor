@@ -1,4 +1,12 @@
 
+// take a note (keyboard key) and return the frequency
+//
+const getNoteFreq = function(note) {
+  // http://subsynth.sourceforge.net/midinote2freq.html
+  const tune = 440
+  return (tune / 32) * Math.pow(2, ((note - 9) / 12))
+}
+
 // take a range and a percent value, return a point on the range
 //
 const percentToPoint = function(min, max, percent) {
@@ -23,4 +31,4 @@ const pointToPercent = function(min, max, point) {
     : percent
 }
 
-export { percentToPoint, pointToPercent }
+export { getNoteFreq, percentToPoint, pointToPercent }

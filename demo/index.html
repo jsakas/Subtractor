@@ -46,11 +46,25 @@
   <div class="subtractor">
     <h1>Subtractor</h1>
     <section>
-      <h2>Oscillator</h2>
-      <x-knob id="octave" name="Octave" value="5" min="0" max="9" oninput="subtractor.setOctave(value)"></x-knob>
-      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.setWaveform(value)"></x-knob>
-      <x-knob id="polyphony" name="Polyphony" value="1" min="1" max="10" oninput="subtractor.setPolyphony(value)"></x-knob>
+      <h2>Super</h2>
+      <x-knob id="polyphony" name="Poly" value="1" min="1" max="10" oninput="subtractor.setPolyphony(value)"></x-knob>
       <x-knob id="detune" name="Detune" value="0" min="0" max="100" oninput="subtractor.setDetune(value)"></x-knob>
+    </section>
+    <section>
+      <h2>Osc 1</h2>
+      <x-knob id="enabled" name="On" value="1" min="0" max="1" oninput="subtractor.osc1.setEnabled(value)"></x-knob>
+      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.osc1.setWaveform(value)"></x-knob>      
+      <x-knob id="octave" name="Octave" value="0" min="-5" max="5" oninput="subtractor.osc1.setOctave(value)"></x-knob>
+      <x-knob id="semi" name="Semi" value="0" min="-12" max="12" oninput="subtractor.osc1.setSemi(value)"></x-knob>
+      <x-knob id="cent" name="Cent" value="0" min="0" max="100" oninput="subtractor.osc1.setDetune(value)"></x-knob>
+    </section>
+    <section>
+      <h2>Osc 2</h2>
+      <x-knob id="enabled" name="On" value="0" min="0" max="1" oninput="subtractor.osc2.setEnabled(value)"></x-knob>
+      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.osc2.setWaveform(value)"></x-knob> 
+      <x-knob id="octave" name="Octave" value="0" min="-5" max="5" oninput="subtractor.osc2.setOctave(value)"></x-knob>
+      <x-knob id="semi" name="Semi" value="7" min="-12" max="12" oninput="subtractor.osc2.setSemi(value)"></x-knob>
+      <x-knob id="cent" name="Cent" value="0" min="0" max="100" oninput="subtractor.osc2.setDetune(value)"></x-knob>
     </section>
     <section>
       <h2>Filter</h2>
@@ -61,7 +75,7 @@
     </section>
     <section>
       <h2>Master</h2>
-      <x-fader id="lfo-type" name="Gain" value="80" min="1" max="100" oninput="subtractor.setMasterGain(value)"></x-fader>
+      <x-fader id="lfo-type" name="Gain" value="50" min="1" max="100" oninput="subtractor.setMasterGain(value)"></x-fader>
     </section>
     <canvas id="oscilloscope" class="oscilloscope"></canvas>
   </div>
