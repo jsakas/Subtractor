@@ -205,9 +205,29 @@ class Subtractor {
     }
   }
 
+  // Trigger an upload dialog load the file contents as a preset
+  //
+  loadPresetFile() {
+    const fileReader = new FileReader()
+    fileReader.addEventListener('load', (e) => {
+      const fileContents = fileReader.result
+      const preset = JSON.parse(fileContents)
+      this.loadPreset(preset)
+    })
+
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'application/json'
+    input.addEventListener('change', (e) => {
+      fileReader.readAsText(input.files[0])
+    })
+
+    input.click()
+  }
+
   // Download the current preset as JSON file
   //
-  savePreset() {
+  savePresetFile() {
     const preset = this.getPreset()
     const json = JSON.stringify(preset, null, ' ')
     const blob = new Blob([json], { type: 'application/json' })
@@ -216,6 +236,7 @@ class Subtractor {
     const a = document.createElement('a')
     a.download = `${preset.name || 'Untitled'}.json`
     a.href = objectURL
+
     a.click()
   }
 }
