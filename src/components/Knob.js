@@ -49,10 +49,8 @@ class Knob extends HTMLElement {
     this.knobValue = this.shadow.getElementById('knob__value')
 
     this.knobRect = this.knobKnob.getBoundingClientRect()
-    // this.maxTop = this.rangeRect.height - this.knobRect.height 
 
     this.setupEvents()
-
   }
 
   setupEvents() {
