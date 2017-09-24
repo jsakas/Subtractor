@@ -114,7 +114,7 @@
     </section>
     <section>
       <h2>Master</h2>
-      <x-fader id="lfo-type" name="Gain" value="50" min="1" max="100" oninput="subtractor.setMasterGain(value)"></x-fader>
+      <x-fader id="master-gain" name="Gain" value="50" min="1" max="100" observe="subtractor" bind="gain"></x-fader>
     </section>
     <canvas id="oscilloscope" class="oscilloscope"></canvas>
   </div>

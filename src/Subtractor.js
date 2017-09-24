@@ -3,42 +3,14 @@ import * as Presets from './presets'
 import { Osc } from './Osc'
 import { Filter } from './Filter'
 import { Oscilloscope } from './Oscilloscope'
+import { Observable } from './Observe'
 
 import { keyboardKeys } from './utils/keyboard'
 
 
-class Observable {
+class Subtractor extends Observable {
   constructor() {
-    self.observers = []
-  }
-
-  registerObserver(observer) {
-    self.observers.push(observer)
-  }
-
-  notifyObservers() {
-    self.observers.forEach(observer => {
-      observer.notify(this)
-    })
-  }
-}
-
-class Observer {
-  constructor(observable) {
-    observable.registerObserver(this)
-  }
-
-  notify(observable) {
-    console.log('Got update from', observable)
-  }
-}
-
-const subject = new Observable()
-const observer = new Observer(subject)
-subject.notifyObservers()
-
-class Subtractor {
-  constructor() {
+    super()
     this.context    = new AudioContext()
     this.osc1       = new Osc(this.context, true)
     this.osc2       = new Osc(this.context, false)
@@ -61,34 +33,30 @@ class Subtractor {
     this.filter1.filter.connect(this.masterGain)
     this.masterGain.connect(this.context.destination)
 
-    // only start the oscilloscope once the DOM is ready
-    document.addEventListener('DOMContentLoaded', () => this.startOscilloscope())
-    
-    this.handleKeys()
-  }
-
-  setOctave(value) {
-    this.octave = value
-  }
-
-  setWaveform(value) {
-    this.waveform = this.intToWaveform(parseInt(value))
-  }
-
-  setPolyphony(value) {
-    this.polyphony = value
-  }
-
-  setDetune(value) {
-    this.detune = value / 100
+    // only perform certain tasks once the DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      this.startOscilloscope()
+      this.loadPreset(Presets.Init)
+      this.handleKeys()
+    })
   }
 
   set gain(value) {
     this.masterGain.gain.value = value * .01
+    this.notifyObservers()
   }
 
   get gain() {
     return this.masterGain.gain.value * 100
+  }
+
+  setPolyphony(value) {
+    this.polyphony = value
+    this.notifyObservers()
+  }
+
+  setDetune(value) {
+    this.detune = value / 100
   }
 
   handleKeys() {
@@ -293,6 +261,10 @@ class Subtractor {
     a.click()
   }
 }
+
+// const subtractor = new Subtractor()
+// const observer = new Observer(subtractor)
+// subtractor.notifyObservers()
 
 export { Subtractor }
 window.Subtractor = Subtractor
