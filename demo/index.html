@@ -73,13 +73,13 @@
         <select class="preset-select" onchange="subtractor.setPresetFromSelect(this.value)">
           <option value="Init">Init</option>
           <optgroup label="Synth">
-            <option value="SuperSaw">Super Saw</option>
+            <option value="SuperFunk">Super Funk</option>
           </optgroup>
           <optgroup label="Bass">
-            <option value="Reese">Reese</option>
+            <option value="ElectroFifth">Electro Fifth</option>
+            <option value="DarkBass">Dark bass</option>
           </optgroup>
         </select>
-        <button onclick="console.log('current preset', JSON.stringify(subtractor.getPreset()))">Log Preset</button>
         <button onclick="subtractor.loadPresetFile()">Load</button>
         <button onclick="subtractor.savePresetFile()">Save</button>
       </div>
@@ -102,7 +102,7 @@
       <x-knob id="enabled" name="On" value="0" min="0" max="1" oninput="subtractor.osc2.setEnabled(value)"></x-knob>
       <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.osc2.setWaveform(value)"></x-knob> 
       <x-knob id="octave" name="Octave" value="0" min="-5" max="5" oninput="subtractor.osc2.setOctave(value)"></x-knob>
-      <x-knob id="semi" name="Semi" value="7" min="-12" max="12" oninput="subtractor.osc2.setSemi(value)"></x-knob>
+      <x-knob id="semi" name="Semi" value="0" min="-12" max="12" oninput="subtractor.osc2.setSemi(value)"></x-knob>
       <x-knob id="cent" name="Cent" value="0" min="0" max="100" oninput="subtractor.osc2.setDetune(value)"></x-knob>
     </section>
     <section>

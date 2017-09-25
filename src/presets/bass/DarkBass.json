@@ -4,29 +4,29 @@
  "description": "",
  "settings": {
   "master": {
-   "gain": 0.5
+   "gain": 0.3100000023841858
   },
   "super": {
-   "polyphony": 1,
-   "detune": 0
+   "polyphony": 2,
+   "detune": 0.2
   },
   "osc1": {
    "enabled": 1,
-   "waveform": 3,
-   "octave": 0,
+   "waveform": 2,
+   "octave": -2,
    "semi": 0,
    "cent": 0
   },
   "osc2": {
-   "enabled": 0,
-   "waveform": 3,
-   "octave": 0,
+   "enabled": 1,
+   "waveform": 2,
+   "octave": -1,
    "semi": 0,
-   "cent": 0
+   "cent": 5
   },
   "filter1": {
    "type": "lowpass",
-   "frequency": 22050,
+   "frequency": 1553,
    "q": 0.10000000149011612,
    "gain": 0
   }

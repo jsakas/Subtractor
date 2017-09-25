@@ -1,5 +1,6 @@
 import Init from './Init'
-import SuperSaw from './synth/SuperSaw'
-import Reese from './bass/Reese'
+import SuperFunk from './synth/SuperFunk'
+import DarkBass from './bass/DarkBass'
+import ElectroFifth from './bass/ElectroFifth'
 
-export { Init, SuperSaw, Reese }
+export { Init, SuperFunk, DarkBass, ElectroFifth }

@@ -13,15 +13,15 @@
   "osc1": {
    "enabled": 1,
    "waveform": 3,
-   "octave": 0,
+   "octave": -2,
    "semi": 0,
    "cent": 0
   },
   "osc2": {
-   "enabled": 0,
+   "enabled": 1,
    "waveform": 3,
    "octave": 0,
-   "semi": 0,
+   "semi": 7,
    "cent": 0
   },
   "filter1": {
