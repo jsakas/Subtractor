@@ -18,6 +18,16 @@
       margin-top: 5px;
     }
 
+    .top {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      display:inline-block;
+      flex: auto;
+    }
+
     body {
       font-family: sans-serif;
       display: flex;
@@ -32,6 +42,10 @@
       background: rgb(232, 241, 224);
       display: inline-block;
       margin: 0;
+    }
+
+    .preset {
+      display: inline-block;
     }
 
     .preset h3 {
@@ -52,22 +66,23 @@
   </script>
 
   <div class="subtractor">
-    <h1>Subtractor</h1>
-
-    <div class="preset">
-    <h3>Preset</h3>
-    <select class="preset-select" onchange="subtractor.setPresetFromSelect(this.value)">
-      <option value="Init">Init</option>
-      <optgroup label="Synth">
-        <option value="SuperSaw">Super Saw</option>
-      </optgroup>
-      <optgroup label="Bass">
-        <option value="Reese">Reese</option>
-      </optgroup>
-    </select>
-    <button onclick="console.log('current preset', JSON.stringify(subtractor.getPreset()))">Log Preset</button>
-    <button onclick="subtractor.loadPresetFile()">Load</button>
-    <button onclick="subtractor.savePresetFile()">Save</button>
+    <div class="top">
+      <h1 class="logo">Subtractor</h1>
+      <div class="preset">
+        <h3>Preset</h3>
+        <select class="preset-select" onchange="subtractor.setPresetFromSelect(this.value)">
+          <option value="Init">Init</option>
+          <optgroup label="Synth">
+            <option value="SuperSaw">Super Saw</option>
+          </optgroup>
+          <optgroup label="Bass">
+            <option value="Reese">Reese</option>
+          </optgroup>
+        </select>
+        <button onclick="console.log('current preset', JSON.stringify(subtractor.getPreset()))">Log Preset</button>
+        <button onclick="subtractor.loadPresetFile()">Load</button>
+        <button onclick="subtractor.savePresetFile()">Save</button>
+      </div>
     </div>
     <section>
       <h2>Super</h2>
