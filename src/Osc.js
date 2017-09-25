@@ -60,23 +60,23 @@ class Osc {
       this.detune = value
     }
 
-    getEnabled(value) {
+    getEnabled() {
       return this.enabled
     }
 
-    getWaveform(value) {
+    getWaveform() {
       return waveformToInt(this.waveform)
     }
 
-    getOctave(value) {
+    getOctave() {
       return this.octave
     }
 
-    getSemi(value) {
+    getSemi() {
       return this.semi
     }
 
-    getDetune(value) {
+    getDetune() {
       return this.detune
     }
 }

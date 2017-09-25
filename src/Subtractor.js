@@ -135,7 +135,7 @@ class Subtractor {
   // take a preset object and load it into the synth
   //
   loadPreset(preset) {
-    // TODO - Need a way to safely `try` to set each thing
+    // todo - need a way to safely `try` to set each thing
     //
     // globals
     this.name = preset.name
@@ -170,46 +170,44 @@ class Subtractor {
   //
   getPreset() {
     return {
-      "name": this.name,
-      "author": this.author,
-      "description": this.description,
-      "settings" : {
-        "master": {
-          gain: this.masterGain.gain.value
+      'name': this.name,
+      'author': this.author,
+      'description': this.description,
+      'settings': { 
+        'master': { 'gain': this.masterGain.gain.value },
+        'super': {
+          'polyphony': this.polyphony,
+          'detune': this.detune,
         },
-        "super": {
-          "polyphony": this.polyphony,
-          "detune": this.detune,
+        'osc1': {
+          'enabled': this.osc1.getEnabled(),
+          'waveform': this.osc1.getWaveform(),
+          'octave': this.osc1.getOctave(),
+          'semi': this.osc1.getSemi(),
+          'cent': this.osc1.getDetune()
         },
-        "osc1": {
-          "enabled": this.osc1.getEnabled(),
-          "waveform": this.osc1.getWaveform(),
-          "octave": this.osc1.getOctave(),
-          "semi": this.osc1.getSemi(),
-          "cent": this.osc1.getDetune()
+        'osc2': {
+          'enabled': this.osc1.getEnabled(),
+          'waveform': this.osc1.getWaveform(),
+          'octave': this.osc1.getOctave(),
+          'semi': this.osc1.getSemi(),
+          'cent': this.osc1.getDetune()
         },
-        "osc2": {
-          "enabled": this.osc1.getEnabled(),
-          "waveform": this.osc1.getWaveform(),
-          "octave": this.osc1.getOctave(),
-          "semi": this.osc1.getSemi(),
-          "cent": this.osc1.getDetune()
-        },
-        "filter1": {
-          "type": this.filter1.getType(),
-          "frequency": this.filter1.getFreq(),
-          "q": this.filter1.getQ(),
-          "gain": this.filter1.getGain()
+        'filter1': {
+          'type': this.filter1.getType(),
+          'frequency': this.filter1.getFreq(),
+          'q': this.filter1.getQ(),
+          'gain': this.filter1.getGain()
         }
       }
     }
   }
 
-  // Trigger an upload dialog load the file contents as a preset
+  // trigger an upload dialog load the file contents as a preset
   //
   loadPresetFile() {
     const fileReader = new FileReader()
-    fileReader.addEventListener('load', (e) => {
+    fileReader.addEventListener('load', () => {
       const fileContents = fileReader.result
       const preset = JSON.parse(fileContents)
       this.loadPreset(preset)
@@ -218,19 +216,19 @@ class Subtractor {
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = 'application/json'
-    input.addEventListener('change', (e) => {
+    input.addEventListener('change', () => {
       fileReader.readAsText(input.files[0])
     })
 
     input.click()
   }
 
-  // Download the current preset as JSON file
+  // download the current preset as JSON file
   //
   savePresetFile() {
     const preset = this.getPreset()
     const json = JSON.stringify(preset, null, ' ')
-    const blob = new Blob([json], { type: 'application/json' })
+    const blob = new Blob([json], { 'type': 'application/json' })
     const objectURL = URL.createObjectURL(blob)
 
     const a = document.createElement('a')

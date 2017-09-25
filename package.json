@@ -7,6 +7,7 @@
     "start": "./node_modules/.bin/webpack --watch & ./node_modules/.bin/webpack-dev-server",
     "test": "./node_modules/.bin/jest --coverage",
     "lint": "./node_modules/.bin/eslint src tests",
+    "lint:fix": "./node_modules/.bin/eslint src tests --fix",
     "postinstall": "ln -sfv $PWD/hooks/* $PWD/.git/hooks/ || exit 0"
   },
   "author": "",
