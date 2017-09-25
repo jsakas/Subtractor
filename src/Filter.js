@@ -20,11 +20,12 @@ class Filter {
     }
 
     setType(value) {
-      const key = parseInt(value)
-      if (this.filterTypes.has(key)) {
-        this.filter.type = this.filterTypes.get(key)
+      if (typeof value == 'string') {
+        this.filter.type = value
+      } else if (this.filterTypes.has(parseInt(value))) {
+        this.filter.type = this.filterTypes.get(parseInt(value))
       } else {
-        throw Error(`Filter key ${key} not recognized`)
+        throw Error(`Filter value ${value} not recognized`)
       }
     }
 

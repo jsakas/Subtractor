@@ -1,0 +1,34 @@
+{
+ "name": "",
+ "author": "",
+ "description": "",
+ "settings": {
+  "master": {
+   "gain": 20
+  },
+  "super": {
+   "polyphony": 4,
+   "detune": 0.17
+  },
+  "osc1": {
+   "enabled": 1,
+   "waveform": 3,
+   "octave": 0,
+   "semi": 0,
+   "cent": 0
+  },
+  "osc2": {
+   "enabled": 1,
+   "waveform": 3,
+   "octave": 2,
+   "semi": 0,
+   "cent": 32
+  },
+  "filter1": {
+   "type": "lowpass",
+   "frequency": 22050,
+   "q": 0,
+   "gain": 0
+  }
+ }
+}

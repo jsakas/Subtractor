@@ -37,4 +37,142 @@ describe('Subtractor', () => {
       expect(subtractor.startPolyNote.mock.calls[0]).toEqual([60])
     })
   })
+
+  describe('loadPreset', () => {
+    // we anticipate this will cause a bunch of warnings, so we disable
+    // console.warn by mocking and then restore after the test
+    beforeEach(() => jest.spyOn(console, 'warn').mockImplementation())
+    afterEach(() => console.warn.mockRestore())
+
+    test('can set a preset that is missing values', () => {
+
+      const mockPreset = { 'description': 'This is a preset with no values :(' }
+      const subtractor = new Subtractor()
+
+      subtractor.loadPreset(mockPreset)
+    })
+  })
+
+  describe('loadPreset', () => {
+    const mockPreset = {
+      'name': 'Rando Syntho',
+      'author': 'Jon Sakas',
+      'description': 'A bunch of random non-default values',
+      'settings': {
+        'master': { 
+          'gain': 75,
+          'polyphony': 3,
+          'detune': 1
+        },
+        'osc1': {
+          'enabled': 0,
+          'waveform': 3,
+          'octave': -2,
+          'semi': 3,
+          'cent': 27
+        },
+        'osc2': {
+          'enabled': 1,
+          'waveform': 2,
+          'octave': -1,
+          'semi': 5,
+          'cent': 23
+        },
+        'filter1': {
+          'type': 2,
+          'frequency': 10148,
+          'q': 1.5,
+          'gain': -3
+        }
+      }
+    }
+    const subtractor = new Subtractor()
+    subtractor.loadPreset(mockPreset)
+    
+    // meta
+    test('sets name', () => {
+      expect(subtractor.name).toBe('Rando Syntho')
+    })
+
+    test('sets author', () => {
+      expect(subtractor.author).toBe('Jon Sakas')
+    })
+
+    test('sets description', () => {
+      expect(subtractor.description).toBe('A bunch of random non-default values')
+    })
+
+    // master
+    test('sets master gain', () => {
+      expect(subtractor.gain).toBe(75)
+    })
+
+    // super
+    test('sets polyphony', () => {
+      expect(subtractor.polyphony).toBe(3)
+    })
+
+    test('sets detune', () => {
+      expect(subtractor.detune).toBe(1)
+    })
+
+    // osc 1
+    test('sets osc1->enabled', () => {
+      expect(subtractor.osc1.enabled).toBe(0)
+    })
+
+    test('sets osc1->waveform', () => {
+      expect(subtractor.osc1.waveform).toBe('sawtooth')
+    })
+
+    test('sets osc1->octave', () => {
+      expect(subtractor.osc1.octave).toBe(-2)
+    })
+
+    test('sets osc1->semi', () => {
+      expect(subtractor.osc1.semi).toBe(3)
+    })
+
+    test('sets osc1->detune', () => {
+      expect(subtractor.osc1.detune).toBe(27)
+    })
+
+    // osc 2
+    test('sets osc2->enabled', () => {
+      expect(subtractor.osc2.enabled).toBe(1)
+    })
+
+    test('sets osc2->waveform', () => {
+      expect(subtractor.osc2.waveform).toBe('square')
+    })
+
+    test('sets osc2->octave', () => {
+      expect(subtractor.osc2.octave).toBe(-1)
+    })
+
+    test('sets osc2->semi', () => {
+      expect(subtractor.osc2.semi).toBe(5)
+    })
+
+    test('sets osc2->detune', () => {
+      expect(subtractor.osc2.detune).toBe(23)
+    })
+
+    // filter
+    test('sets filter1->type', () => {
+      expect(subtractor.filter1.filter.type).toBe('highpass')
+    })
+
+    test('sets filter1->frequency', () => {
+      expect(subtractor.filter1.filter.frequency.value).toBe(10148)
+    })
+
+    test('sets filter1->Q', () => {
+      expect(subtractor.filter1.filter.Q.value).toBe(0.15)
+    })
+
+    test('sets filter1->gain', () => {
+      expect(subtractor.filter1.filter.gain.value).toBe(-3)
+    })
+  })
 })

@@ -23,6 +23,9 @@ module.exports =
             ]
             loader: 'babel-loader'
         ,
+            test: /\.json$/
+            loader: 'json-loader'
+        ,
             test: /\.scss$/,
             use: [
                 loader: "css-loader" # translates CSS into CommonJS

@@ -1,5 +1,5 @@
 import { getNoteFreq } from './utils/maths'
-import { intToWaveform } from './utils/helpers'
+import { intToWaveform, waveformToInt } from './utils/helpers'
 
 class Osc {
     constructor(audioContext, enabled = true) {
@@ -58,6 +58,26 @@ class Osc {
 
     setDetune(value) {
       this.detune = value
+    }
+
+    getEnabled() {
+      return this.enabled
+    }
+
+    getWaveform() {
+      return waveformToInt(this.waveform)
+    }
+
+    getOctave() {
+      return this.octave
+    }
+
+    getSemi() {
+      return this.semi
+    }
+
+    getDetune() {
+      return this.detune
     }
 }
 
