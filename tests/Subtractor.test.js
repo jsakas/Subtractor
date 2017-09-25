@@ -60,7 +60,7 @@ describe('Subtractor', () => {
       'description': 'A bunch of random non-default values',
       'settings': {
         'master': { 
-          'gain': 0.75,
+          'gain': 75,
           'polyphony': 3,
           'detune': 1
         },
@@ -102,10 +102,10 @@ describe('Subtractor', () => {
       expect(subtractor.description).toBe('A bunch of random non-default values')
     })
 
-    // // master
-    // test('sets master gain', () => {
-    //   expect(subtractor.masterGain.gain.value).toBe(0.75)
-    // })
+    // master
+    test('sets master gain', () => {
+      expect(subtractor.gain).toBe(75)
+    })
 
     // super
     test('sets polyphony', () => {

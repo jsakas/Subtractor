@@ -53,8 +53,12 @@ class Subtractor {
     this.detune = value / 100
   }
 
-  setMasterGain(value) {
+  set gain(value) {
     this.masterGain.gain.value = value * .01
+  }
+
+  get gain() {
+    return this.masterGain.gain.value * 100
   }
 
   handleKeys() {
@@ -150,7 +154,7 @@ class Subtractor {
       ['name', 'preset.name'],
       ['author', 'preset.author'],
       ['description', 'preset.description'],
-      // ['masterGain'.gain.value, 'preset.settings.master.gain'],
+      ['gain', 'preset.settings.master.gain'],
       ['polyphony', 'preset.settings.master.polyphony'],
       ['detune', 'preset.settings.master.detune'],
     ]
@@ -195,7 +199,7 @@ class Subtractor {
       'author': this.author,
       'description': this.description,
       'settings': { 
-        'master': { 'gain': this.masterGain.gain.value },
+        'master': { 'gain': this.gain },
         'super': {
           'polyphony': this.polyphony,
           'detune': this.detune,
