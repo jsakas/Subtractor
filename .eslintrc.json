@@ -17,7 +17,8 @@
         "describe": true,
         "test": true,
         "expect": true,
-        "beforeEach": true
+        "beforeEach": true,
+        "afterEach": true
     },
     "rules": {
         "accessor-pairs": "error",
@@ -141,7 +142,7 @@
         "no-else-return": "error",
         "no-empty-function": "error",
         "no-eq-null": "error",
-        "no-eval": "error",
+        "no-eval": "off",
         "no-extend-native": "error",
         "no-extra-bind": "error",
         "no-extra-label": "error",
@@ -205,6 +206,7 @@
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "error",
         "no-unused-expressions": "error",
+        "no-unused-vars": ["error", { "args": "none" }],
         "no-use-before-define": "error",
         "no-useless-call": "error",
         "no-useless-computed-key": "error",
@@ -236,7 +238,7 @@
         "prefer-destructuring": "off",
         "prefer-numeric-literals": "error",
         "prefer-promise-reject-errors": "error",
-        "prefer-reflect": "error",
+        "prefer-reflect": "off",
         "prefer-rest-params": "error",
         "prefer-spread": "error",
         "prefer-template": "error",

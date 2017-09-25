@@ -4,9 +4,7 @@
   "description": "",
   "settings": {
     "master": {
-      "gain": 0.3
-    },
-    "super": {
+      "gain": 0.3,
       "polyphony": 3,
       "detune": 0.31
     },

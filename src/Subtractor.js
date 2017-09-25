@@ -134,36 +134,57 @@ class Subtractor {
 
   // take a preset object and load it into the synth
   //
+  // in order to make this safe we define maps of how to set each preset 
+  // from the supplied preset object.
+  //
+  // there is a map of class attributes, e.g. `this.name`,
+  // and a map of functions to call, e.g. `this.osc1.setEnabled()`
+  //
+  // this is done to provide a safe mapping, where we can loop through
+  // and attempt to set each value without failing the entire operation
+  // with a global try block. If a preset value is missing, the outputs 
+  // a warning message.
+  //
   loadPreset(preset) {
-    // todo - need a way to safely `try` to set each thing
-    //
-    // globals
-    this.name = preset.name
-    this.author = preset.author
-    this.description = preset.description
-    this.masterGain.gain.value = preset.settings.master.gain
-    this.polyphony = preset.settings.super.polyphony
-    this.detune = preset.settings.super.detune
+    const presetValueMap = [
+      ['name', 'preset.name'],
+      ['author', 'preset.author'],
+      ['description', 'preset.description'],
+      // ['masterGain'.gain.value, 'preset.settings.master.gain'],
+      ['polyphony', 'preset.settings.master.polyphony'],
+      ['detune', 'preset.settings.master.detune'],
+    ]
+    const presetFunctionMap = [
+      [this.osc1.setEnabled, this.osc1, 'preset.settings.osc1.enabled'],
+      [this.osc1.setWaveform, this.osc1, 'preset.settings.osc1.waveform'],
+      [this.osc1.setOctave, this.osc1, 'preset.settings.osc1.octave'],
+      [this.osc1.setSemi, this.osc1, 'preset.settings.osc1.semi'],
+      [this.osc1.setDetune, this.osc1, 'preset.settings.osc1.cent'],
+      [this.osc2.setEnabled, this.osc2, 'preset.settings.osc2.enabled'],
+      [this.osc2.setWaveform, this.osc2, 'preset.settings.osc2.waveform'],
+      [this.osc2.setOctave, this.osc2, 'preset.settings.osc2.octave'],
+      [this.osc2.setSemi, this.osc2, 'preset.settings.osc2.semi'],
+      [this.osc2.setDetune, this.osc2, 'preset.settings.osc2.cent'],
+      [this.filter1.setType, this.filter1, 'preset.settings.filter1.type'],
+      [this.filter1.setFreq, this.filter1, 'preset.settings.filter1.frequency'],
+      [this.filter1.setQ, this.filter1, 'preset.settings.filter1.q'],
+      [this.filter1.setGain, this.filter1, 'preset.settings.filter1.gain'],
+    ]
 
-    // osc 1
-    this.osc1.setEnabled(preset.settings.osc1.enabled)
-    this.osc1.setWaveform(preset.settings.osc1.waveform)
-    this.osc1.setOctave(preset.settings.osc1.octave)
-    this.osc1.setSemi(preset.settings.osc1.semi)
-    this.osc1.setDetune(preset.settings.osc1.cent)
-
-    // osc 2
-    this.osc2.setEnabled(preset.settings.osc2.enabled)
-    this.osc2.setWaveform(preset.settings.osc2.waveform)
-    this.osc2.setOctave(preset.settings.osc2.octave)
-    this.osc2.setSemi(preset.settings.osc2.semi)
-    this.osc2.setDetune(preset.settings.osc2.cent)
-
-    // filter 1
-    this.filter1.setType(preset.settings.filter1.type)
-    this.filter1.setFreq(preset.settings.filter1.frequency)
-    this.filter1.setQ(preset.settings.filter1.q)
-    this.filter1.setGain(preset.settings.filter1.gain)
+    presetValueMap.forEach((value) => {
+      try {
+        this[value[0]] = eval(value[1])
+      } catch (e) {
+        console.warn(`Warning: ${value[1]} is missing from preset`)
+      }
+    })
+    presetFunctionMap.forEach((value) => {
+      try {
+        value[0].call(value[1], eval(value[2]))
+      } catch (e) {
+        console.warn(`Warning: ${value[2]} is missing from preset`)
+      }
+    })
   }
 
   // take the current synth settings and return an object
@@ -187,11 +208,11 @@ class Subtractor {
           'cent': this.osc1.getDetune()
         },
         'osc2': {
-          'enabled': this.osc1.getEnabled(),
-          'waveform': this.osc1.getWaveform(),
-          'octave': this.osc1.getOctave(),
-          'semi': this.osc1.getSemi(),
-          'cent': this.osc1.getDetune()
+          'enabled': this.osc2.getEnabled(),
+          'waveform': this.osc2.getWaveform(),
+          'octave': this.osc2.getOctave(),
+          'semi': this.osc2.getSemi(),
+          'cent': this.osc2.getDetune()
         },
         'filter1': {
           'type': this.filter1.getType(),

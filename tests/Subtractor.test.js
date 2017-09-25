@@ -38,14 +38,29 @@ describe('Subtractor', () => {
     })
   })
 
-  describe('loadPrest', () => {
+  describe('loadPreset', () => {
+    // we anticipate this will cause a bunch of warnings, so we disable
+    // console.warn by mocking and then restore after the test
+    beforeEach(() => jest.spyOn(console, 'warn').mockImplementation())
+    afterEach(() => console.warn.mockRestore())
+
+    test('can set a preset that is missing values', () => {
+
+      const mockPreset = { 'description': 'This is a preset with no values :(' }
+      const subtractor = new Subtractor()
+
+      subtractor.loadPreset(mockPreset)
+    })
+  })
+
+  describe('loadPreset', () => {
     const mockPreset = {
       'name': 'Rando Syntho',
       'author': 'Jon Sakas',
       'description': 'A bunch of random non-default values',
       'settings': {
-        'master': { 'gain': 0.75 },
-        'super': {
+        'master': { 
+          'gain': 0.75,
           'polyphony': 3,
           'detune': 1
         },
@@ -87,10 +102,10 @@ describe('Subtractor', () => {
       expect(subtractor.description).toBe('A bunch of random non-default values')
     })
 
-    // master
-    test('sets master gain', () => {
-      expect(subtractor.masterGain.gain.value).toBe(0.75)
-    })
+    // // master
+    // test('sets master gain', () => {
+    //   expect(subtractor.masterGain.gain.value).toBe(0.75)
+    // })
 
     // super
     test('sets polyphony', () => {
