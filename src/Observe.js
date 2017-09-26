@@ -8,7 +8,7 @@ class Observable {
   }
 
   notifyObservers() {
-    self.observers.forEach(observer => {
+    self.observers.forEach((observer) => {
       observer.notify(this)
     })
   }

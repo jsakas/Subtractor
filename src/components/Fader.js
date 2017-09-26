@@ -57,7 +57,6 @@ class Fader extends HTMLElement {
     this.maxTop = this.rangeRect.height - this.knobRect.height 
 
     this.setupEvents()
-
   }
 
   setupEvents() {

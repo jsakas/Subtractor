@@ -2,17 +2,19 @@ import { percentToPoint, pointToPercent } from '../utils/maths'
 import styles from '../sass/knob.scss';
 
 class Knob extends HTMLElement {
-  static get observedAttributes() {
-    return ['id', 'name', 'min', 'max', 'value',]
-  }
-
   connectedCallback() {
+    // if observable and bind attributes are preset, register this element as an observer
+    this.observable = eval(this.getAttribute('observe'))
+    this.bind = this.getAttribute('bind')
+    if (this.observable && this.bind) {
+      this.observable.registerObserver(this)
+    }
+
     this.id = this.getAttribute('id')
     this.name = this.getAttribute('name')
     this.min = this.getAttribute('min')
     this.max = this.getAttribute('max')
     this.value = this.getAttribute('value')
-    this.oninput = new Function('value', this.getAttribute('oninput'))
     this.template = `
       <label for="knob__input" class="knob" id="knob">
         <input class="knob__input" id="knob__input" type="range" 
@@ -68,26 +70,26 @@ class Knob extends HTMLElement {
 
     this.knobInput.addEventListener('input', (e) => {
       const inputValue = parseInt(e.target.value)
-      const inputMax = parseInt(e.target.max)
-      const inputMin = parseInt(e.target.min) 
-      
-      const percent = pointToPercent(inputMin, inputMax, inputValue)
-      const degree = percentToPoint(-150, 150, percent)
-
-      this.knobKnob.style.transform = `rotateZ(${parseInt(degree)}deg)`
-      this.knobValue.innerText = inputValue
-
-      // call the oninput function passed in as an HTML attribute
-      this.oninput(parseInt(inputValue))
+      this.setRotation(inputValue)
+      this.knobValue.innerText = parseInt(inputValue)
+      this.observable[this.bind] = parseInt(inputValue)
     })
+  }
 
-    this.knobInput.addEventListener('change', (e) => {
-      const inputValue = parseInt(e.target.value)
-      this.knobValue.innerText = inputValue
-    })
+  notify(observable) {
+    this.knobInput.value = this.observable[this.bind]
+    this.knobValue.innerText = parseInt(this.observable[this.bind])
+    this.setRotation(this.observable[this.bind])
+  }
 
-    // trigger input event so `top` style is set in DOM
-    this.knobInput.dispatchEvent(new Event('input'))
+  setRotation(inputValue) {
+    const inputMax = parseInt(this.knobInput.max)
+    const inputMin = parseInt(this.knobInput.min)
+
+    const percent = pointToPercent(inputMin, inputMax, inputValue)
+    const degree = percentToPoint(-150, 150, percent)
+
+    this.knobKnob.style.transform = `rotateZ(${parseInt(degree)}deg)`
   }
 
   mousemove (_this, x, y, oldValue, e) {

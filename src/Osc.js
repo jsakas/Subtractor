@@ -1,14 +1,16 @@
 import { getNoteFreq } from './utils/maths'
 import { intToWaveform, waveformToInt } from './utils/helpers'
+import { Observable } from './Observe'
 
-class Osc {
+class Osc extends Observable {
     constructor(audioContext, enabled = true) {
+      super()
       this.audioContext = audioContext
-      this.enabled = enabled
-      this.waveform = 'sine'
-      this.octave = 0
-      this.semi = 0
-      this.detune = 0
+      this._enabled = enabled
+      this._waveform = 'sine'
+      this._octave = 0
+      this._semi = 0
+      this._detune = 0
     }
 
     // returns an array of oscillator nodes depending on the polyphony value
@@ -22,7 +24,7 @@ class Osc {
         // ternary gaurds interval being Infinity
 
       // shift the base note based on oscillator octave and semitone settings
-      const shiftedNote = note + (this.octave * 12) + this.semi
+      const shiftedNote = note + (this._octave * 12) + this._semi
       
       return Array(polyphony).fill()
         .map((_,i) => shiftedNote + (numIntervals - i) * interval)
@@ -31,53 +33,63 @@ class Osc {
         .map(this.startFreqOscillator.bind(this))
     }
 
-    startFreqOscillator(freq) {
+    startFreqOscillator(f) {
       const osc = this.audioContext.createOscillator()
-      osc.type = this.waveform
-      osc.frequency.value = freq
-      osc.detune.value = this.detune
+      osc.type = this._waveform
+      osc.frequency.value = f
+      osc.detune.value = this._detune
       osc.start()
       return osc
     }
 
-    setEnabled(value) {
-      this.enabled = value
+    set enabled(value) {
+      this._enabled = value
+      this.notifyObservers()
     }
 
-    setWaveform(value) {
-      this.waveform = intToWaveform(value)
+    get enabled() {
+      return this._enabled
     }
 
-    setOctave(value) {
-      this.octave = value
+    set waveform(value) {
+      if (typeof value == 'number') {
+        this._waveform = intToWaveform(value)
+      } else {
+        this._waveform = value
+      }
+      
+      this.notifyObservers()
     }
 
-    setSemi(value) {
-      this.semi = value
+    get waveform() {
+      return waveformToInt(this._waveform)
     }
 
-    setDetune(value) {
-      this.detune = value
+    set octave(value) {
+      this._octave = value
+      this.notifyObservers()
     }
 
-    getEnabled() {
-      return this.enabled
+    get octave() {
+      return this._octave
     }
 
-    getWaveform() {
-      return waveformToInt(this.waveform)
+    set semi(value) {
+      this._semi = value
+      this.notifyObservers()
     }
 
-    getOctave() {
-      return this.octave
+    get semi() {
+      return this._semi
     }
 
-    getSemi() {
-      return this.semi
+    set detune(value) {
+      this._detune = value
+      this.notifyObservers()
     }
 
-    getDetune() {
-      return this.detune
+    get detune() {
+      return this._detune
     }
 }
 

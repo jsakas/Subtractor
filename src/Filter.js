@@ -1,72 +1,52 @@
-class Filter {
-    constructor(context, type=1, freq=22050, gain=0) {
+import { intToFilter, filterToInt } from './utils/helpers'
+import { Observable } from './Observe'
+
+class Filter extends Observable {
+    constructor(context) {
+      super()
       this.context = context
       this.filter = context.createBiquadFilter()
-
-      this.filterTypes = new Map([
-        [1, 'lowpass'],
-        [2, 'highpass'],
-        [3, 'bandpass'],
-        [4, 'lowshelf'],
-        [5, 'highshelf'],
-        [6, 'peaking'],
-        [7, 'notch'],
-        [8, 'allpass']
-      ])
-
-      this.setType(type)
-      this.setFreq(freq)
-      this.setGain(gain)
+      this.freq = 22050
+      this.type = 'lowpass'
     }
 
-    setType(value) {
+    set type(value) {
       if (typeof value == 'string') {
         this.filter.type = value
-      } else if (this.filterTypes.has(parseInt(value))) {
-        this.filter.type = this.filterTypes.get(parseInt(value))
-      } else {
-        throw Error(`Filter value ${value} not recognized`)
+      } else if (typeof value == 'number') {
+        this.filter.type = intToFilter(value)
       }
+      this.notifyObservers()
     }
 
-    setFreq(value) {
+    get type() {
+      return filterToInt(this.filter.type)
+    }
+
+    set freq(value) {
       this.filter.frequency.value = value
+      this.notifyObservers()
     }
 
-    setQ(value) {
-      this.filter.Q.value = value / 10
-    }
-
-    setGain(value) {
-      this.filter.gain.value = value
-    }
-
-    getType() {
-      return this.filter.type
-    }
-
-    getTypeInput() {
-      for (const [key, value] of this.filterTypes) {
-        if (value === this.getType()) {
-          return key
-        }
-      }
-      return 0
-    }
-
-    getFreq() {
+    get freq() {
       return this.filter.frequency.value
     }
 
-    getQ() {
+    set q(value) {
+      this.filter.Q.value = value
+      this.notifyObservers()
+    }
+
+    get q() {
       return this.filter.Q.value
     }
 
-    getQInput() {
-      return this.getQ() * 10
+    set gain(value) {
+      this.filter.gain.value = value
+      this.notifyObservers()
     }
 
-    getGain() {
+    get gain() {
       return this.filter.gain.value
     }
 }
