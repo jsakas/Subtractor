@@ -1,34 +1,30 @@
 {
- "name": "",
- "author": "",
- "description": "",
- "settings": {
+  "name": "Super Funk",
+  "author": "Jon Sakas",
+  "description": "Play chords!",
   "master": {
-   "gain": 20
-  },
-  "super": {
-   "polyphony": 4,
-   "detune": 0.17
+    "gain": 20,
+    "polyphony": 4,
+    "detune": 0.17
   },
   "osc1": {
-   "enabled": 1,
-   "waveform": 3,
-   "octave": 0,
-   "semi": 0,
-   "cent": 0
+    "enabled": 1,
+    "waveform": 3,
+    "octave": 0,
+    "semi": 0,
+    "detune": 0
   },
   "osc2": {
-   "enabled": 1,
-   "waveform": 3,
-   "octave": 2,
-   "semi": 0,
-   "cent": 32
+    "enabled": 1,
+    "waveform": 3,
+    "octave": 2,
+    "semi": 0,
+    "detune": 32
   },
   "filter1": {
-   "type": "lowpass",
-   "frequency": 22050,
-   "q": 0,
-   "gain": 0
+    "type": 1,
+    "freq": 18010,
+    "q": 0,
+    "gain": 0
   }
- }
 }

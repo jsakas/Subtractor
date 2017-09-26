@@ -1,34 +1,30 @@
 {
- "name": "",
- "author": "",
- "description": "",
- "settings": {
+  "name": "Dark Bass",
+  "author": "Jon Sakas",
+  "description": "Not quite a reese but getting there",
   "master": {
-   "gain": 30
-  },
-  "super": {
-   "polyphony": 2,
-   "detune": 0.2
+    "gain": 30,
+    "polyphony": 2,
+    "detune": 0.2
   },
   "osc1": {
-   "enabled": 1,
-   "waveform": 2,
-   "octave": -2,
-   "semi": 0,
-   "cent": 0
+    "enabled": 1,
+    "waveform": 2,
+    "octave": -2,
+    "semi": 0,
+    "detune": 0
   },
   "osc2": {
-   "enabled": 1,
-   "waveform": 2,
-   "octave": -1,
-   "semi": 0,
-   "cent": 5
+    "enabled": 1,
+    "waveform": 2,
+    "octave": -1,
+    "semi": 0,
+    "detune": 5
   },
   "filter1": {
-   "type": "lowpass",
-   "frequency": 1553,
-   "q": 0.10000000149011612,
-   "gain": 0
+    "type": 1,
+    "freq": 2000,
+    "q": 0.10,
+    "gain": 0
   }
- }
 }

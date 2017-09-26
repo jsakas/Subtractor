@@ -5,18 +5,18 @@ import { Subtractor } from '../src/Subtractor'
 describe('Subtractor', () => {
   describe('qwerty keyboard', () => {
 
-    test('key "a" triggers note 39 when octave is 4', () => {
+    test('key "a" triggers note 36 when octave is 4', () => {
       const subtractor = new Subtractor()
       subtractor.startPolyNote = jest.fn()
-      subtractor.setOctave(3)
+      subtractor.octave = 3
       window.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'a' }))
       expect(subtractor.startPolyNote.mock.calls[0]).toEqual([36])
     })
 
-     test('key "k" triggers note 39 when octave is 4', () => {
+     test('key "k" triggers note 36 when octave is 4', () => {
       const subtractor = new Subtractor()
       subtractor.startPolyNote = jest.fn()
-      subtractor.setOctave(3)
+      subtractor.octave = 3
       window.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'k' }))
       expect(subtractor.startPolyNote.mock.calls[0]).toEqual([48])
     })
@@ -24,7 +24,7 @@ describe('Subtractor', () => {
     test('key "a" triggers note 48 when octave is 4', () => {
       const subtractor = new Subtractor()
       subtractor.startPolyNote = jest.fn()
-      subtractor.setOctave(4)
+      subtractor.octave = 4
       window.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'a' }))
       expect(subtractor.startPolyNote.mock.calls[0]).toEqual([48])
     })
@@ -32,20 +32,14 @@ describe('Subtractor', () => {
      test('key "k" triggers note 60 when octave is 4', () => {
       const subtractor = new Subtractor()
       subtractor.startPolyNote = jest.fn()
-      subtractor.setOctave(4)
+      subtractor.octave = 4
       window.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'k' }))
       expect(subtractor.startPolyNote.mock.calls[0]).toEqual([60])
     })
   })
 
   describe('loadPreset', () => {
-    // we anticipate this will cause a bunch of warnings, so we disable
-    // console.warn by mocking and then restore after the test
-    beforeEach(() => jest.spyOn(console, 'warn').mockImplementation())
-    afterEach(() => console.warn.mockRestore())
-
     test('can set a preset that is missing values', () => {
-
       const mockPreset = { 'description': 'This is a preset with no values :(' }
       const subtractor = new Subtractor()
 
@@ -58,32 +52,30 @@ describe('Subtractor', () => {
       'name': 'Rando Syntho',
       'author': 'Jon Sakas',
       'description': 'A bunch of random non-default values',
-      'settings': {
-        'master': { 
-          'gain': 75,
-          'polyphony': 3,
-          'detune': 1
-        },
-        'osc1': {
-          'enabled': 0,
-          'waveform': 3,
-          'octave': -2,
-          'semi': 3,
-          'cent': 27
-        },
-        'osc2': {
-          'enabled': 1,
-          'waveform': 2,
-          'octave': -1,
-          'semi': 5,
-          'cent': 23
-        },
-        'filter1': {
-          'type': 2,
-          'frequency': 10148,
-          'q': 1.5,
-          'gain': -3
-        }
+      'master': { 
+        'gain': 75,
+        'polyphony': 3,
+        'detune': 1
+      },
+      'osc1': {
+        'enabled': 0,
+        'waveform': 3,
+        'octave': -2,
+        'semi': 3,
+        'detune': 27
+      },
+      'osc2': {
+        'enabled': 1,
+        'waveform': 2,
+        'octave': -1,
+        'semi': 5,
+        'detune': 23
+      },
+      'filter1': {
+        'type': 2,
+        'freq': 10148,
+        'q': 0.15,
+        'gain': -3
       }
     }
     const subtractor = new Subtractor()
@@ -122,7 +114,7 @@ describe('Subtractor', () => {
     })
 
     test('sets osc1->waveform', () => {
-      expect(subtractor.osc1.waveform).toBe('sawtooth')
+      expect(subtractor.osc1.waveform).toBe(3)
     })
 
     test('sets osc1->octave', () => {
@@ -143,7 +135,7 @@ describe('Subtractor', () => {
     })
 
     test('sets osc2->waveform', () => {
-      expect(subtractor.osc2.waveform).toBe('square')
+      expect(subtractor.osc2.waveform).toBe(2)
     })
 
     test('sets osc2->octave', () => {

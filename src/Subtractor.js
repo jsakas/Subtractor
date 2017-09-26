@@ -3,12 +3,14 @@ import * as Presets from './presets'
 import { Osc } from './Osc'
 import { Filter } from './Filter'
 import { Oscilloscope } from './Oscilloscope'
+import { Observable } from './Observe'
 
 import { keyboardKeys } from './utils/keyboard'
 
 
-class Subtractor {
+class Subtractor extends Observable {
   constructor() {
+    super()
     this.context    = new AudioContext()
     this.osc1       = new Osc(this.context, true)
     this.osc2       = new Osc(this.context, false)
@@ -20,41 +22,55 @@ class Subtractor {
 
     // octave value is used only for the qwerty controls, this value should not be used
     // when MIDI is integrated. 
-    this.octave = 4
+    this._octave = 4
 
     // here polyphony refers to the number of oscs started for each key press,
     // detune refers to the spread of frequencies across the poly notes
-    this.polyphony = 1
-    this.detune = 0
+    this._polyphony = 1
+    this._detune = 0
 
     this.masterGain = this.context.createGain()
     this.filter1.filter.connect(this.masterGain)
     this.masterGain.connect(this.context.destination)
 
-    // only start the oscilloscope once the DOM is ready
-    document.addEventListener('DOMContentLoaded', () => this.startOscilloscope())
-    
     this.handleKeys()
+
+    // only perform certain tasks once the DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      this.startOscilloscope()
+      this.loadPreset(Presets.Init)
+    })
   }
 
-  setOctave(value) {
-    this.octave = value
+  set octave(value) {
+    this._octave = value
   }
 
-  setWaveform(value) {
-    this.waveform = this.intToWaveform(parseInt(value))
+  get octave() {
+    return this._octave
   }
 
-  setPolyphony(value) {
-    this.polyphony = value
+  set polyphony(value) {
+    this._polyphony = value
+    this.notifyObservers()
   }
 
-  setDetune(value) {
-    this.detune = value / 100
+  get polyphony() {
+    return this._polyphony
+  }
+
+  set detune(value) {
+    this._detune = value * .01
+    this.notifyObservers()
+  }
+
+  get detune() {
+    return this._detune * 100
   }
 
   set gain(value) {
     this.masterGain.gain.value = value * .01
+    this.notifyObservers()
   }
 
   get gain() {
@@ -103,7 +119,7 @@ class Subtractor {
       if (!osc.enabled) { 
         return []
       }
-      return osc.start(note, this.polyphony, this.detune)
+      return osc.start(note, this._polyphony, this._detune)
                 .map(startedOsc => this.pipeline(startedOsc))
     })
 
@@ -138,57 +154,56 @@ class Subtractor {
 
   // take a preset object and load it into the synth
   //
-  // in order to make this safe we define maps of how to set each preset 
-  // from the supplied preset object.
-  //
-  // there is a map of class attributes, e.g. `this.name`,
-  // and a map of functions to call, e.g. `this.osc1.setEnabled()`
-  //
-  // this is done to provide a safe mapping, where we can loop through
-  // and attempt to set each value without failing the entire operation
-  // with a global try block. If a preset value is missing, the outputs 
-  // a warning message.
-  //
-  loadPreset(preset) {
-    const presetValueMap = [
-      ['name', 'preset.name'],
-      ['author', 'preset.author'],
-      ['description', 'preset.description'],
-      ['gain', 'preset.settings.master.gain'],
-      ['polyphony', 'preset.settings.master.polyphony'],
-      ['detune', 'preset.settings.master.detune'],
-    ]
-    const presetFunctionMap = [
-      [this.osc1.setEnabled, this.osc1, 'preset.settings.osc1.enabled'],
-      [this.osc1.setWaveform, this.osc1, 'preset.settings.osc1.waveform'],
-      [this.osc1.setOctave, this.osc1, 'preset.settings.osc1.octave'],
-      [this.osc1.setSemi, this.osc1, 'preset.settings.osc1.semi'],
-      [this.osc1.setDetune, this.osc1, 'preset.settings.osc1.cent'],
-      [this.osc2.setEnabled, this.osc2, 'preset.settings.osc2.enabled'],
-      [this.osc2.setWaveform, this.osc2, 'preset.settings.osc2.waveform'],
-      [this.osc2.setOctave, this.osc2, 'preset.settings.osc2.octave'],
-      [this.osc2.setSemi, this.osc2, 'preset.settings.osc2.semi'],
-      [this.osc2.setDetune, this.osc2, 'preset.settings.osc2.cent'],
-      [this.filter1.setType, this.filter1, 'preset.settings.filter1.type'],
-      [this.filter1.setFreq, this.filter1, 'preset.settings.filter1.frequency'],
-      [this.filter1.setQ, this.filter1, 'preset.settings.filter1.q'],
-      [this.filter1.setGain, this.filter1, 'preset.settings.filter1.gain'],
-    ]
-
-    presetValueMap.forEach((value) => {
-      try {
-        this[value[0]] = eval(value[1])
-      } catch (e) {
-        console.warn(`Warning: ${value[1]} is missing from preset`)
-      }
-    })
-    presetFunctionMap.forEach((value) => {
-      try {
-        value[0].call(value[1], eval(value[2]))
-      } catch (e) {
-        console.warn(`Warning: ${value[2]} is missing from preset`)
-      }
-    })
+  loadPreset({
+    name = 'init',
+    author = '',
+    description = '',
+    master = {
+      gain: 50,
+      polyphony: 1,
+      detune: 0
+    },
+    osc1 = {
+      enabled: 1,
+      waveform: 1,
+      octave: 0,
+      semi: 0,
+      detune: 0
+    },
+    osc2 = {
+      enabled: 0,
+      waveform: 1,
+      octave: 0,
+      semi: 0,
+      detune: 0
+    },
+    filter1 = {
+      type: 1,
+      freq: 22050,
+      q: 0.10,
+      gain: 0
+    }
+  }) {
+    this.name = name
+    this.author = author
+    this.description = description
+    this.gain = master.gain
+    this.polyphony = master.polyphony
+    this.detune = master.detune
+    this.osc1.enabled = osc1.enabled
+    this.osc1.waveform = osc1.waveform
+    this.osc1.octave = osc1.octave
+    this.osc1.semi = osc1.semi
+    this.osc1.detune = osc1.detune
+    this.osc2.enabled = osc2.enabled
+    this.osc2.waveform = osc2.waveform
+    this.osc2.octave = osc2.octave
+    this.osc2.semi = osc2.semi
+    this.osc2.detune = osc2.detune
+    this.filter1.type = filter1.type
+    this.filter1.freq = filter1.freq
+    this.filter1.q = filter1.q
+    this.filter1.gain = filter1.gain
   }
 
   // take the current synth settings and return an object
@@ -198,32 +213,30 @@ class Subtractor {
       'name': this.name,
       'author': this.author,
       'description': this.description,
-      'settings': { 
-        'master': { 'gain': this.gain },
-        'super': {
-          'polyphony': this.polyphony,
-          'detune': this.detune,
-        },
-        'osc1': {
-          'enabled': this.osc1.getEnabled(),
-          'waveform': this.osc1.getWaveform(),
-          'octave': this.osc1.getOctave(),
-          'semi': this.osc1.getSemi(),
-          'cent': this.osc1.getDetune()
-        },
-        'osc2': {
-          'enabled': this.osc2.getEnabled(),
-          'waveform': this.osc2.getWaveform(),
-          'octave': this.osc2.getOctave(),
-          'semi': this.osc2.getSemi(),
-          'cent': this.osc2.getDetune()
-        },
-        'filter1': {
-          'type': this.filter1.getType(),
-          'frequency': this.filter1.getFreq(),
-          'q': this.filter1.getQ(),
-          'gain': this.filter1.getGain()
-        }
+      'master': {
+        'gain': this.gain,
+        'polyphony': this.polyphony,
+        'detune': this.detune,
+      },
+      'osc1': {
+        'enabled': this.osc1.enabled,
+        'waveform': this.osc1.waveform,
+        'octave': this.osc1.octave,
+        'semi': this.osc1.semi,
+        'detune': this.osc1.detune
+      },
+      'osc2': {
+        'enabled': this.osc2.enabled,
+        'waveform': this.osc2.waveform,
+        'octave': this.osc2.octave,
+        'semi': this.osc2.semi,
+        'detune': this.osc2.detune
+      },
+      'filter1': {
+        'type': this.filter1.type,
+        'freq': this.filter1.freq,
+        'q': this.filter1.q,
+        'gain': this.filter1.gain
       }
     }
   }
