@@ -3,40 +3,6 @@ import { Subtractor } from '../src/Subtractor'
 
 
 describe('Subtractor', () => {
-  describe('qwerty keyboard', () => {
-
-    test('key "a" triggers note 36 when octave is 4', () => {
-      const subtractor = new Subtractor()
-      subtractor.startPolyNote = jest.fn()
-      subtractor.octave = 3
-      window.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'a' }))
-      expect(subtractor.startPolyNote.mock.calls[0]).toEqual([36])
-    })
-
-     test('key "k" triggers note 36 when octave is 4', () => {
-      const subtractor = new Subtractor()
-      subtractor.startPolyNote = jest.fn()
-      subtractor.octave = 3
-      window.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'k' }))
-      expect(subtractor.startPolyNote.mock.calls[0]).toEqual([48])
-    })
-
-    test('key "a" triggers note 48 when octave is 4', () => {
-      const subtractor = new Subtractor()
-      subtractor.startPolyNote = jest.fn()
-      subtractor.octave = 4
-      window.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'a' }))
-      expect(subtractor.startPolyNote.mock.calls[0]).toEqual([48])
-    })
-
-     test('key "k" triggers note 60 when octave is 4', () => {
-      const subtractor = new Subtractor()
-      subtractor.startPolyNote = jest.fn()
-      subtractor.octave = 4
-      window.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'k' }))
-      expect(subtractor.startPolyNote.mock.calls[0]).toEqual([60])
-    })
-  })
 
   describe('loadPreset', () => {
     test('can set a preset that is missing values', () => {
