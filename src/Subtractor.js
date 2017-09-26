@@ -5,8 +5,6 @@ import { Filter } from './Filter'
 import { Oscilloscope } from './Oscilloscope'
 import { Observable } from './Observe'
 
-import { keyboardKeys } from './utils/keyboard'
-
 
 class Subtractor extends Observable {
   constructor() {
@@ -33,8 +31,6 @@ class Subtractor extends Observable {
     this.filter1.filter.connect(this.masterGain)
     this.masterGain.connect(this.context.destination)
 
-    this.handleKeys()
-
     // only perform certain tasks once the DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
       this.startOscilloscope()
@@ -44,6 +40,7 @@ class Subtractor extends Observable {
 
   set octave(value) {
     this._octave = value
+    this.notifyObservers()
   }
 
   get octave() {
@@ -75,43 +72,6 @@ class Subtractor extends Observable {
 
   get gain() {
     return this.masterGain.gain.value * 100
-  }
-
-  handleKeys() {
-    let keyWasPressed = []
-    window.addEventListener('keydown', (eKeyDown) => {
-      if (keyboardKeys.has(eKeyDown.key) && !keyWasPressed[eKeyDown.key]) {
-        const note = keyboardKeys.get(eKeyDown.key)
-        const polyNoteOscillators = this.startPolyNote(note + this.octave * 12)
-
-        // on note-keyup, stop the oscillators
-        const stopThisPolyNote = (eNoteKeyUp) => {
-          if (eKeyDown.key === eNoteKeyUp.key) {
-            polyNoteOscillators.forEach((osc) => {
-              try { 
-                osc.stop() 
-              } catch (e) {
-                // osc was never started
-              }
-            })
-            window.removeEventListener('keyup', stopThisPolyNote)
-          }
-        }
-        window.addEventListener('keyup', stopThisPolyNote)
-      }
-
-      if (eKeyDown.key == 'z' && this.octave > 0) {
-        this.octave--
-      }
-      if (eKeyDown.key == 'x' && this.octave < 12) {
-        this.octave++
-      }
-
-      keyWasPressed[eKeyDown.key] = true
-    })
-    window.addEventListener('keyup', (eKeyUp) => {
-      keyWasPressed[eKeyUp.key] = false
-    })
   }
 
   startPolyNote(note) {

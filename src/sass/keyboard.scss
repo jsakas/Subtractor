@@ -1,0 +1,38 @@
+// commented out values can't be set on SVG's with CSS
+
+.keyboard {
+  // viewBox: 0, 0, 50,10 ;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100px;
+  margin-top: 5px;
+
+  &__white_key {
+    // width: 4;
+    // height: 10;
+    fill: white;
+    stroke: black;
+    stroke-width: .2;
+  }
+
+  &__black_key {
+    // width: 2;
+    // height: 6;
+    fill: rgb(70,70,100);
+    stroke: black;
+    stroke-width: .2;
+  }
+
+  &__pressed {
+    fill: rgb(194, 211, 176);
+  }
+  
+  &__octave_indicator {
+    // width: 2;
+    // height: 6;
+    fill: rgb(232, 241, 224);
+    stroke: green;
+    stroke-width: .2;
+  }
+}
