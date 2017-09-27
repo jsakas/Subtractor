@@ -10,7 +10,7 @@ fi
 
 repo=$(basename $(git rev-parse --show-toplevel))
 changed_files=''
-for file in $(git diff --name-only --cached --diff-filter=d | grep '^src/'); do
+for file in $(git diff --name-only --cached --diff-filter=d | grep '^src/.*\.js$'); do
   changed_files="$changed_files $file"
 done
 changed_files=$( echo "$changed_files" | sed 's/^ //' )
