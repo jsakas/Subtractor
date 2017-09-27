@@ -1,34 +1,30 @@
 {
- "name": "",
- "author": "",
- "description": "",
- "settings": {
+  "name": "Init",
+  "author": "Subtractor Team",
+  "description": "",
   "master": {
-   "gain": 0.5
-  },
-  "super": {
-   "polyphony": 1,
-   "detune": 0
+    "gain": 50,
+    "polyphony": 1,
+    "detune": 0
   },
   "osc1": {
-   "enabled": 1,
-   "waveform": 3,
-   "octave": 0,
-   "semi": 0,
-   "cent": 0
+    "enabled": 1,
+    "waveform": 1,
+    "octave": 0,
+    "semi": 0,
+    "detune": 0
   },
   "osc2": {
-   "enabled": 0,
-   "waveform": 3,
-   "octave": 0,
-   "semi": 0,
-   "cent": 0
+    "enabled": 0,
+    "waveform": 1,
+    "octave": 0,
+    "semi": 0,
+    "detune": 0
   },
   "filter1": {
-   "type": "lowpass",
-   "frequency": 22050,
-   "q": 0.10000000149011612,
-   "gain": 0
+    "type": 1,
+    "freq": 22050,
+    "q": 0.10,
+    "gain": 0
   }
- }
 }

@@ -4,16 +4,13 @@ import { Filter } from '../src/Filter'
 test('Filter default type is lowpass', () => {
   const context = new AudioContext() 
   const filter = new Filter(context)
-  expect(filter.getType()).toBe('lowpass')
+  expect(filter.type).toBe(1)
 })
 
-test('Filter.setType() does not set invalid types', () => {
+test('Filter type does not allow invalid types', () => {
   const context = new AudioContext() 
   const filter = new Filter(context)
 
-  function setType() {
-    filter.setType(-1)
-  }
-
-  expect(setType).toThrowError(Error)
+  filter.type = -1
+  expect(filter.type).toBe(1)
 })

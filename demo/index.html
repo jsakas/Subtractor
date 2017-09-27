@@ -77,7 +77,7 @@
           </optgroup>
           <optgroup label="Bass">
             <option value="ElectroFifth">Electro Fifth</option>
-            <option value="DarkBass">Dark bass</option>
+            <option value="DarkBass">Dark Bass</option>
           </optgroup>
         </select>
         <button onclick="subtractor.loadPresetFile()">Load</button>
@@ -86,35 +86,35 @@
     </div>
     <section>
       <h2>Super</h2>
-      <x-knob id="polyphony" name="Poly" value="1" min="1" max="10" oninput="subtractor.setPolyphony(value)"></x-knob>
-      <x-knob id="detune" name="Detune" value="0" min="0" max="100" oninput="subtractor.setDetune(value)"></x-knob>
+      <x-knob id="polyphony" name="Poly" value="1" min="1" max="10" observe="subtractor" bind="polyphony"></x-knob>
+      <x-knob id="detune" name="Detune" value="0" min="0" max="100" observe="subtractor" bind="detune"></x-knob>
     </section>
     <section>
       <h2>Osc 1</h2>
-      <x-knob id="enabled" name="On" value="1" min="0" max="1" oninput="subtractor.osc1.setEnabled(value)"></x-knob>
-      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.osc1.setWaveform(value)"></x-knob>      
-      <x-knob id="octave" name="Octave" value="0" min="-5" max="5" oninput="subtractor.osc1.setOctave(value)"></x-knob>
-      <x-knob id="semi" name="Semi" value="0" min="-12" max="12" oninput="subtractor.osc1.setSemi(value)"></x-knob>
-      <x-knob id="cent" name="Cent" value="0" min="0" max="100" oninput="subtractor.osc1.setDetune(value)"></x-knob>
+      <x-knob id="enabled" name="On" value="1" min="0" max="1" observe="subtractor.osc1" bind="enabled"></x-knob>
+      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" observe="subtractor.osc1" bind="waveform"></x-knob> 
+      <x-knob id="octave" name="Octave" value="0" min="-5" max="5" observe="subtractor.osc1" bind="octave"></x-knob>
+      <x-knob id="semi" name="Semi" value="0" min="-12" max="12" observe="subtractor.osc1" bind="semi"></x-knob>
+      <x-knob id="cent" name="Cent" value="0" min="0" max="100" observe="subtractor.osc1" bind="detune"></x-knob>
     </section>
     <section>
       <h2>Osc 2</h2>
-      <x-knob id="enabled" name="On" value="0" min="0" max="1" oninput="subtractor.osc2.setEnabled(value)"></x-knob>
-      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" oninput="subtractor.osc2.setWaveform(value)"></x-knob> 
-      <x-knob id="octave" name="Octave" value="0" min="-5" max="5" oninput="subtractor.osc2.setOctave(value)"></x-knob>
-      <x-knob id="semi" name="Semi" value="0" min="-12" max="12" oninput="subtractor.osc2.setSemi(value)"></x-knob>
-      <x-knob id="cent" name="Cent" value="0" min="0" max="100" oninput="subtractor.osc2.setDetune(value)"></x-knob>
+      <x-knob id="enabled" name="On" value="0" min="0" max="1" observe="subtractor.osc2" bind="enabled"></x-knob>
+      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" observe="subtractor.osc2" bind="waveform"></x-knob> 
+      <x-knob id="octave" name="Octave" value="0" min="-5" max="5" observe="subtractor.osc2" bind="octave"></x-knob>
+      <x-knob id="semi" name="Semi" value="0" min="-12" max="12" observe="subtractor.osc2" bind="semi"></x-knob>
+      <x-knob id="cent" name="Cent" value="0" min="0" max="100" observe="subtractor.osc2" bind="detune"></x-knob>
     </section>
     <section>
       <h2>Filter</h2>
-      <x-knob id="filter-type" name="Fiter Type" value="1" min="1" max="8" oninput="subtractor.filter1.setType(value)"></x-knob>
-      <x-knob id="filter-freq" name="Fiter Freq" value="22050" min="10" max="22050" oninput="subtractor.filter1.setFreq(value)"></x-knob>
-      <x-knob id="filter-q" name="Fiter Q" value="1" min="0" max="500" oninput="subtractor.filter1.setQ(value)"></x-knob>
-      <x-knob id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" oninput="subtractor.filter1.setGain(value)"></x-knob>
+      <x-knob id="filter-type" name="Fiter Type" value="1" min="1" max="8" observe="subtractor.filter1" bind="type"></x-knob>
+      <x-knob id="filter-freq" name="Fiter Freq" value="22050" min="10" max="22050" observe="subtractor.filter1" bind="freq"></x-knob>
+      <x-knob id="filter-q" name="Fiter Q" value="1" min="0" max="500" observe="subtractor.filter1" bind="q"></x-knob>
+      <x-knob id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" observe="subtractor.filter1" bind="gain"></x-knob>
     </section>
     <section>
       <h2>Master</h2>
-      <x-fader id="lfo-type" name="Gain" value="50" min="1" max="100" oninput="subtractor.setMasterGain(value)"></x-fader>
+      <x-fader id="master-gain" name="Gain" value="50" min="1" max="100" observe="subtractor" bind="gain"></x-fader>
     </section>
     <canvas id="oscilloscope" class="oscilloscope"></canvas>
   </div>

@@ -202,7 +202,7 @@
         "no-throw-literal": "error",
         "no-undef-init": "error",
         "no-undefined": "error",
-        "no-underscore-dangle": "error",
+        "no-underscore-dangle": "off",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "error",
         "no-unused-expressions": "error",
@@ -242,7 +242,7 @@
         "prefer-rest-params": "error",
         "prefer-spread": "error",
         "prefer-template": "error",
-        "quote-props": "error",
+        "quote-props": "off",
         "quotes": [
             "error",
             "single"
