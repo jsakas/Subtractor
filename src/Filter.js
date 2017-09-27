@@ -23,6 +23,10 @@ class Filter extends Observable {
       return filterToInt(this.filter.type)
     }
 
+    get frType() {
+      return this.filter.type
+    }
+
     set freq(value) {
       this.filter.frequency.value = value
       this.notifyObservers()

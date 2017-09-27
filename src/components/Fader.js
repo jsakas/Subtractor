@@ -6,6 +6,8 @@ class Fader extends HTMLElement {
     // if observable and bind attributes are preset, register this element as an observer
     this.observable = eval(this.getAttribute('observe'))
     this.bind = this.getAttribute('bind')
+    this.label = this.getAttribute('label')
+
     if (this.observable && this.bind) {
       this.observable.registerObserver(this)
     }
@@ -82,7 +84,7 @@ class Fader extends HTMLElement {
 
   notify(observable) {
     this.faderInput.value = this.observable[this.bind]
-    this.faderValue.innerText = parseInt(this.observable[this.bind])
+    this.faderValue.innerText = this.observable[this.label] || parseInt(this.observable[this.bind])
     this.setTop(this.observable[this.bind])
   }
 

@@ -6,6 +6,8 @@ class Knob extends HTMLElement {
     // if observable and bind attributes are preset, register this element as an observer
     this.observable = eval(this.getAttribute('observe'))
     this.bind = this.getAttribute('bind')
+    this.label = this.getAttribute('label')
+
     if (this.observable && this.bind) {
       this.observable.registerObserver(this)
     }
@@ -78,7 +80,7 @@ class Knob extends HTMLElement {
 
   notify(observable) {
     this.knobInput.value = this.observable[this.bind]
-    this.knobValue.innerText = parseInt(this.observable[this.bind])
+    this.knobValue.innerText = this.observable[this.label] || parseInt(this.observable[this.bind])
     this.setRotation(this.observable[this.bind])
   }
 
