@@ -26,5 +26,9 @@
     "web-audio-test-api": "^0.5.2",
     "webpack": "^3.5.6",
     "webpack-dev-server": "^2.8.2"
+  },
+  "dependencies": {
+    "@webcomponents/custom-elements": "^1.0.4",
+    "@webcomponents/shadydom": "^1.0.4"
   }
 }
