@@ -1,10 +1,14 @@
 import 'web-audio-test-api'
 // import { Subtractor } from '../src/Subtractor'
-import '../src/components/Keyboard'
+// import '../src/components/Keyboard'
 
 
 describe('Keyboard', () => {
   describe('qwerty keyboard', () => {
+
+    test('true is true', () => {
+        expect(true).toBe(true)
+    })
     // need to determine an approach to testing Custom Elements
 
     // test('key "a" triggers note 39 when octave is 4', () => {

@@ -2,6 +2,8 @@
 
 A WebAudio API Synth
 
+[![CircleCI](https://circleci.com/gh/jsakas/Subtractor/tree/master.svg?style=shield)](https://circleci.com/gh/jsakas/Subtractor/tree/master)
+
 ## Development
 
 ```shell
