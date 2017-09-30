@@ -2,6 +2,7 @@ import * as Presets from './presets'
 
 import { Osc } from './Osc'
 import { Filter } from './Filter'
+import { FilterEnv } from './FilterEnv'
 import { Oscilloscope } from './Oscilloscope'
 import { Observable } from './Observe'
 
@@ -13,6 +14,7 @@ class Subtractor extends Observable {
     this.osc1       = new Osc(this.context, true)
     this.osc2       = new Osc(this.context, false)
     this.filter1    = new Filter(this.context)
+    this.filterenv  = new FilterEnv()
 
     this.name = ''
     this.description = ''
@@ -26,6 +28,8 @@ class Subtractor extends Observable {
     // detune refers to the spread of frequencies across the poly notes
     this._polyphony = 1
     this._detune = 0
+
+    this._filterenvamount = 0
 
     this.masterGain = this.context.createGain()
     this.filter1.filter.connect(this.masterGain)
@@ -72,6 +76,14 @@ class Subtractor extends Observable {
 
   get gain() {
     return this.masterGain.gain.value * 100
+  }
+
+  set filterenvamount(value) {
+    this._filterenvamount = value
+  }
+
+  get filterenvamount() {
+    return this._filterenvamount
   }
 
   startPolyNote(note) {

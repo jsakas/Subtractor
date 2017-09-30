@@ -115,6 +115,14 @@
       <x-knob id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" observe="subtractor.filter1" bind="gain"></x-knob>
     </section>
     <section>
+      <h2>Filter Env</h2>
+      <x-knob id="filterenv-attack" name="Attack" value="1" min="1" max="127" observe="subtractor.filterenv" bind="attack"></x-knob>
+      <x-knob id="filterenv-sustain" name="Sustain" value="40" min="1" max="127" observe="subtractor.filterenv" bind="sustain"></x-knob>
+      <x-knob id="filterenv-decay" name="Decay" value="1" min="1" max="127" observe="subtractor.filterenv" bind="decay"></x-knob>
+      <x-knob id="filterenv-release" name="Release" value="40" min="1" max="127" observe="subtractor.filterenv" bind="release"></x-knob>
+      <x-knob id="filterenv-amt" name="Amount" value="127" min="0" max="127" observe="subtractor" bind="filterenvamount"></x-knob>
+    </section>
+    <section>
       <h2>Master</h2>
       <x-fader id="master-gain" name="Gain" value="50" min="1" max="100" observe="subtractor" bind="gain"></x-fader>
     </section>
