@@ -9,7 +9,7 @@
   },
   "osc1": {
     "enabled": 1,
-    "waveform": 1,
+    "waveform": 3,
     "octave": 0,
     "semi": 0,
     "detune": 0

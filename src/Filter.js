@@ -5,53 +5,57 @@ class Filter extends Observable {
     constructor(context) {
       super()
       this.context = context
-      this.filter = context.createBiquadFilter()
+      this._filter = context.createBiquadFilter()
       this.freq = 22050
       this.type = 'lowpass'
     }
 
+    get filter() {
+      return this._filter
+    }
+
     set type(value) {
       if (typeof value == 'string') {
-        this.filter.type = value
+        this._filter.type = value
       } else if (typeof value == 'number') {
-        this.filter.type = intToFilter(value)
+        this._filter.type = intToFilter(value)
       }
       this.notifyObservers()
     }
 
     get type() {
-      return filterToInt(this.filter.type)
+      return filterToInt(this._filter.type)
     }
 
     get frType() {
-      return this.filter.type
+      return this._filter.type
     }
 
     set freq(value) {
-      this.filter.frequency.value = value
+      this._filter.frequency.value = value
       this.notifyObservers()
     }
 
     get freq() {
-      return this.filter.frequency.value
+      return this._filter.frequency.value
     }
 
     set q(value) {
-      this.filter.Q.value = value
+      this._filter.Q.value = value
       this.notifyObservers()
     }
 
     get q() {
-      return this.filter.Q.value
+      return this._filter.Q.value
     }
 
     set gain(value) {
-      this.filter.gain.value = value
+      this._filter.gain.value = value
       this.notifyObservers()
     }
 
     get gain() {
-      return this.filter.gain.value
+      return this._filter.gain.value
     }
 }
 

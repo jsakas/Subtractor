@@ -108,6 +108,13 @@
       <x-knob id="cent" name="Cent" value="0" min="0" max="100" observe="subtractor.osc2" bind="detune"></x-knob>
     </section>
     <section>
+      <h2>Amp Envelope</h2>
+      <x-knob id="gainenv-attack" name="Attack" value="1" min="0" max="127" observe="subtractor" bind="attack"></x-knob>
+      <x-knob id="gainenv-sustain" name="Sustain" value="40" min="0" max="127" observe="subtractor" bind="sustain"></x-knob>
+      <x-knob id="gainenv-decay" name="Decay" value="1" min="0" max="127" observe="subtractor" bind="decay"></x-knob>
+      <x-knob id="gainenv-release" name="Release" value="40" min="1" max="127" observe="subtractor" bind="release"></x-knob>
+    </section>
+    <section>
       <h2>Filter</h2>
       <x-knob id="filter-type" name="Fiter Type" value="1" min="1" max="8" observe="subtractor.filter1" bind="type" label="frType"></x-knob>
       <x-knob id="filter-freq" name="Fiter Freq" value="22050" min="10" max="22050" observe="subtractor.filter1" bind="freq"></x-knob>
@@ -115,12 +122,11 @@
       <x-knob id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" observe="subtractor.filter1" bind="gain"></x-knob>
     </section>
     <section>
-      <h2>Filter Env</h2>
-      <x-knob id="filterenv-attack" name="Attack" value="1" min="1" max="127" observe="subtractor.filterenv" bind="attack"></x-knob>
-      <x-knob id="filterenv-sustain" name="Sustain" value="40" min="1" max="127" observe="subtractor.filterenv" bind="sustain"></x-knob>
-      <x-knob id="filterenv-decay" name="Decay" value="1" min="1" max="127" observe="subtractor.filterenv" bind="decay"></x-knob>
-      <x-knob id="filterenv-release" name="Release" value="40" min="1" max="127" observe="subtractor.filterenv" bind="release"></x-knob>
-      <x-knob id="filterenv-amt" name="Amount" value="127" min="0" max="127" observe="subtractor" bind="filterenvamount"></x-knob>
+      <h2>Filter Envelope</h2>
+      <x-knob id="filterenv-attack" name="Attack" value="1" min="0" max="127" observe="subtractor" bind="filterAttack"></x-knob>
+      <x-knob id="filterenv-sustain" name="Sustain" value="40" min="0" max="127" observe="subtractor" bind="filterSustain"></x-knob>
+      <x-knob id="filterenv-decay" name="Decay" value="1" min="0" max="127" observe="subtractor" bind="filterDecay"></x-knob>
+      <x-knob id="filterenv-release" name="Release" value="40" min="1" max="127" observe="subtractor" bind="filterRelease"></x-knob>
     </section>
     <section>
       <h2>Master</h2>

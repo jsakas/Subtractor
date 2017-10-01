@@ -31,4 +31,10 @@ const pointToPercent = function(min, max, point) {
     : percent
 }
 
-export { getNoteFreq, percentToPoint, pointToPercent }
+// take a value from 0 to 127 and convert it to seconds, good for envelopes
+//
+const knobToSeconds = function(value) {
+  return value * (10 / 127)
+}
+
+export { getNoteFreq, percentToPoint, pointToPercent, knobToSeconds }

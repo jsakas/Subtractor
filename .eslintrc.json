@@ -116,7 +116,11 @@
         "lines-around-directive": "error",
         "max-depth": "error",
         "max-len": "off",
-        "max-lines": "error",
+        "max-lines": [
+            "error", {
+                "max": 1000
+            }
+        ],
         "max-nested-callbacks": "error",
         "max-params": "off",
         "max-statements": "off",

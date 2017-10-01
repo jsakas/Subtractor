@@ -2,9 +2,10 @@ import * as Presets from './presets'
 
 import { Osc } from './Osc'
 import { Filter } from './Filter'
-import { FilterEnv } from './FilterEnv'
+import { Envelope } from './Envelope'
 import { Oscilloscope } from './Oscilloscope'
 import { Observable } from './Observe'
+import { knobToSeconds } from './utils/maths'
 
 
 class Subtractor extends Observable {
@@ -14,7 +15,6 @@ class Subtractor extends Observable {
     this.osc1       = new Osc(this.context, true)
     this.osc2       = new Osc(this.context, false)
     this.filter1    = new Filter(this.context)
-    this.filterenv  = new FilterEnv()
 
     this.name = ''
     this.description = ''
@@ -29,10 +29,7 @@ class Subtractor extends Observable {
     this._polyphony = 1
     this._detune = 0
 
-    this._filterenvamount = 0
-
     this.masterGain = this.context.createGain()
-    this.filter1.filter.connect(this.masterGain)
     this.masterGain.connect(this.context.destination)
 
     // only perform certain tasks once the DOM is ready
@@ -78,15 +75,73 @@ class Subtractor extends Observable {
     return this.masterGain.gain.value * 100
   }
 
-  set filterenvamount(value) {
-    this._filterenvamount = value
+  // amp envelope getter and setters
+  set attack(value) {
+    this._attack = value
   }
 
-  get filterenvamount() {
-    return this._filterenvamount
+  set sustain(value) {
+    this._sustain = value
   }
 
-  startPolyNote(note) {
+  set decay(value) {
+    this._decay = value
+  }
+
+  set release(value) {
+    this._release = value
+  }
+
+  get attack() {
+    return this._attack
+  }
+
+  get sustain() {
+    return this._sustain
+  }
+
+  get decay() {
+    return this._decay
+  }
+
+  get release() {
+    return this._release
+  }
+
+  // filter envelope getters and setters
+  set filterAttack(value) {
+    this._filterAttack = value
+  }
+
+  set filterSustain(value) {
+    this._filterSustain = value
+  }
+
+  set filterDecay(value) {
+    this._filterDecay = value
+  }
+
+  set filterRelease(value) {
+    this._filterRelease = value
+  }
+
+  get filterAttack() {
+    return this._filterAttack
+  }
+
+  get filterSustain() {
+    return this._filterSustain
+  }
+
+  get filterDecay() {
+    return this._filterDecay
+  }
+
+  get filterRelease() {
+    return this._filterRelease
+  }
+
+  noteOn(note) {
     let returnOscs = [this.osc1, this.osc2].map((osc) => {
       if (!osc.enabled) { 
         return []
@@ -99,10 +154,57 @@ class Subtractor extends Observable {
     return [].concat(...returnOscs)
   }
 
+  noteOff(osc) {
+    osc.oscEnvelope.reset()
+    osc.filterEnvelope.reset()
+    osc.stop(this.context.currentTime + knobToSeconds(this.release))
+  }
+
+
   // route an oscillator thru the pipeline of modifiers.
   // e.g. gains, filter, distortions etc.
   pipeline(osc) {
-    osc.connect(this.filter1.filter)
+    // add noteOff to the osc prototype
+    osc.noteOff = this.noteOff.bind(this)
+
+    const gainNode = this.context.createGain()
+    const oscEnvelope = new Envelope(this.context, gainNode.gain)
+    oscEnvelope.maxValue = 1
+    oscEnvelope.minValue = 0
+    oscEnvelope.attack = this.attack
+    oscEnvelope.sustain = this.sustain
+    oscEnvelope.decay = this.decay
+    oscEnvelope.release = this.release
+    oscEnvelope.schedule()
+
+    // create a filter, base it on the global filter
+    const filter = new Filter(this.context)
+    filter.type = this.filter1.type
+    filter.freq = this.filter1.freq
+    filter.q = this.filter1.q
+    filter.gain = this.filter1.gain
+
+    // attach and envelope to the filter frequency
+    const filterEnvelope = new Envelope(this.context, filter.filter.frequency)
+    filterEnvelope.maxValue = 22050
+    filterEnvelope.minValue = 10
+    filterEnvelope.attack = this.filterAttack
+    filterEnvelope.sustain = this.filterSustain
+    filterEnvelope.decay = this.filterDecay
+    filterEnvelope.release = this.filterRelease
+    filterEnvelope.schedule()
+
+    // route the osc thru everything we just created 
+    osc.connect(gainNode)
+    gainNode.connect(filter.filter)
+    filter.filter.connect(this.masterGain)
+
+    // attach the envelopes to the osc the gain node so it can be reset on noteOff
+    osc.oscEnvelope = oscEnvelope
+    osc.filterEnvelope = filterEnvelope
+    
+    // start and return the osc
+    osc.start()
     return osc
   }
 
@@ -135,6 +237,18 @@ class Subtractor extends Observable {
       polyphony: 1,
       detune: 0
     },
+    ampEnv = {
+      attack: 0,
+      sustain: 63,
+      decay: 0,
+      release: 63
+    },
+    filterenv = {
+      attack: 0,
+      sustain: 63,
+      decay: 0,
+      release: 63
+    },
     osc1 = {
       enabled: 1,
       waveform: 1,
@@ -162,6 +276,14 @@ class Subtractor extends Observable {
     this.gain = master.gain
     this.polyphony = master.polyphony
     this.detune = master.detune
+    this.attack = ampEnv.attack
+    this.sustain = ampEnv.sustain
+    this.decay = ampEnv.decay
+    this.release = ampEnv.release
+    this.filterAttack = ampEnv.attack
+    this.filterSustain = ampEnv.sustain
+    this.filterDecay = ampEnv.decay
+    this.filterRelease = ampEnv.release
     this.osc1.enabled = osc1.enabled
     this.osc1.waveform = osc1.waveform
     this.osc1.octave = osc1.octave
