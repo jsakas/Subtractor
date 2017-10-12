@@ -12,9 +12,9 @@ class Envelope extends Observable {
       this.maxValue = 1
       this.minValue = 0
       this._attack = 0
-      this._sustain = 63
-      this._decay = 0
-      this._release = 63
+      this._decay = 40
+      this._sustain = 0
+      this._release = 40
     }
 
     schedule() {
@@ -38,20 +38,20 @@ class Envelope extends Observable {
       return this._attack
     }
 
-    set sustain(value) {
-      this._sustain = value
-    }
-
-    get sustain() {
-      return this._sustain
-    }
-
     set decay(value) {
       this._decay = value
     }
 
     get decay() {
       return this._decay
+    }
+
+    set sustain(value) {
+      this._sustain = value
+    }
+
+    get sustain() {
+      return this._sustain
     }
 
     set release(value) {

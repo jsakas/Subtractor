@@ -80,12 +80,12 @@ class Subtractor extends Observable {
     this._attack = value
   }
 
-  set sustain(value) {
-    this._sustain = value
-  }
-
   set decay(value) {
     this._decay = value
+  }
+
+  set sustain(value) {
+    this._sustain = value
   }
 
   set release(value) {
@@ -96,12 +96,12 @@ class Subtractor extends Observable {
     return this._attack
   }
 
-  get sustain() {
-    return this._sustain
-  }
-
   get decay() {
     return this._decay
+  }
+
+  get sustain() {
+    return this._sustain
   }
 
   get release() {
@@ -113,12 +113,12 @@ class Subtractor extends Observable {
     this._filterAttack = value
   }
 
-  set filterSustain(value) {
-    this._filterSustain = value
-  }
-
   set filterDecay(value) {
     this._filterDecay = value
+  }
+
+  set filterSustain(value) {
+    this._filterSustain = value
   }
 
   set filterRelease(value) {
@@ -129,12 +129,12 @@ class Subtractor extends Observable {
     return this._filterAttack
   }
 
-  get filterSustain() {
-    return this._filterSustain
-  }
-
   get filterDecay() {
     return this._filterDecay
+  }
+
+  get filterSustain() {
+    return this._filterSustain
   }
 
   get filterRelease() {
@@ -239,15 +239,15 @@ class Subtractor extends Observable {
     },
     ampEnv = {
       attack: 0,
-      sustain: 63,
-      decay: 0,
-      release: 63
+      decay: 40,
+      sustain: 0,
+      release: 40
     },
     filterenv = {
       attack: 0,
-      sustain: 63,
-      decay: 0,
-      release: 63
+      decay: 40,
+      sustain: 0,
+      release: 40
     },
     osc1 = {
       enabled: 1,
