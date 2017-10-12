@@ -15,7 +15,7 @@ module.exports =
             'web-audio-test-api': path.resolve(__dirname, 'node_modules/web-audio-test-api')
     devServer:
         contentBase: path.join(__dirname),
-        port: 8000
+        port: 7200
     module:
         rules: [
             test: /\.js$/
