@@ -243,7 +243,7 @@ class Subtractor extends Observable {
       sustain: 0,
       release: 40
     },
-    filterenv = {
+    filterEnv = {
       attack: 0,
       decay: 40,
       sustain: 0,
@@ -277,13 +277,13 @@ class Subtractor extends Observable {
     this.polyphony = master.polyphony
     this.detune = master.detune
     this.attack = ampEnv.attack
-    this.sustain = ampEnv.sustain
     this.decay = ampEnv.decay
+    this.sustain = ampEnv.sustain
     this.release = ampEnv.release
-    this.filterAttack = ampEnv.attack
-    this.filterSustain = ampEnv.sustain
-    this.filterDecay = ampEnv.decay
-    this.filterRelease = ampEnv.release
+    this.filterAttack = filterEnv.attack
+    this.filterDecay = filterEnv.decay
+    this.filterSustain = filterEnv.sustain
+    this.filterRelease = filterEnv.release
     this.osc1.enabled = osc1.enabled
     this.osc1.waveform = osc1.waveform
     this.osc1.octave = osc1.octave
@@ -311,6 +311,18 @@ class Subtractor extends Observable {
         'gain': this.gain,
         'polyphony': this.polyphony,
         'detune': this.detune,
+      },
+      'ampEnv': {
+        'attack': this.attack,
+        'decay': this.decay,
+        'sustain': this.sustain,
+        'release': this.release,
+      },
+      'filterEnv': {
+        'attack': this.filterAttack,
+        'decay': this.filterDecay,
+        'sustain': this.filterSustain,
+        'release': this.filterRelease,
       },
       'osc1': {
         'enabled': this.osc1.enabled,
