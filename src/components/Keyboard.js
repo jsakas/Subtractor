@@ -83,7 +83,8 @@ class Keyboard extends HTMLElement {
             this.keys[note].classList.remove('keyboard__pressed')
             polyNoteOscillators.forEach((osc) => {
               try { 
-                osc.stop() 
+                // osc.noteOff is bound during osc.start
+                osc.noteOff(osc)
               } catch (e) {
                 // osc was never started
               }
@@ -108,6 +109,7 @@ class Keyboard extends HTMLElement {
             this.keys[note].classList.remove('keyboard__pressed')
             polyNoteOscillators.forEach((osc) => {
               try { 
+                // osc.noteOff is bound during osc.start
                 osc.noteOff(osc) 
               } catch (e) {
                 console.error(e)
