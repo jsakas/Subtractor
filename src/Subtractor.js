@@ -78,30 +78,34 @@ class Subtractor extends Observable {
   // amp envelope getter and setters
   set attack(value) {
     this._attack = value
-  }
-
-  set decay(value) {
-    this._decay = value
-  }
-
-  set sustain(value) {
-    this._sustain = value
-  }
-
-  set release(value) {
-    this._release = value
+    this.notifyObservers()
   }
 
   get attack() {
     return this._attack
   }
 
+  set decay(value) {
+    this._decay = value
+    this.notifyObservers()
+  }
+
   get decay() {
     return this._decay
   }
 
+  set sustain(value) {
+    this._sustain = value
+    this.notifyObservers()
+  }
+
   get sustain() {
     return this._sustain
+  }
+
+  set release(value) {
+    this._release = value
+    this.notifyObservers()
   }
 
   get release() {
@@ -109,44 +113,49 @@ class Subtractor extends Observable {
   }
 
   // filter envelope getters and setters
-  set filterAmount(value) {
-    this._filterAmount = value
-  }
-
   set filterAttack(value) {
     this._filterAttack = value
-  }
-
-  set filterDecay(value) {
-    this._filterDecay = value
-  }
-
-  set filterSustain(value) {
-    this._filterSustain = value
-  }
-
-  set filterRelease(value) {
-    this._filterRelease = value
-  }
-
-  get filterAmount() {
-    return this._filterAmount
+    this.notifyObservers()
   }
 
   get filterAttack() {
     return this._filterAttack
   }
 
+  set filterDecay(value) {
+    this._filterDecay = value
+    this.notifyObservers()
+  }
+
   get filterDecay() {
     return this._filterDecay
+  }
+
+  set filterSustain(value) {
+    this._filterSustain = value
+    this.notifyObservers()
   }
 
   get filterSustain() {
     return this._filterSustain
   }
 
+  set filterRelease(value) {
+    this._filterRelease = value
+    this.notifyObservers()
+  }
+  
   get filterRelease() {
     return this._filterRelease
+  }
+
+  set filterAmount(value) {
+    this._filterAmount = value
+    this.notifyObservers()
+  }
+
+  get filterAmount() {
+    return this._filterAmount
   }
 
   noteOn(note) {

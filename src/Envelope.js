@@ -60,6 +60,7 @@ class Envelope extends Observable {
 
     set attack(value) {
       this._attack = value
+      this.notifyObservers()
     }
 
     get attack() {
@@ -68,6 +69,7 @@ class Envelope extends Observable {
 
     set decay(value) {
       this._decay = value
+      this.notifyObservers()
     }
 
     get decay() {
@@ -76,6 +78,7 @@ class Envelope extends Observable {
 
     set sustain(value) {
       this._sustain = value
+      this.notifyObservers()
     }
 
     get sustain() {
@@ -84,6 +87,7 @@ class Envelope extends Observable {
 
     set release(value) {
       this._release = value
+      this.notifyObservers()
     }
 
     get release() {
@@ -92,6 +96,7 @@ class Envelope extends Observable {
 
     set amount(value) {
       this._amount = value
+      this.notifyObservers()
     }
 
     get amount() {
