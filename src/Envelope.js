@@ -10,28 +10,41 @@ class Envelope extends Observable {
       // the following should work, but we need to convert that scientific notation to a value somehow
       // this.maxValue = audioParam.maxValue
       // this.minValue = audioParam.minValue
+      this.startValue = audioParam.value
       this.maxValue = 1
       this.minValue = 0
       this._attack = 0
       this._decay = 40
       this._sustain = 0
       this._release = 40
+      this._amount = 127
     }
 
     // schedule handles the ADS of the ADSR envelope
     //
     schedule() {
-      // how far to drop down for the sustain
-      const sustainPercent = this._sustain * (100 / 127) * .01
+      const baseValue = this.startValue
 
-      // reset value to 0
-      this.audioParam.setValueAtTime(0, this.context.currentTime)
+      const amount = (this._amount / 127)
+      const sustainAmount = this._sustain * (100 / 127) * .01
 
-      // ramp up to max value from attack
-      this.audioParam.linearRampToValueAtTime(this.maxValue, this.context.currentTime + knobToSeconds(this._attack))
+      const rampTo = baseValue + ((this.maxValue - baseValue) * amount)
+      const sustainTo = baseValue + ((this.maxValue - baseValue) * sustainAmount)
+
+      // start at the current value
+      this.audioParam.setValueAtTime(this.startValue, this.context.currentTime)
+
+      // ramp up
+      this.audioParam.linearRampToValueAtTime(
+        rampTo, 
+        this.context.currentTime + knobToSeconds(this._attack)
+      )
 
       // ramp down to sustain value
-      this.audioParam.linearRampToValueAtTime(this.maxValue * sustainPercent, this.context.currentTime + knobToSeconds(this._attack + this._decay))
+      this.audioParam.linearRampToValueAtTime(
+        sustainTo, 
+        this.context.currentTime + knobToSeconds(this._attack + this._decay)
+      )
     }
 
     // reset handles the R of the ADSR envelope
@@ -42,7 +55,7 @@ class Envelope extends Observable {
       this.audioParam.setValueAtTime(this.audioParam.value, this.context.currentTime)
 
       // start decay from current value to min
-      this.audioParam.linearRampToValueAtTime(this.minValue, this.context.currentTime + knobToSeconds(this._release))
+      this.audioParam.linearRampToValueAtTime(this.startValue, this.context.currentTime + knobToSeconds(this._release))
     }
 
     set attack(value) {
@@ -75,6 +88,14 @@ class Envelope extends Observable {
 
     get release() {
       return this._release
+    }
+
+    set amount(value) {
+      this._amount = value
+    }
+
+    get amount() {
+      return this._amount
     }
 }
 

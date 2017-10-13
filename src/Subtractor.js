@@ -35,7 +35,7 @@ class Subtractor extends Observable {
     // only perform certain tasks once the DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
       this.startOscilloscope()
-      this.loadPreset(Presets.Init)
+      this.loadPreset({})
     })
   }
 
@@ -109,6 +109,10 @@ class Subtractor extends Observable {
   }
 
   // filter envelope getters and setters
+  set filterAmount(value) {
+    this._filterAmount = value
+  }
+
   set filterAttack(value) {
     this._filterAttack = value
   }
@@ -123,6 +127,10 @@ class Subtractor extends Observable {
 
   set filterRelease(value) {
     this._filterRelease = value
+  }
+
+  get filterAmount() {
+    return this._filterAmount
   }
 
   get filterAttack() {
@@ -167,7 +175,11 @@ class Subtractor extends Observable {
     // add noteOff to the osc prototype
     osc.noteOff = this.noteOff.bind(this)
 
+    // create a gain node for the envelope
     const gainNode = this.context.createGain()
+    gainNode.gain.value = 0
+
+    // attach an envelope to the gain node
     const oscEnvelope = new Envelope(this.context, gainNode.gain)
     oscEnvelope.maxValue = 1
     oscEnvelope.minValue = 0
@@ -184,7 +196,7 @@ class Subtractor extends Observable {
     filter.q = this.filter1.q
     filter.gain = this.filter1.gain
 
-    // attach and envelope to the filter frequency
+    // attach an envelope to the filter frequency
     const filterEnvelope = new Envelope(this.context, filter.filter.frequency)
     filterEnvelope.maxValue = 22050
     filterEnvelope.minValue = 10
@@ -192,6 +204,7 @@ class Subtractor extends Observable {
     filterEnvelope.sustain = this.filterSustain
     filterEnvelope.decay = this.filterDecay
     filterEnvelope.release = this.filterRelease
+    filterEnvelope.amount = this.filterAmount
     filterEnvelope.schedule()
 
     // route the osc thru everything we just created 
@@ -239,33 +252,34 @@ class Subtractor extends Observable {
     },
     ampEnv = {
       attack: 0,
-      decay: 40,
-      sustain: 0,
-      release: 40
+      decay: 100,
+      sustain: 64,
+      release: 10
     },
     filterEnv = {
       attack: 0,
       decay: 40,
       sustain: 0,
-      release: 40
+      release: 40,
+      amount: 0
     },
     osc1 = {
       enabled: 1,
-      waveform: 1,
+      waveform: 3,
       octave: 0,
       semi: 0,
       detune: 0
     },
     osc2 = {
       enabled: 0,
-      waveform: 1,
+      waveform: 3,
       octave: 0,
       semi: 0,
       detune: 0
     },
     filter1 = {
       type: 1,
-      freq: 22050,
+      freq: 11025,
       q: 0.10,
       gain: 0
     }
@@ -284,6 +298,7 @@ class Subtractor extends Observable {
     this.filterDecay = filterEnv.decay
     this.filterSustain = filterEnv.sustain
     this.filterRelease = filterEnv.release
+    this.filterAmount = filterEnv.amount
     this.osc1.enabled = osc1.enabled
     this.osc1.waveform = osc1.waveform
     this.osc1.octave = osc1.octave
