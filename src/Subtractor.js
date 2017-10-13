@@ -39,125 +39,6 @@ class Subtractor extends Observable {
     })
   }
 
-  set octave(value) {
-    this._octave = value
-    this.notifyObservers()
-  }
-
-  get octave() {
-    return this._octave
-  }
-
-  set polyphony(value) {
-    this._polyphony = value
-    this.notifyObservers()
-  }
-
-  get polyphony() {
-    return this._polyphony
-  }
-
-  set detune(value) {
-    this._detune = value * .01
-    this.notifyObservers()
-  }
-
-  get detune() {
-    return this._detune * 100
-  }
-
-  set gain(value) {
-    this.masterGain.gain.value = value * .01
-    this.notifyObservers()
-  }
-
-  get gain() {
-    return this.masterGain.gain.value * 100
-  }
-
-  // amp envelope getter and setters
-  set attack(value) {
-    this._attack = value
-    this.notifyObservers()
-  }
-
-  get attack() {
-    return this._attack
-  }
-
-  set decay(value) {
-    this._decay = value
-    this.notifyObservers()
-  }
-
-  get decay() {
-    return this._decay
-  }
-
-  set sustain(value) {
-    this._sustain = value
-    this.notifyObservers()
-  }
-
-  get sustain() {
-    return this._sustain
-  }
-
-  set release(value) {
-    this._release = value
-    this.notifyObservers()
-  }
-
-  get release() {
-    return this._release
-  }
-
-  // filter envelope getters and setters
-  set filterAttack(value) {
-    this._filterAttack = value
-    this.notifyObservers()
-  }
-
-  get filterAttack() {
-    return this._filterAttack
-  }
-
-  set filterDecay(value) {
-    this._filterDecay = value
-    this.notifyObservers()
-  }
-
-  get filterDecay() {
-    return this._filterDecay
-  }
-
-  set filterSustain(value) {
-    this._filterSustain = value
-    this.notifyObservers()
-  }
-
-  get filterSustain() {
-    return this._filterSustain
-  }
-
-  set filterRelease(value) {
-    this._filterRelease = value
-    this.notifyObservers()
-  }
-  
-  get filterRelease() {
-    return this._filterRelease
-  }
-
-  set filterAmount(value) {
-    this._filterAmount = value
-    this.notifyObservers()
-  }
-
-  get filterAmount() {
-    return this._filterAmount
-  }
-
   noteOn(note) {
     let returnOscs = [this.osc1, this.osc2].map((osc) => {
       if (!osc.enabled) { 
@@ -177,9 +58,9 @@ class Subtractor extends Observable {
     osc.stop(this.context.currentTime + knobToSeconds(this.release))
   }
 
-
   // route an oscillator thru the pipeline of modifiers.
   // e.g. gains, filter, distortions etc.
+  //
   pipeline(osc) {
     // add noteOff to the osc prototype
     osc.noteOff = this.noteOff.bind(this)
@@ -404,6 +285,124 @@ class Subtractor extends Observable {
     a.href = objectURL
 
     a.click()
+  }
+  set octave(value) {
+    this._octave = value
+    this.notifyObservers()
+  }
+
+  get octave() {
+    return this._octave
+  }
+
+  set polyphony(value) {
+    this._polyphony = value
+    this.notifyObservers()
+  }
+
+  get polyphony() {
+    return this._polyphony
+  }
+
+  set detune(value) {
+    this._detune = value * .01
+    this.notifyObservers()
+  }
+
+  get detune() {
+    return this._detune * 100
+  }
+
+  set gain(value) {
+    this.masterGain.gain.value = value * .01
+    this.notifyObservers()
+  }
+
+  get gain() {
+    return this.masterGain.gain.value * 100
+  }
+
+  // amp envelope getter and setters
+  set attack(value) {
+    this._attack = value
+    this.notifyObservers()
+  }
+
+  get attack() {
+    return this._attack
+  }
+
+  set decay(value) {
+    this._decay = value
+    this.notifyObservers()
+  }
+
+  get decay() {
+    return this._decay
+  }
+
+  set sustain(value) {
+    this._sustain = value
+    this.notifyObservers()
+  }
+
+  get sustain() {
+    return this._sustain
+  }
+
+  set release(value) {
+    this._release = value
+    this.notifyObservers()
+  }
+
+  get release() {
+    return this._release
+  }
+
+  // filter envelope getters and setters
+  set filterAttack(value) {
+    this._filterAttack = value
+    this.notifyObservers()
+  }
+
+  get filterAttack() {
+    return this._filterAttack
+  }
+
+  set filterDecay(value) {
+    this._filterDecay = value
+    this.notifyObservers()
+  }
+
+  get filterDecay() {
+    return this._filterDecay
+  }
+
+  set filterSustain(value) {
+    this._filterSustain = value
+    this.notifyObservers()
+  }
+
+  get filterSustain() {
+    return this._filterSustain
+  }
+
+  set filterRelease(value) {
+    this._filterRelease = value
+    this.notifyObservers()
+  }
+  
+  get filterRelease() {
+    return this._filterRelease
+  }
+
+  set filterAmount(value) {
+    this._filterAmount = value
+    this.notifyObservers()
+  }
+
+  get filterAmount() {
+    return this._filterAmount
   }
 }
 
