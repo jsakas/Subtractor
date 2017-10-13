@@ -52,7 +52,6 @@ class Envelope extends Observable {
     reset() {
       // kill all current scheduled values and reset to current value
       this.audioParam.cancelScheduledValues(this.context.currentTime)
-      this.audioParam.setValueAtTime(this.audioParam.value, this.context.currentTime)
 
       // start decay from current value to min
       this.audioParam.linearRampToValueAtTime(this.startValue, this.context.currentTime + knobToSeconds(this._release))
