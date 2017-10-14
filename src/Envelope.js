@@ -46,9 +46,13 @@ class Envelope extends Observable {
 
     // reset handles the R of the ADSR envelope
     //
+    // in Firefox, this does not current work properly because cancelAndHoldAtTime is not available yet
+    // 
     reset() {
-      // kill all current scheduled values and reset to current value
-      this.audioParam.cancelScheduledValues(this.context.currentTime)
+      // cancelAndHoldAtTime is not available in Firefox yet
+      if (this.audioParam.cancelAndHoldAtTime) {
+        this.audioParam.cancelAndHoldAtTime(this.context.currentTime)
+      }
 
       // start decay from current value to min
       this.audioParam.linearRampToValueAtTime(this.startValue, this.context.currentTime + knobToSeconds(this._release))
