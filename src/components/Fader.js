@@ -112,7 +112,6 @@ class Fader extends HTMLElement {
     }
 
     _this.faderInput.value = newValue
-    _this.faderInput.innerText = _this.observable[_this.label] || parseInt(_this.observable[_this.bind])
     _this.faderInput.dispatchEvent(new Event('input'))
   }
 }

@@ -108,7 +108,6 @@ class Knob extends HTMLElement {
     }
 
     _this.knobInput.value = newValue
-    _this.knobValue.innerText = _this.observable[_this.label] || parseInt(_this.observable[_this.bind])
     _this.knobInput.dispatchEvent(new Event('input'))
   }
 }
