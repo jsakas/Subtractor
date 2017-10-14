@@ -7,12 +7,9 @@ class Envelope extends Observable {
 
       this.context = context
       this.audioParam = audioParam
-      // the following should work, but we need to convert that scientific notation to a value somehow
-      // this.maxValue = audioParam.maxValue
-      // this.minValue = audioParam.minValue
       this.startValue = audioParam.value
-      this.maxValue = 1
-      this.minValue = 0
+      this._maxValue = 1
+      this._minValue = 0
       this._attack = 0
       this._decay = 40
       this._sustain = 0
@@ -28,8 +25,8 @@ class Envelope extends Observable {
       const amount = (this._amount / 127)
       const sustainAmount = this._sustain * (100 / 127) * .01
 
-      const rampTo = baseValue + ((this.maxValue - baseValue) * amount)
-      const sustainTo = baseValue + ((this.maxValue - baseValue) * sustainAmount)
+      const rampTo = baseValue + ((this._maxValue - baseValue) * amount)
+      const sustainTo = baseValue + ((this._maxValue - baseValue) * sustainAmount)
 
       // start at the current value
       this.audioParam.setValueAtTime(this.startValue, this.context.currentTime)
@@ -100,6 +97,22 @@ class Envelope extends Observable {
 
     get amount() {
       return this._amount
+    }
+
+    set minValue(value) {
+      this._minValue = value
+    }
+
+    get minValue() {
+      return this._minValue
+    }
+
+    set maxValue(value) {
+      this._maxValue = value
+    }
+
+    get maxValue() {
+      return this._maxValue
     }
 }
 
