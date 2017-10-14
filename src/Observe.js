@@ -7,9 +7,9 @@ class Observable {
     self.observers.push(observer)
   }
 
-  notifyObservers() {
+  notifyObservers(message = null) {
     self.observers.forEach((observer) => {
-      observer.notify(this)
+      observer.notify(message || this)
     })
   }
 }
