@@ -77,7 +77,7 @@ class Fader extends HTMLElement {
     this.faderInput.addEventListener('input', (e) => {
       const inputValue = parseInt(e.target.value)
       this.setTop(inputValue)
-      this.faderValue.innerText = parseInt(inputValue)
+      this.faderValue.innerText = this.observable[this.label] || parseInt(inputValue)
       this.observable[this.bind] = parseInt(inputValue)
     })
   }
