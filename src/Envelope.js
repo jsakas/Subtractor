@@ -40,7 +40,7 @@ class Envelope extends Observable {
       // ramp down to sustain value
       this.audioParam.linearRampToValueAtTime(
         sustainTo, 
-        this.context.currentTime + knobToSeconds(this._attack + this._decay)
+        this.context.currentTime + knobToSeconds(this._attack) + knobToSeconds(this._decay)
       )
     }
 
