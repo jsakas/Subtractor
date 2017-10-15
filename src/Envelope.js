@@ -22,11 +22,11 @@ class Envelope extends Observable {
     schedule() {
       const baseValue = this.startValue
 
-      const amount = (this._amount / 127)
-      const sustainAmount = this._sustain * (100 / 127) * .01
+      const amount = (this.amount / 127)
+      const sustainAmount = this.sustain * (100 / 127) * .01
 
-      const rampTo = baseValue + ((this._maxValue - baseValue) * amount)
-      const sustainTo = baseValue + ((this._maxValue - baseValue) * sustainAmount)
+      const rampTo = baseValue + ((this.maxValue - baseValue) * amount)
+      const sustainTo = baseValue + ((this.maxValue - baseValue) * sustainAmount)
 
       // start at the current value
       this.audioParam.setValueAtTime(this.startValue, this.context.currentTime)
@@ -34,13 +34,13 @@ class Envelope extends Observable {
       // ramp up
       this.audioParam.linearRampToValueAtTime(
         rampTo, 
-        this.context.currentTime + knobToSeconds(this._attack)
+        this.context.currentTime + knobToSeconds(this.attack)
       )
 
       // ramp down to sustain value
       this.audioParam.linearRampToValueAtTime(
         sustainTo, 
-        this.context.currentTime + knobToSeconds(this._attack) + knobToSeconds(this._decay)
+        this.context.currentTime + knobToSeconds(this.attack) + knobToSeconds(this.decay)
       )
     }
 
