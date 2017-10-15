@@ -1,7 +1,7 @@
 {
- "name": "Electro Fifth",
+ "name": "Plucky",
  "author": "Jon Sakas",
- "description": "A fatty fifth",
+ "description": "A little pluck",
  "master": {
   "gain": 50,
   "polyphony": 1,
@@ -9,34 +9,34 @@
  },
  "ampEnv": {
   "attack": 0,
-  "decay": 100,
-  "sustain": 64,
-  "release": 23
+  "decay": 36,
+  "sustain": 24,
+  "release": 52
  },
  "filterEnv": {
   "attack": 0,
-  "decay": 40,
+  "decay": 45,
   "sustain": 0,
   "release": 40,
-  "amount": 0
+  "amount": 127
  },
  "osc1": {
   "enabled": 1,
   "waveform": 3,
-  "octave": -2,
+  "octave": 0,
   "semi": 0,
   "detune": 0
  },
  "osc2": {
-  "enabled": 1,
+  "enabled": 0,
   "waveform": 3,
   "octave": 0,
-  "semi": 7,
+  "semi": 0,
   "detune": 0
  },
  "filter1": {
   "type": 1,
-  "freq": 22050,
+  "freq": 10,
   "q": 0.10000000149011612,
   "gain": 0
  }
