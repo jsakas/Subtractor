@@ -222,6 +222,7 @@ class Subtractor extends Observable {
         'decay': this.decay,
         'sustain': this.sustain,
         'release': this.release,
+        'amount': this.filterAmount
       },
       'filterEnv': {
         'attack': this.filterAttack,

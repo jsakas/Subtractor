@@ -4,6 +4,7 @@ import Plucky from './synth/Plucky'
 import DarkBass from './bass/DarkBass'
 import ElectroBass from './bass/ElectroBass'
 import ElectroFifth from './bass/ElectroFifth'
+import BellsOfGuidia from './pluck/BellsOfGuidia'
 
 export { 
   Init, 
@@ -11,5 +12,6 @@ export {
   Plucky, 
   DarkBass, 
   ElectroBass, 
-  ElectroFifth 
+  ElectroFifth,
+  BellsOfGuidia
 }

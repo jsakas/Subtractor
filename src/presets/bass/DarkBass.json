@@ -17,7 +17,8 @@
   "attack": 46,
   "decay": 74,
   "sustain": 0,
-  "release": 40
+  "release": 40,
+  "amount": 0
  },
  "osc1": {
   "enabled": 1,

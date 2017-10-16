@@ -2,6 +2,8 @@ path = require('path')
 
 module.exports =
     entry: [
+        'custom-elements'
+        'shadydom'
         './src/Subtractor.js'
         './src/components/Fader.js'
         './src/components/Keyboard.js'
@@ -13,6 +15,8 @@ module.exports =
     resolve:
         alias:
             'web-audio-test-api': path.resolve(__dirname, 'node_modules/web-audio-test-api')
+            'custom-elements': path.resolve(__dirname, 'node_modules/@webcomponents/custom-elements/custom-elements.min')
+            'shadydom': path.resolve(__dirname, 'node_modules/@webcomponents/shadydom/shadydom.min')
     devServer:
         contentBase: path.join(__dirname),
         port: 7200

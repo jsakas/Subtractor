@@ -1,0 +1,43 @@
+{
+ "name": "Bells of Guidia",
+ "author": "Jon Sakas",
+ "description": "",
+ "master": {
+  "gain": 25,
+  "polyphony": 1,
+  "detune": 0
+ },
+ "ampEnv": {
+  "attack": 0,
+  "decay": 34,
+  "sustain": 64,
+  "release": 61
+ },
+ "filterEnv": {
+  "attack": 0,
+  "decay": 40,
+  "sustain": 0,
+  "release": 40,
+  "amount": 0
+ },
+ "osc1": {
+  "enabled": 1,
+  "waveform": 1,
+  "octave": 2,
+  "semi": 0,
+  "detune": 0
+ },
+ "osc2": {
+  "enabled": 0,
+  "waveform": 3,
+  "octave": 0,
+  "semi": 0,
+  "detune": 0
+ },
+ "filter1": {
+  "type": 1,
+  "freq": 11025,
+  "q": 0.1,
+  "gain": 0
+ }
+}
