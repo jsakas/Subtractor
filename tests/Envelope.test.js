@@ -3,31 +3,6 @@ import { Envelope } from '../src/Envelope'
 
 
 describe('Envelope', () => {
-
-  describe('schedule', () => {
-
-    const audioContext = new AudioContext()
-    const gainNode = audioContext.createGain()
-    const envelope = new Envelope(audioContext, gainNode.gain)
-
-    // TODO - need to figure out how to test this function
-    test('does something', () => {
-      envelope.schedule()
-    })
-  })
-
-  describe('reset', () => {
-
-    const audioContext = new AudioContext()
-    const gainNode = audioContext.createGain()
-    const envelope = new Envelope(audioContext, gainNode.gain)
-
-    // TODO - need to figure out how to test this function
-    test('does something', () => {
-      envelope.reset()
-    })
-  })
-
   describe('setters & getters', () => {
 
     const audioContext = new AudioContext()
