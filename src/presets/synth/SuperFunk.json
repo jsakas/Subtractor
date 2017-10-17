@@ -5,7 +5,7 @@
  "master": {
   "gain": 20.000000298023224,
   "polyphony": 4,
-  "detune": 0.17
+  "detune": 17
  },
  "ampEnv": {
   "attack": 0,
