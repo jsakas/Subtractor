@@ -71,7 +71,7 @@
       <h1 class="logo">Subtractor</h1>
       <div class="preset">
         <h3>Preset</h3>
-        <select class="preset-select" onchange="subtractor.setPresetFromSelect(this.value)">
+        <select class="preset-select" onchange="subtractor.setPresetFromSelect(this.value); this.blur()">
           <option value="Init">Init</option>
           <optgroup label="Synth">
             <option value="Acid">Acid</option>
