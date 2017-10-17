@@ -23,7 +23,7 @@
  "osc1": {
   "enabled": 1,
   "waveform": 3,
-  "octave": -1,
+  "octave": -2,
   "semi": 0,
   "detune": 0
  },
@@ -36,7 +36,7 @@
  },
  "filter1": {
   "type": 1,
-  "freq": 1333,
+  "freq": 231,
   "q": 15,
   "gain": 0
  },
