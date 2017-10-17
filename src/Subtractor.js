@@ -6,6 +6,7 @@ import { Envelope } from './Envelope'
 import { Oscilloscope } from './Oscilloscope'
 import { Observable } from './Observe'
 import { knobToSeconds } from './utils/maths'
+import { intToFilter } from './utils/helpers'
 
 
 class Subtractor extends Observable {
@@ -15,6 +16,12 @@ class Subtractor extends Observable {
     this.osc1       = new Osc(this.context, true)
     this.osc2       = new Osc(this.context, false)
     this.filter1    = new Filter(this.context)
+    this.filter2    = new Filter(this.context)
+    this.dynamicFilters = []
+
+    window.showFilters = () => {
+      console.log(this.dynamicFilters)
+    }
 
     this.name = ''
     this.description = ''
@@ -30,6 +37,9 @@ class Subtractor extends Observable {
     this._detune = 0
 
     this.masterGain = this.context.createGain()
+
+    // static connections
+    this.filter2.filter.connect(this.masterGain)
     this.masterGain.connect(this.context.destination)
 
     // only perform certain tasks once the DOM is ready
@@ -85,6 +95,7 @@ class Subtractor extends Observable {
     filter.freq = this.filter1.freq
     filter.q = this.filter1.q
     filter.gain = this.filter1.gain
+    this.dynamicFilters.push(filter)
 
     // attach an envelope to the filter frequency
     const filterEnvelope = new Envelope(this.context, filter.filter.frequency)
@@ -100,7 +111,7 @@ class Subtractor extends Observable {
     // route the osc thru everything we just created 
     osc.connect(gainNode)
     gainNode.connect(filter.filter)
-    filter.filter.connect(this.masterGain)
+    filter.filter.connect(this.filter2.filter)
 
     // attach the envelopes to the osc the gain node so it can be reset on noteOff
     osc.oscEnvelope = oscEnvelope
@@ -172,6 +183,12 @@ class Subtractor extends Observable {
       freq: 11025,
       q: 0.10,
       gain: 0
+    },
+    filter2 = {
+      type: 1,
+      freq: 22025,
+      q: 0.10,
+      gain: 0
     }
   }) {
     this.name = name
@@ -199,10 +216,14 @@ class Subtractor extends Observable {
     this.osc2.octave = osc2.octave
     this.osc2.semi = osc2.semi
     this.osc2.detune = osc2.detune
-    this.filter1.type = filter1.type
-    this.filter1.freq = filter1.freq
-    this.filter1.q = filter1.q
-    this.filter1.gain = filter1.gain
+    this.filter1Type = filter1.type
+    this.filter1Freq = filter1.freq
+    this.filter1Q = filter1.q
+    this.filter1Gain = filter1.gain
+    this.filter2.type = filter2.type
+    this.filter2.freq = filter2.freq
+    this.filter2.q = filter2.q
+    this.filter2.gain = filter2.gain
   }
 
   // take the current synth settings and return an object
@@ -221,14 +242,14 @@ class Subtractor extends Observable {
         'attack': this.attack,
         'decay': this.decay,
         'sustain': this.sustain,
-        'release': this.release,
-        'amount': this.filterAmount
+        'release': this.release
       },
       'filterEnv': {
         'attack': this.filterAttack,
         'decay': this.filterDecay,
         'sustain': this.filterSustain,
         'release': this.filterRelease,
+        'amount': this.filterAmount
       },
       'osc1': {
         'enabled': this.osc1.enabled,
@@ -245,10 +266,16 @@ class Subtractor extends Observable {
         'detune': this.osc2.detune
       },
       'filter1': {
-        'type': this.filter1.type,
-        'freq': this.filter1.freq,
-        'q': this.filter1.q,
-        'gain': this.filter1.gain
+        'type': this.filter1Type,
+        'freq': this.filter1Freq,
+        'q': this.filter1Q,
+        'gain': this.filter1Gain
+      },
+      'filter2': {
+        'type': this.filter2.type,
+        'freq': this.filter2.freq,
+        'q': this.filter2.q,
+        'gain': this.filter2.gain
       }
     }
   }
@@ -358,6 +385,59 @@ class Subtractor extends Observable {
 
   get release() {
     return this._release
+  }
+
+  // filter 1
+  set filter1Type(value) {
+    this.filter1.type = intToFilter(value)
+    this.dynamicFilters.forEach((filter) => { 
+      filter.type = intToFilter(value) 
+    })
+    this.notifyObservers()
+  }
+
+  get filter1FrType() {
+    return this.filter1.frType
+  }
+
+  get frType() {
+    return this.filter1.type
+  }
+
+  set filter1Freq(value) {
+    this.filter1.freq = value
+    this.dynamicFilters.forEach((filter) => { 
+      filter.freq = value 
+    })
+    this.notifyObservers()
+  }
+
+  get filter1Freq() {
+    return this.filter1.freq
+  }
+
+  set filter1Q(value) {
+    this.filter1.q = value
+    this.dynamicFilters.forEach((filter) => { 
+      filter.q = value 
+    })
+    this.notifyObservers()
+  }
+
+  get filter1Q() {
+    return this.filter1.q
+  }
+
+  set filter1Gain(value) {
+    this.filter1.gain = value
+    this.dynamicFilters.forEach((filter) => { 
+      filter.gain = value 
+    })
+    this.notifyObservers()
+  }
+
+  get filter1Gain() {
+    return this.filter1.gain
   }
 
   // filter envelope getters and setters

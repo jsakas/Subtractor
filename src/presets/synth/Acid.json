@@ -1,0 +1,49 @@
+{
+ "name": "init",
+ "author": "",
+ "description": "",
+ "master": {
+  "gain": 50,
+  "polyphony": 1,
+  "detune": 0
+ },
+ "ampEnv": {
+  "attack": 0,
+  "decay": 100,
+  "sustain": 64,
+  "release": 10
+ },
+ "filterEnv": {
+  "attack": 0,
+  "decay": 45,
+  "sustain": 0,
+  "release": 40,
+  "amount": 42
+ },
+ "osc1": {
+  "enabled": 1,
+  "waveform": 3,
+  "octave": -1,
+  "semi": 0,
+  "detune": 0
+ },
+ "osc2": {
+  "enabled": 0,
+  "waveform": 4,
+  "octave": 0,
+  "semi": 0,
+  "detune": 0
+ },
+ "filter1": {
+  "type": 1,
+  "freq": 1333,
+  "q": 15,
+  "gain": 0
+ },
+ "filter2": {
+  "type": 2,
+  "freq": 100,
+  "q": 0.10000000149011612,
+  "gain": 0
+ }
+}
