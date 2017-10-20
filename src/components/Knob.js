@@ -73,7 +73,7 @@ class Knob extends HTMLElement {
     this.knobInput.addEventListener('input', (e) => {
       const inputValue = parseInt(e.target.value)
       this.setRotation(inputValue)
-      this.knobValue.innerText = parseInt(inputValue)
+      this.knobValue.innerText = this.observable[this.label] || parseInt(inputValue)
       this.observable[this.bind] = parseInt(inputValue)
     })
   }

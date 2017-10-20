@@ -42,6 +42,7 @@
       background: rgb(232, 241, 224);
       display: inline-block;
       margin: 0;
+      vertical-align: top;
     }
 
     .preset {
@@ -59,8 +60,6 @@
 </head>
 
 <body>
-  <script src="../node_modules/@webcomponents/custom-elements/custom-elements.min.js"></script>
-  <script src="../node_modules/@webcomponents/shadydom/shadydom.min.js"></script>
   <script src="../dist/subtractor.js" type="text/javascript"></script>
 
   <script>
@@ -72,14 +71,20 @@
       <h1 class="logo">Subtractor</h1>
       <div class="preset">
         <h3>Preset</h3>
-        <select class="preset-select" onchange="subtractor.setPresetFromSelect(this.value)">
+        <select class="preset-select" onchange="subtractor.setPresetFromSelect(this.value); this.blur()">
           <option value="Init">Init</option>
           <optgroup label="Synth">
+            <option value="Acid">Acid</option>
+            <option value="Plucky">Plucky</option>
             <option value="SuperFunk">Super Funk</option>
           </optgroup>
           <optgroup label="Bass">
             <option value="ElectroFifth">Electro Fifth</option>
+            <option value="ElectroBass">Electro Bass</option>
             <option value="DarkBass">Dark Bass</option>
+          </optgroup>
+          <optgroup label="Pluck">
+            <option value="BellsOfGuidia">Bells of Guidia</option>
           </optgroup>
         </select>
         <button onclick="subtractor.loadPresetFile()">Load</button>
@@ -92,27 +97,53 @@
       <x-knob id="detune" name="Detune" value="0" min="0" max="100" observe="subtractor" bind="detune"></x-knob>
     </section>
     <section>
-      <h2>Osc 1</h2>
-      <x-knob id="enabled" name="On" value="1" min="0" max="1" observe="subtractor.osc1" bind="enabled"></x-knob>
-      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" observe="subtractor.osc1" bind="waveform" label="frWaveform"></x-knob> 
-      <x-knob id="octave" name="Octave" value="0" min="-5" max="5" observe="subtractor.osc1" bind="octave"></x-knob>
-      <x-knob id="semi" name="Semi" value="0" min="-12" max="12" observe="subtractor.osc1" bind="semi"></x-knob>
-      <x-knob id="cent" name="Cent" value="0" min="0" max="100" observe="subtractor.osc1" bind="detune"></x-knob>
+      <div>
+        <h2>Osc 1</h2>
+        <x-knob id="enabled" name="On" value="1" min="0" max="1" observe="subtractor.osc1" bind="enabled"></x-knob>
+        <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" observe="subtractor.osc1" bind="waveform" label="frWaveform"></x-knob> 
+        <x-knob id="octave" name="Octave" value="0" min="-5" max="5" observe="subtractor.osc1" bind="octave"></x-knob>
+        <x-knob id="semi" name="Semi" value="0" min="-12" max="12" observe="subtractor.osc1" bind="semi"></x-knob>
+        <x-knob id="cent" name="Cent" value="0" min="0" max="100" observe="subtractor.osc1" bind="detune"></x-knob>
+      </div>
+      <div>
+        <h2>Osc 2</h2>
+        <x-knob id="enabled" name="On" value="0" min="0" max="1" observe="subtractor.osc2" bind="enabled"></x-knob>
+        <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" observe="subtractor.osc2" bind="waveform" label="frWaveform"></x-knob> 
+        <x-knob id="octave" name="Octave" value="0" min="-5" max="5" observe="subtractor.osc2" bind="octave"></x-knob>
+        <x-knob id="semi" name="Semi" value="0" min="-12" max="12" observe="subtractor.osc2" bind="semi"></x-knob>
+        <x-knob id="cent" name="Cent" value="0" min="0" max="100" observe="subtractor.osc2" bind="detune"></x-knob>
+      </div>
     </section>
     <section>
-      <h2>Osc 2</h2>
-      <x-knob id="enabled" name="On" value="0" min="0" max="1" observe="subtractor.osc2" bind="enabled"></x-knob>
-      <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" observe="subtractor.osc2" bind="waveform" label="frWaveform"></x-knob> 
-      <x-knob id="octave" name="Octave" value="0" min="-5" max="5" observe="subtractor.osc2" bind="octave"></x-knob>
-      <x-knob id="semi" name="Semi" value="0" min="-12" max="12" observe="subtractor.osc2" bind="semi"></x-knob>
-      <x-knob id="cent" name="Cent" value="0" min="0" max="100" observe="subtractor.osc2" bind="detune"></x-knob>
+      <div>
+        <h2>Filter 1</h2>
+        <x-knob id="filter-type" name="Fiter Type" value="1" min="1" max="8" observe="subtractor" bind="filter1Type" label="filter1FrType"></x-knob>
+        <x-knob id="filter-freq" name="Fiter Freq" value="22050" min="10" max="22050" observe="subtractor" bind="filter1Freq"></x-knob>
+        <x-knob id="filter-q" name="Fiter Q" value="1" min="0" max="500" observe="subtractor" bind="filter1Q"></x-knob>
+        <x-knob id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" observe="subtractor" bind="filter1Gain"></x-knob>
+      </div>
+      <div>
+        <h2>Filter Envelope</h2>
+        <x-knob id="filterenv-attack" name="Attack" value="0" min="0" max="127" observe="subtractor" bind="filterAttack"></x-knob>
+        <x-knob id="filterenv-decay" name="Decay" value="40" min="0" max="127" observe="subtractor" bind="filterDecay"></x-knob>
+        <x-knob id="filterenv-sustain" name="Sustain" value="0" min="0" max="127" observe="subtractor" bind="filterSustain"></x-knob>
+        <x-knob id="filterenv-release" name="Release" value="40" min="0" max="127" observe="subtractor" bind="filterRelease"></x-knob>
+        <x-knob id="filterenv-amount" name="Amount" value="0" min="0" max="127" observe="subtractor" bind="filterAmount"></x-knob>
+      </div>
     </section>
     <section>
-      <h2>Filter</h2>
-      <x-knob id="filter-type" name="Fiter Type" value="1" min="1" max="8" observe="subtractor.filter1" bind="type" label="frType"></x-knob>
-      <x-knob id="filter-freq" name="Fiter Freq" value="22050" min="10" max="22050" observe="subtractor.filter1" bind="freq"></x-knob>
-      <x-knob id="filter-q" name="Fiter Q" value="1" min="0" max="500" observe="subtractor.filter1" bind="q"></x-knob>
-      <x-knob id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" observe="subtractor.filter1" bind="gain"></x-knob>
+      <h2>Filter 2</h2>
+      <x-knob id="filter-type" name="Fiter Type" value="1" min="1" max="8" observe="subtractor.filter2" bind="type" label="frType"></x-knob>
+      <x-knob id="filter-freq" name="Fiter Freq" value="22050" min="10" max="22050" observe="subtractor.filter2" bind="freq"></x-knob>
+      <x-knob id="filter-q" name="Fiter Q" value="1" min="0" max="500" observe="subtractor.filter2" bind="q"></x-knob>
+      <x-knob id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" observe="subtractor.filter2" bind="gain"></x-knob>
+    </section>
+    <section>
+      <h2>Amp Envelope</h2>
+      <x-knob id="gainenv-attack" name="Attack" value="0" min="0" max="127" observe="subtractor" bind="attack"></x-knob>
+      <x-knob id="gainenv-decay" name="Decay" value="40" min="0" max="127" observe="subtractor" bind="decay"></x-knob>
+      <x-knob id="gainenv-sustain" name="Sustain" value="0" min="0" max="127" observe="subtractor" bind="sustain"></x-knob>
+      <x-knob id="gainenv-release" name="Release" value="40" min="0" max="127" observe="subtractor" bind="release"></x-knob>
     </section>
     <section>
       <h2>Master</h2>

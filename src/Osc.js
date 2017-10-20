@@ -38,7 +38,6 @@ class Osc extends Observable {
       osc.type = this._waveform
       osc.frequency.value = f
       osc.detune.value = this._detune
-      osc.start()
       return osc
     }
 

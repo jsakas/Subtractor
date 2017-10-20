@@ -77,13 +77,14 @@ class Keyboard extends HTMLElement {
         const note = parseInt(eMouseDown.target.id.replace('key-', ''))
         if (note >= 0 && !noteWasPressed[note]) {
           this.keys[note].classList.add('keyboard__pressed')
-          const polyNoteOscillators = this.observable.startPolyNote(note + this.observable.octave * 12)
+          const polyNoteOscillators = this.observable.noteOn(note + this.observable.octave * 12)
 
           const releaseThisKey = () => {
             this.keys[note].classList.remove('keyboard__pressed')
             polyNoteOscillators.forEach((osc) => {
               try { 
-                osc.stop() 
+                // osc.noteOff is bound during osc.start
+                osc.noteOff(osc)
               } catch (e) {
                 // osc was never started
               }
@@ -101,15 +102,17 @@ class Keyboard extends HTMLElement {
       const note = keyboardKeys.get(eKeyDown.key)
       if (note >= 0 && !noteWasPressed[note]) {
         this.keys[note].classList.add('keyboard__pressed')
-        const polyNoteOscillators = this.observable.startPolyNote(note + this.observable.octave * 12)
+        const polyNoteOscillators = this.observable.noteOn(note + this.observable.octave * 12)
 
         const unPressThisKey = (eNoteKeyUp) => {
           if (note === keyboardKeys.get(eNoteKeyUp.key)) {
             this.keys[note].classList.remove('keyboard__pressed')
             polyNoteOscillators.forEach((osc) => {
               try { 
-                osc.stop() 
+                // osc.noteOff is bound during osc.start
+                osc.noteOff(osc) 
               } catch (e) {
+                console.error(e)
                 // osc was never started
               }
             })

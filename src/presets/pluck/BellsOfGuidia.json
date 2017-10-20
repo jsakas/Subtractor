@@ -1,17 +1,17 @@
 {
- "name": "Electro Fifth",
+ "name": "Bells of Guidia",
  "author": "Jon Sakas",
- "description": "A fatty fifth",
+ "description": "",
  "master": {
-  "gain": 50,
+  "gain": 25,
   "polyphony": 1,
   "detune": 0
  },
  "ampEnv": {
   "attack": 0,
-  "decay": 100,
+  "decay": 34,
   "sustain": 64,
-  "release": 23
+  "release": 61
  },
  "filterEnv": {
   "attack": 0,
@@ -22,22 +22,22 @@
  },
  "osc1": {
   "enabled": 1,
-  "waveform": 3,
-  "octave": -2,
+  "waveform": 1,
+  "octave": 2,
   "semi": 0,
   "detune": 0
  },
  "osc2": {
-  "enabled": 1,
+  "enabled": 0,
   "waveform": 3,
   "octave": 0,
-  "semi": 7,
+  "semi": 0,
   "detune": 0
  },
  "filter1": {
   "type": 1,
-  "freq": 22050,
-  "q": 0.10000000149011612,
+  "freq": 11025,
+  "q": 0.1,
   "gain": 0
  }
 }

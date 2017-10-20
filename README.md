@@ -11,7 +11,7 @@ npm install
 npm start
 ```
 
-Then open [localhost:8000/demo](http://localhost:8000/demo)
+Then open [localhost:8000/demo](http://localhost:7200/demo)
 
 ## Testing
 run Jest:

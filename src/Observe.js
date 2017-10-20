@@ -1,15 +1,15 @@
 class Observable {
   constructor() {
-    self.observers = []
+    this.observers = []
   }
 
   registerObserver(observer) {
-    self.observers.push(observer)
+    this.observers.push(observer)
   }
 
-  notifyObservers() {
-    self.observers.forEach((observer) => {
-      observer.notify(this)
+  notifyObservers(message = null) {
+    this.observers.forEach((observer) => {
+      observer.notify(message || this)
     })
   }
 }
