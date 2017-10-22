@@ -39,7 +39,7 @@ describe('Subtractor', () => {
       },
       'filter1': {
         'type': 2,
-        'freq': 10148,
+        'freq': 127,
         'q': 0.15,
         'gain': -3
       }
@@ -122,7 +122,7 @@ describe('Subtractor', () => {
     })
 
     test('sets filter1->frequency', () => {
-      expect(subtractor.filter1.filter.frequency.value).toBe(10148)
+      expect(subtractor.filter1.filter.frequency.value).toBe(Math.pow(127, 2))
     })
 
     test('sets filter1->Q', () => {

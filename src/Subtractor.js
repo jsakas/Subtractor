@@ -6,7 +6,7 @@ import { Filter } from './Filter'
 import { Envelope } from './Envelope'
 import { Oscilloscope } from './Oscilloscope'
 import { Observable } from './Observe'
-import { knobToSeconds } from './utils/maths'
+import { knobToSeconds, knobToFreq } from './utils/maths'
 import { intToFilter } from './utils/helpers'
 
 
@@ -19,10 +19,6 @@ class Subtractor extends Observable {
     this.filter1    = new Filter(this.context)
     this.filter2    = new Filter(this.context)
     this.dynamicFilters = []
-
-    window.showFilters = () => {
-      console.log(this.dynamicFilters)
-    }
 
     this.name = ''
     this.description = ''
@@ -92,7 +88,7 @@ class Subtractor extends Observable {
 
     // create a filter, base it on the global filter
     const filter = new Filter(this.context)
-    filter.type = this.filter1.type
+    filter.type = this.filter1.frType
     filter.freq = this.filter1.freq
     filter.q = this.filter1.q
     filter.gain = this.filter1.gain
@@ -100,8 +96,8 @@ class Subtractor extends Observable {
 
     // attach an envelope to the filter frequency
     const filterEnvelope = new Envelope(this.context, filter.filter.frequency)
-    filterEnvelope.maxValue = 22050
-    filterEnvelope.minValue = 10
+    filterEnvelope.maxValue = knobToFreq(127)
+    filterEnvelope.minValue = knobToFreq(0)
     filterEnvelope.attack = this.filterAttack
     filterEnvelope.sustain = this.filterSustain
     filterEnvelope.decay = this.filterDecay
@@ -181,13 +177,13 @@ class Subtractor extends Observable {
     },
     filter1 = {
       type: 1,
-      freq: 11025,
+      freq: 64,
       q: 0.10,
       gain: 0
     },
     filter2 = {
       type: 1,
-      freq: 22025,
+      freq: 127,
       q: 0.10,
       gain: 0
     }
@@ -397,12 +393,12 @@ class Subtractor extends Observable {
     this.notifyObservers()
   }
 
-  get filter1FrType() {
-    return this.filter1.frType
+  get filter1Type() {
+    return this.filter1.type
   }
 
-  get frType() {
-    return this.filter1.type
+  get filter1FrType() {
+    return this.filter1.frType
   }
 
   set filter1Freq(value) {
@@ -415,6 +411,10 @@ class Subtractor extends Observable {
 
   get filter1Freq() {
     return this.filter1.freq
+  }
+
+  get filter1FrFreq() {
+    return this.filter1.frFreq
   }
 
   set filter1Q(value) {
