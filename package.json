@@ -30,5 +30,10 @@
   "dependencies": {
     "@webcomponents/custom-elements": "^1.0.4",
     "@webcomponents/shadydom": "^1.0.4"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|scss)$": "<rootDir>/tests/__mocks__/css.js"
+    }
   }
 }
