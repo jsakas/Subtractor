@@ -1,4 +1,8 @@
 path = require('path')
+ExtractTextPlugin = require('extract-text-webpack-plugin')
+extractSass = new ExtractTextPlugin({
+    filename: 'subtractor.css'
+})
 
 module.exports =
     entry: [
@@ -32,9 +36,27 @@ module.exports =
             loader: 'json-loader'
         ,
             test: /\.scss$/,
-            use: [
-                loader: "css-loader" # translates CSS into CommonJS
-            ,
-                loader: "sass-loader" # compiles Sass to CSS  
+            include: [
+                path.resolve(__dirname, 'src/sass')
             ]
+            exclude: [
+                path.resolve(__dirname, 'src/sass/subtractor.scss')
+            ]
+            use: [
+                loader: 'css-loader'
+            ,
+                loader: 'sass-loader'
+            ]
+        ,
+            test: path.resolve(__dirname, 'src/sass/subtractor.scss'),
+            use: extractSass.extract(
+                use: [
+                    loader: 'css-loader'
+                ,
+                    loader: 'sass-loader'
+                ]
+            )
         ]
+    plugins: [
+        extractSass
+    ]
