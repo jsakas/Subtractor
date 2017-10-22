@@ -20,6 +20,7 @@
     "coffeescript": "^2.0.1",
     "css-loader": "^0.28.7",
     "eslint": "^4.7.0",
+    "extract-text-webpack-plugin": "^3.0.1",
     "jest": "^21.1.0",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",
