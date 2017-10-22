@@ -109,10 +109,20 @@ var knobToSeconds = function knobToSeconds(value) {
   return Math.pow(value, 5) / 500000000;
 };
 
+var knobToFreq = function knobToFreq(value) {
+  return Math.pow(value, 2);
+};
+
+var freqToKnob = function freqToKnob(value) {
+  return Math.sqrt(value);
+};
+
 exports.getNoteFreq = getNoteFreq;
 exports.percentToPoint = percentToPoint;
 exports.pointToPercent = pointToPercent;
 exports.knobToSeconds = knobToSeconds;
+exports.knobToFreq = knobToFreq;
+exports.freqToKnob = freqToKnob;
 
 /***/ }),
 /* 1 */
@@ -476,10 +486,6 @@ var Subtractor = function (_Observable) {
     _this.filter2 = new _Filter.Filter(_this.context);
     _this.dynamicFilters = [];
 
-    window.showFilters = function () {
-      console.log(_this.dynamicFilters);
-    };
-
     _this.name = '';
     _this.description = '';
     _this.author = '';
@@ -559,7 +565,7 @@ var Subtractor = function (_Observable) {
 
       // create a filter, base it on the global filter
       var filter = new _Filter.Filter(this.context);
-      filter.type = this.filter1.type;
+      filter.type = this.filter1.frType;
       filter.freq = this.filter1.freq;
       filter.q = this.filter1.q;
       filter.gain = this.filter1.gain;
@@ -567,8 +573,8 @@ var Subtractor = function (_Observable) {
 
       // attach an envelope to the filter frequency
       var filterEnvelope = new _Envelope.Envelope(this.context, filter.filter.frequency);
-      filterEnvelope.maxValue = 22050;
-      filterEnvelope.minValue = 10;
+      filterEnvelope.maxValue = (0, _maths.knobToFreq)(127);
+      filterEnvelope.minValue = (0, _maths.knobToFreq)(0);
       filterEnvelope.attack = this.filterAttack;
       filterEnvelope.sustain = this.filterSustain;
       filterEnvelope.decay = this.filterDecay;
@@ -659,14 +665,14 @@ var Subtractor = function (_Observable) {
           _ref2$filter = _ref2.filter1,
           filter1 = _ref2$filter === undefined ? {
         type: 1,
-        freq: 11025,
+        freq: 64,
         q: 0.10,
         gain: 0
       } : _ref2$filter,
           _ref2$filter2 = _ref2.filter2,
           filter2 = _ref2$filter2 === undefined ? {
         type: 1,
-        freq: 22025,
+        freq: 127,
         q: 0.10,
         gain: 0
       } : _ref2$filter2;
@@ -891,16 +897,14 @@ var Subtractor = function (_Observable) {
         filter.type = (0, _helpers.intToFilter)(value);
       });
       this.notifyObservers();
+    },
+    get: function get() {
+      return this.filter1.type;
     }
   }, {
     key: 'filter1FrType',
     get: function get() {
       return this.filter1.frType;
-    }
-  }, {
-    key: 'frType',
-    get: function get() {
-      return this.filter1.type;
     }
   }, {
     key: 'filter1Freq',
@@ -913,6 +917,11 @@ var Subtractor = function (_Observable) {
     },
     get: function get() {
       return this.filter1.freq;
+    }
+  }, {
+    key: 'filter1FrFreq',
+    get: function get() {
+      return this.filter1.frFreq;
     }
   }, {
     key: 'filter1Q',
@@ -1060,43 +1069,43 @@ module.exports = {"name":"Init","author":"Subtractor Team","description":""}
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":0,"decay":45,"sustain":0,"release":40,"amount":42},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":4,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":231,"q":15,"gain":0},"filter2":{"type":2,"freq":100,"q":0.10000000149011612,"gain":0}}
+module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":0,"decay":45,"sustain":0,"release":40,"amount":42},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":4,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":15,"q":15,"gain":0},"filter2":{"type":2,"freq":10,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Super Funk","author":"Jon Sakas","description":"Play chords!","master":{"gain":20.000000298023224,"polyphony":4,"detune":17},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":35},"filterEnv":{"attack":61,"decay":53,"sustain":0,"release":35,"amount":40},"osc1":{"enabled":1,"waveform":3,"octave":0,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":3,"octave":2,"semi":0,"detune":32},"filter1":{"type":1,"freq":10,"q":0,"gain":0}}
+module.exports = {"name":"Super Funk","author":"Jon Sakas","description":"Play chords!","master":{"gain":20,"polyphony":4,"detune":17},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":35},"filterEnv":{"attack":61,"decay":53,"sustain":0,"release":35,"amount":40},"osc1":{"enabled":1,"waveform":3,"octave":0,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":3,"octave":2,"semi":0,"detune":32},"filter1":{"type":1,"freq":10,"q":0,"gain":0}}
 
 /***/ }),
 /* 12 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Plucky","author":"Jon Sakas","description":"A little pluck","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":36,"sustain":24,"release":52},"filterEnv":{"attack":0,"decay":45,"sustain":0,"release":40,"amount":127},"osc1":{"enabled":1,"waveform":3,"octave":0,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":10,"q":0.10000000149011612,"gain":0}}
+module.exports = {"name":"Plucky","author":"Jon Sakas","description":"A little pluck","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":36,"sustain":24,"release":52},"filterEnv":{"attack":0,"decay":45,"sustain":0,"release":40,"amount":127},"osc1":{"enabled":1,"waveform":3,"octave":0,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":10,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 13 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Dark Bass","author":"Jon Sakas","description":"Not quite a reese but getting there","master":{"gain":30,"polyphony":2,"detune":11},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":46,"decay":74,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-1,"semi":0,"detune":5},"filter1":{"type":1,"freq":2000,"q":0.1,"gain":0}}
+module.exports = {"name":"Dark Bass","author":"Jon Sakas","description":"Not quite a reese but getting there","master":{"gain":30,"polyphony":2,"detune":11},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":46,"decay":74,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-1,"semi":0,"detune":5},"filter1":{"type":1,"freq":45,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 14 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Electro Bass","author":"Jon Sakas","description":"A bit of whomp","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":52,"decay":43,"sustain":0,"release":40,"amount":40},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"filter1":{"type":1,"freq":10,"q":0.10000000149011612,"gain":0}}
+module.exports = {"name":"Electro Bass","author":"Jon Sakas","description":"A bit of whomp","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":52,"decay":43,"sustain":0,"release":40,"amount":40},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"filter1":{"type":1,"freq":0,"q":0.10000000149011612,"gain":0}}
 
 /***/ }),
 /* 15 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Electro Fifth","author":"Jon Sakas","description":"A fatty fifth","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":23},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":3,"octave":0,"semi":7,"detune":0},"filter1":{"type":1,"freq":22050,"q":0.10000000149011612,"gain":0}}
+module.exports = {"name":"Electro Fifth","author":"Jon Sakas","description":"A fatty fifth","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":23},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":3,"octave":0,"semi":7,"detune":0},"filter1":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
 
 /***/ }),
 /* 16 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Bells of Guidia","author":"Jon Sakas","description":"","master":{"gain":25,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":34,"sustain":64,"release":61},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":1,"octave":2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":11025,"q":0.1,"gain":0}}
+module.exports = {"name":"Bells of Guidia","author":"Jon Sakas","description":"","master":{"gain":25,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":34,"sustain":64,"release":61},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":1,"octave":2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":127,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 17 */
@@ -1258,6 +1267,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _helpers = __webpack_require__(3);
 
+var _maths = __webpack_require__(0);
+
 var _Observe = __webpack_require__(1);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1276,7 +1287,7 @@ var Filter = function (_Observable) {
 
     _this.context = context;
     _this._filter = context.createBiquadFilter();
-    _this.freq = 22050;
+    _this.freq = 127;
     _this.type = 'lowpass';
     return _this;
   }
@@ -1307,9 +1318,14 @@ var Filter = function (_Observable) {
   }, {
     key: 'freq',
     set: function set(value) {
-      this._filter.frequency.value = value;
+      this._filter.frequency.value = (0, _maths.knobToFreq)(value);
       this.notifyObservers();
     },
+    get: function get() {
+      return (0, _maths.freqToKnob)(this._filter.frequency.value);
+    }
+  }, {
+    key: 'frFreq',
     get: function get() {
       return this._filter.frequency.value;
     }

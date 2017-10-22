@@ -38,4 +38,12 @@ const knobToSeconds = function(value) {
   return Math.pow(value, 5) / 500000000
 }
 
-export { getNoteFreq, percentToPoint, pointToPercent, knobToSeconds }
+const knobToFreq = function(value) {
+  return Math.pow(value, 2)
+}
+
+const freqToKnob = function(value) {
+  return Math.sqrt(value)
+}
+
+export { getNoteFreq, percentToPoint, pointToPercent, knobToSeconds, knobToFreq, freqToKnob }

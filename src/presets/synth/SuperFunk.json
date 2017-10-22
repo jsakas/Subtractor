@@ -3,7 +3,7 @@
  "author": "Jon Sakas",
  "description": "Play chords!",
  "master": {
-  "gain": 20.000000298023224,
+  "gain": 20,
   "polyphony": 4,
   "detune": 17
  },

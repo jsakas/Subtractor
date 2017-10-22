@@ -1,4 +1,5 @@
 import { intToFilter, filterToInt } from './utils/helpers'
+import { knobToFreq, freqToKnob } from './utils/maths'
 import { Observable } from './Observe'
 
 class Filter extends Observable {
@@ -6,7 +7,7 @@ class Filter extends Observable {
       super()
       this.context = context
       this._filter = context.createBiquadFilter()
-      this.freq = 22050
+      this.freq = 127
       this.type = 'lowpass'
     }
 
@@ -32,11 +33,15 @@ class Filter extends Observable {
     }
 
     set freq(value) {
-      this._filter.frequency.value = value
+      this._filter.frequency.value = knobToFreq(value)
       this.notifyObservers()
     }
 
     get freq() {
+      return freqToKnob(this._filter.frequency.value)
+    }
+
+    get frFreq() {
       return this._filter.frequency.value
     }
 
