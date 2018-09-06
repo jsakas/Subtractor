@@ -5,7 +5,7 @@
  "master": {
   "gain": 50,
   "polyphony": 2,
-  "detune": 74,
+  "detune": 10,
   "voices": 1,
   "glide": 38
  },
