@@ -76,19 +76,13 @@ class Keyboard extends HTMLElement {
       key.addEventListener('mousedown', (eMouseDown) => {
         const note = parseInt(eMouseDown.target.id.replace('key-', ''))
         if (note >= 0 && !noteWasPressed[note]) {
-          this.keys[note].classList.add('keyboard__pressed')
-          const polyNoteOscillators = this.observable.noteOn(note + this.observable.octave * 12)
+          this.keys[note].classList.add('keyboard__pressed');
+
+          const n = note + this.observable.octave * 12;
 
           const releaseThisKey = () => {
             this.keys[note].classList.remove('keyboard__pressed')
-            polyNoteOscillators.forEach((osc) => {
-              try { 
-                // osc.noteOff is bound during osc.start
-                osc.noteOff(osc)
-              } catch (e) {
-                // osc was never started
-              }
-            })
+            this.observable.noteOff(n);
             window.removeEventListener('mouseup', releaseThisKey)
             noteWasPressed[note] = false
           }
@@ -102,20 +96,14 @@ class Keyboard extends HTMLElement {
       const note = keyboardKeys.get(eKeyDown.key)
       if (note >= 0 && !noteWasPressed[note]) {
         this.keys[note].classList.add('keyboard__pressed')
-        const polyNoteOscillators = this.observable.noteOn(note + this.observable.octave * 12)
+        const n = note + this.observable.octave * 12;
+
+        this.observable.noteOn(n)
 
         const unPressThisKey = (eNoteKeyUp) => {
           if (note === keyboardKeys.get(eNoteKeyUp.key)) {
             this.keys[note].classList.remove('keyboard__pressed')
-            polyNoteOscillators.forEach((osc) => {
-              try { 
-                // osc.noteOff is bound during osc.start
-                osc.noteOff(osc) 
-              } catch (e) {
-                console.error(e)
-                // osc was never started
-              }
-            })
+            this.observable.noteOff(n);
             window.removeEventListener('keyup', unPressThisKey)
           }
         }

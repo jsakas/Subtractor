@@ -296,10 +296,17 @@ var filterToInt = function filterToInt(f) {
   return ['lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'].indexOf(f) + 1;
 };
 
+var renameObjectKey = function renameObjectKey(obj, oldKey, newKey) {
+  obj[newKey] = obj[oldKey];
+  delete obj[oldKey];
+  return obj;
+};
+
 exports.intToWaveform = intToWaveform;
 exports.waveformToInt = waveformToInt;
 exports.intToFilter = intToFilter;
 exports.filterToInt = filterToInt;
+exports.renameObjectKey = renameObjectKey;
 
 /***/ }),
 /* 4 */
@@ -499,6 +506,11 @@ var Subtractor = function (_Observable) {
     _this._polyphony = 1;
     _this._detune = 0;
 
+    _this._voices = 4;
+    _this._glide = 1;
+
+    _this._activeNotes = {};
+
     _this.masterGain = _this.context.createGain();
 
     // static connections
@@ -514,29 +526,68 @@ var Subtractor = function (_Observable) {
   }
 
   _createClass(Subtractor, [{
+    key: 'moveNote',
+    value: function moveNote(n1, n2) {
+      var _this2 = this;
+
+      console.debug('moveNote', n1, n2);
+
+      var oscs = this._activeNotes[n1];
+
+      if (oscs) {
+        oscs.forEach(function (osc) {
+          return osc.frequency.linearRampToValueAtTime((0, _maths.getNoteFreq)(n2), _this2.context.currentTime + (0, _maths.knobToSeconds)(_this2._glide));
+        });
+
+        (0, _helpers.renameObjectKey)(this._activeNotes, n1, n2);
+      }
+    }
+  }, {
     key: 'noteOn',
     value: function noteOn(note) {
-      var _this2 = this,
-          _ref;
+      var _this3 = this;
 
-      var returnOscs = [this.osc1, this.osc2].map(function (osc) {
-        if (!osc.enabled) {
-          return [];
-        }
-        return osc.start(note, _this2._polyphony, _this2._detune).map(function (startedOsc) {
-          return _this2.pipeline(startedOsc);
+      console.debug('noteOn', note);
+
+      var activeNoteKeys = Object.keys(this._activeNotes);
+
+      if (activeNoteKeys.length >= this._voices) {
+        this.moveNote(activeNoteKeys[0], note);
+      } else {
+        var _ref;
+
+        var returnOscs = [this.osc1, this.osc2].map(function (osc) {
+          if (!osc.enabled) {
+            return [];
+          }
+          return osc.start(note, _this3._polyphony, _this3._detune).map(function (startedOsc) {
+            return _this3.pipeline(startedOsc);
+          });
         });
-      });
 
-      // osc.start returns an array of osc references, 
-      return (_ref = []).concat.apply(_ref, _toConsumableArray(returnOscs));
+        var oscs = (_ref = []).concat.apply(_ref, _toConsumableArray(returnOscs));
+
+        this._activeNotes[note] = oscs;
+      }
     }
   }, {
     key: 'noteOff',
-    value: function noteOff(osc) {
-      osc.oscEnvelope.reset();
-      osc.filterEnvelope.reset();
-      osc.stop(this.context.currentTime + (0, _maths.knobToSeconds)(this.release));
+    value: function noteOff(note) {
+      var _this4 = this;
+
+      console.debug('noteOff', note);
+
+      if (this._activeNotes[note]) {
+        this._activeNotes[note].forEach(function (osc) {
+          osc.oscEnvelope.reset();
+          osc.filterEnvelope.reset();
+          osc.stop(_this4.context.currentTime + (0, _maths.knobToSeconds)(_this4.release));
+        });
+
+        delete this._activeNotes[note];
+      } else {
+        console.debug('could not find active note ' + note + ', activeNotes are:', this._activeNotes);
+      }
     }
 
     // route an oscillator thru the pipeline of modifiers.
@@ -546,9 +597,6 @@ var Subtractor = function (_Observable) {
   }, {
     key: 'pipeline',
     value: function pipeline(osc) {
-      // add noteOff to the osc prototype
-      osc.noteOff = this.noteOff.bind(this);
-
       // create a gain node for the envelope
       var gainNode = this.context.createGain();
       gainNode.gain.value = 0;
@@ -775,13 +823,13 @@ var Subtractor = function (_Observable) {
   }, {
     key: 'loadPresetFile',
     value: function loadPresetFile() {
-      var _this3 = this;
+      var _this5 = this;
 
       var fileReader = new FileReader();
       fileReader.addEventListener('load', function () {
         var fileContents = fileReader.result;
         var preset = JSON.parse(fileContents);
-        _this3.loadPreset(preset);
+        _this5.loadPreset(preset);
       });
 
       var input = document.createElement('input');
@@ -994,6 +1042,22 @@ var Subtractor = function (_Observable) {
     },
     get: function get() {
       return this._filterAmount;
+    }
+  }, {
+    key: 'voices',
+    get: function get() {
+      return this._voices;
+    },
+    set: function set(value) {
+      this._voices = value;
+    }
+  }, {
+    key: 'glide',
+    get: function get() {
+      return this._glide;
+    },
+    set: function set(value) {
+      this._glide = value;
     }
   }]);
 
@@ -1828,18 +1892,12 @@ class Keyboard extends HTMLElement {
         const note = parseInt(eMouseDown.target.id.replace('key-', ''));
         if (note >= 0 && !noteWasPressed[note]) {
           this.keys[note].classList.add('keyboard__pressed');
-          const polyNoteOscillators = this.observable.noteOn(note + this.observable.octave * 12);
+
+          const n = note + this.observable.octave * 12;
 
           const releaseThisKey = () => {
             this.keys[note].classList.remove('keyboard__pressed');
-            polyNoteOscillators.forEach(osc => {
-              try {
-                // osc.noteOff is bound during osc.start
-                osc.noteOff(osc);
-              } catch (e) {
-                // osc was never started
-              }
-            });
+            this.observable.noteOff(n);
             window.removeEventListener('mouseup', releaseThisKey);
             noteWasPressed[note] = false;
           };
@@ -1853,20 +1911,14 @@ class Keyboard extends HTMLElement {
       const note = __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__["keyboardKeys"].get(eKeyDown.key);
       if (note >= 0 && !noteWasPressed[note]) {
         this.keys[note].classList.add('keyboard__pressed');
-        const polyNoteOscillators = this.observable.noteOn(note + this.observable.octave * 12);
+        const n = note + this.observable.octave * 12;
+
+        this.observable.noteOn(n);
 
         const unPressThisKey = eNoteKeyUp => {
           if (note === __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__["keyboardKeys"].get(eNoteKeyUp.key)) {
             this.keys[note].classList.remove('keyboard__pressed');
-            polyNoteOscillators.forEach(osc => {
-              try {
-                // osc.noteOff is bound during osc.start
-                osc.noteOff(osc);
-              } catch (e) {
-                console.error(e);
-                // osc was never started
-              }
-            });
+            this.observable.noteOff(n);
             window.removeEventListener('keyup', unPressThisKey);
           }
         };

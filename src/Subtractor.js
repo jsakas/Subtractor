@@ -6,8 +6,8 @@ import { Filter } from './Filter'
 import { Envelope } from './Envelope'
 import { Oscilloscope } from './Oscilloscope'
 import { Observable } from './Observe'
-import { knobToSeconds, knobToFreq } from './utils/maths'
-import { intToFilter } from './utils/helpers'
+import { knobToSeconds, knobToFreq, getNoteFreq } from './utils/maths'
+import { intToFilter, renameObjectKey } from './utils/helpers'
 
 
 class Subtractor extends Observable {
@@ -33,6 +33,11 @@ class Subtractor extends Observable {
     this._polyphony = 1
     this._detune = 0
 
+    this._voices = 4
+    this._glide = 1
+
+    this._activeNotes = {};
+
     this.masterGain = this.context.createGain()
 
     // static connections
@@ -45,33 +50,64 @@ class Subtractor extends Observable {
       this.loadPreset({})
     })
   }
+  
+  moveNote(n1, n2) {
+    console.debug('moveNote', n1, n2)
 
-  noteOn(note) {
-    let returnOscs = [this.osc1, this.osc2].map((osc) => {
-      if (!osc.enabled) { 
-        return []
-      }
-      return osc.start(note, this._polyphony, this._detune)
-                .map(startedOsc => this.pipeline(startedOsc))
-    })
+    const oscs = this._activeNotes[n1]
 
-    // osc.start returns an array of osc references, 
-    return [].concat(...returnOscs)
+    if (oscs) {
+      oscs.forEach(osc => osc.frequency.linearRampToValueAtTime(
+        getNoteFreq(n2),
+        this.context.currentTime + knobToSeconds(this._glide)
+      ))
+
+      renameObjectKey(this._activeNotes, n1, n2);
+    }
   }
 
-  noteOff(osc) {
-    osc.oscEnvelope.reset()
-    osc.filterEnvelope.reset()
-    osc.stop(this.context.currentTime + knobToSeconds(this.release))
+  noteOn(note) {
+    console.debug('noteOn', note)
+
+    const activeNoteKeys = Object.keys(this._activeNotes)
+
+    if (activeNoteKeys.length >= this._voices) {
+      this.moveNote(activeNoteKeys[0], note);
+    } else { 
+      let returnOscs = [this.osc1, this.osc2].map((osc) => {
+        if (!osc.enabled) { 
+          return []
+        }
+        return osc.start(note, this._polyphony, this._detune)
+        .map(startedOsc => this.pipeline(startedOsc))
+      })
+      
+      const oscs = [].concat(...returnOscs);
+      
+      this._activeNotes[note] = oscs;
+    }
+  }
+
+  noteOff(note) {
+    console.debug('noteOff', note);
+
+    if (this._activeNotes[note]) {
+      this._activeNotes[note].forEach((osc) => {
+        osc.oscEnvelope.reset()
+        osc.filterEnvelope.reset()
+        osc.stop(this.context.currentTime + knobToSeconds(this.release))
+      })
+      
+      delete this._activeNotes[note];
+    } else {
+      console.debug(`could not find active note ${note}, activeNotes are:`, this._activeNotes)
+    }
   }
 
   // route an oscillator thru the pipeline of modifiers.
   // e.g. gains, filter, distortions etc.
   //
   pipeline(osc) {
-    // add noteOff to the osc prototype
-    osc.noteOff = this.noteOff.bind(this)
-
     // create a gain node for the envelope
     const gainNode = this.context.createGain()
     gainNode.gain.value = 0
@@ -485,6 +521,22 @@ class Subtractor extends Observable {
 
   get filterAmount() {
     return this._filterAmount
+  }
+
+  get voices() {
+    return this._voices;
+  }
+
+  set voices(value) {
+    this._voices = value;
+  }
+
+  get glide() {
+    return this._glide;
+  }
+
+  set glide(value) {
+    this._glide = value;
   }
 }
 
