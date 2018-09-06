@@ -1,4 +1,4 @@
-# Subtractor ∿🎹🎧
+# Subtractor
 
 A WebAudio API Synth
 
