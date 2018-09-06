@@ -730,6 +730,8 @@ var Subtractor = function (_Observable) {
       this.description = description;
       this.gain = master.gain;
       this.polyphony = master.polyphony;
+      this.voices = master.voices;
+      this.glide = master.glide;
       this.detune = master.detune;
       this.attack = ampEnv.attack;
       this.decay = ampEnv.decay;
@@ -773,7 +775,9 @@ var Subtractor = function (_Observable) {
         'master': {
           'gain': this.gain,
           'polyphony': this.polyphony,
-          'detune': this.detune
+          'detune': this.detune,
+          'voices': this.voices,
+          'glide': this.glide
         },
         'ampEnv': {
           'attack': this.attack,
