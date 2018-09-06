@@ -33,6 +33,7 @@
     "@webcomponents/shadydom": "^1.0.4"
   },
   "jest": {
+    "clearMocks": true,
     "moduleNameMapper": {
       "\\.(css|scss)$": "<rootDir>/tests/__mocks__/css.js"
     }

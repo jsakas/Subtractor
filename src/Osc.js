@@ -1,4 +1,4 @@
-import { getNoteFreq } from './utils/maths'
+import { getFrequencySpread, getNoteFreq } from './utils/maths'
 import { intToWaveform, waveformToInt } from './utils/helpers'
 import { Observable } from './Observe'
 
@@ -13,24 +13,14 @@ class Osc extends Observable {
       this._detune = 0
     }
 
-    // returns an array of oscillator nodes depending on the polyphony value
     start(note, polyphony = 1, detune = 0) {
-      // number of intervals on the upper side of the root note
-      const numIntervals = Math.floor(polyphony / 2)
-      // width of interval based on the detune and polyphony measured in notes
-      const interval = numIntervals == 0
-        ? 0
-        : detune / numIntervals
-        // ternary gaurds interval being Infinity
-
       // shift the base note based on oscillator octave and semitone settings
       const shiftedNote = note + (this._octave * 12) + this._semi
-      
-      return Array(polyphony).fill()
-        .map((_,i) => shiftedNote + (numIntervals - i) * interval)
-        .reverse()
-        .map(getNoteFreq)
-        .map(this.startFreqOscillator.bind(this))
+
+      const baseFreq = getNoteFreq(shiftedNote)
+      const freqs = getFrequencySpread(baseFreq, polyphony, detune * 10);
+
+      return freqs.map(this.startFreqOscillator.bind(this))
     }
 
     startFreqOscillator(f) {

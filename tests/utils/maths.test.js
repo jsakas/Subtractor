@@ -1,4 +1,22 @@
-import { percentToPoint, pointToPercent } from '../../src/utils/maths'
+import { getFrequencySpread, percentToPoint, pointToPercent } from '../../src/utils/maths'
+
+describe('getFrequencySpread', () => {
+  test('returns frequency by default', () => {
+    expect(getFrequencySpread(1000)).toEqual([1000])
+  })
+
+  test('returns a proper spread for poly 3, detune 0', () => {
+    const a = getFrequencySpread(1000, 3)
+    expect(a).toEqual([1000, 1000, 1000])
+  })
+
+  test('returns a proper spread for poly 3', () => {
+    const a = getFrequencySpread(1000, 3, 10)
+    expect(a[1]).toEqual(1000)
+    expect(a[0] < a[1]).toBe(true)
+    expect(a[1] < a[2]).toBe(true)
+  })
+})
 
 describe('percentToPoint', () => {
   test('returns 127 for 1 in range [-127, 127]', () => {

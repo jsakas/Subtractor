@@ -6,7 +6,7 @@ import { Filter } from './Filter'
 import { Envelope } from './Envelope'
 import { Oscilloscope } from './Oscilloscope'
 import { Observable } from './Observe'
-import { knobToSeconds, knobToFreq, getNoteFreq } from './utils/maths'
+import { knobToSeconds, knobToFreq, getNoteFreq, getFrequencySpread } from './utils/maths'
 import { intToFilter, renameObjectKey } from './utils/helpers'
 
 
@@ -55,10 +55,12 @@ class Subtractor extends Observable {
     console.debug('moveNote', n1, n2)
 
     const oscs = this._activeNotes[n1]
+    const baseFreq = getNoteFreq(n2)
+    const freqs = getFrequencySpread(baseFreq, this._polyphony, this._detune);
 
     if (oscs) {
-      oscs.forEach(osc => osc.frequency.linearRampToValueAtTime(
-        getNoteFreq(n2),
+      oscs.forEach((osc, i) => osc.frequency.linearRampToValueAtTime(
+        freqs[i],
         this.context.currentTime + knobToSeconds(this._glide)
       ))
 

@@ -7,6 +7,16 @@ const getNoteFreq = function(note) {
   return (tune / 32) * Math.pow(2, ((note - 9) / 12))
 }
 
+// take a frequency, poly, and detune value and return an array of frequencies
+//
+const getFrequencySpread = function(freq, poly = 1, detune = 0) {
+  const numIntervals = Math.floor(poly / 2)
+  
+  return Array(poly).fill()
+    .map((_, i) => freq + (numIntervals - i) * detune)
+    .reverse()
+}
+
 // take a range and a percent value, return a point on the range
 //
 const percentToPoint = function(min, max, percent) {
@@ -46,4 +56,4 @@ const freqToKnob = function(value) {
   return Math.sqrt(value)
 }
 
-export { getNoteFreq, percentToPoint, pointToPercent, knobToSeconds, knobToFreq, freqToKnob }
+export { getNoteFreq, getFrequencySpread, percentToPoint, pointToPercent, knobToSeconds, knobToFreq, freqToKnob }

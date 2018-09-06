@@ -82,6 +82,19 @@ var getNoteFreq = function getNoteFreq(note) {
   return tune / 32 * Math.pow(2, (note - 9) / 12);
 };
 
+// take a frequency, poly, and detune value and return an array of frequencies
+//
+var getFrequencySpread = function getFrequencySpread(freq) {
+  var poly = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var detune = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+  var numIntervals = Math.floor(poly / 2);
+
+  return Array(poly).fill().map(function (_, i) {
+    return freq + (numIntervals - i) * detune;
+  }).reverse();
+};
+
 // take a range and a percent value, return a point on the range
 //
 var percentToPoint = function percentToPoint(min, max, percent) {
@@ -118,6 +131,7 @@ var freqToKnob = function freqToKnob(value) {
 };
 
 exports.getNoteFreq = getNoteFreq;
+exports.getFrequencySpread = getFrequencySpread;
 exports.percentToPoint = percentToPoint;
 exports.pointToPercent = pointToPercent;
 exports.knobToSeconds = knobToSeconds;
@@ -533,10 +547,12 @@ var Subtractor = function (_Observable) {
       console.debug('moveNote', n1, n2);
 
       var oscs = this._activeNotes[n1];
+      var baseFreq = (0, _maths.getNoteFreq)(n2);
+      var freqs = (0, _maths.getFrequencySpread)(baseFreq, this._polyphony, this._detune);
 
       if (oscs) {
-        oscs.forEach(function (osc) {
-          return osc.frequency.linearRampToValueAtTime((0, _maths.getNoteFreq)(n2), _this2.context.currentTime + (0, _maths.knobToSeconds)(_this2._glide));
+        oscs.forEach(function (osc, i) {
+          return osc.frequency.linearRampToValueAtTime(freqs[i], _this2.context.currentTime + (0, _maths.knobToSeconds)(_this2._glide));
         });
 
         (0, _helpers.renameObjectKey)(this._activeNotes, n1, n2);
@@ -1233,27 +1249,19 @@ var Osc = function (_Observable) {
     return _this;
   }
 
-  // returns an array of oscillator nodes depending on the polyphony value
-
-
   _createClass(Osc, [{
     key: 'start',
     value: function start(note) {
       var polyphony = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
       var detune = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
-      // number of intervals on the upper side of the root note
-      var numIntervals = Math.floor(polyphony / 2);
-      // width of interval based on the detune and polyphony measured in notes
-      var interval = numIntervals == 0 ? 0 : detune / numIntervals;
-      // ternary gaurds interval being Infinity
-
       // shift the base note based on oscillator octave and semitone settings
       var shiftedNote = note + this._octave * 12 + this._semi;
 
-      return Array(polyphony).fill().map(function (_, i) {
-        return shiftedNote + (numIntervals - i) * interval;
-      }).reverse().map(_maths.getNoteFreq).map(this.startFreqOscillator.bind(this));
+      var baseFreq = (0, _maths.getNoteFreq)(shiftedNote);
+      var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * 10);
+
+      return freqs.map(this.startFreqOscillator.bind(this));
     }
   }, {
     key: 'startFreqOscillator',
