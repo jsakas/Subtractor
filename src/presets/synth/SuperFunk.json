@@ -5,7 +5,9 @@
  "master": {
   "gain": 20,
   "polyphony": 4,
-  "detune": 17
+  "detune": 17,
+  "voices": 4,
+  "glide": 0
  },
  "ampEnv": {
   "attack": 0,

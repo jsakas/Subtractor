@@ -520,7 +520,7 @@ var Subtractor = function (_Observable) {
     // only perform certain tasks once the DOM is ready
     document.addEventListener('DOMContentLoaded', function () {
       _this.startOscilloscope();
-      _this.loadPreset({});
+      _this.loadPreset(Presets.Reese);
     });
     return _this;
   }
@@ -677,7 +677,9 @@ var Subtractor = function (_Observable) {
           master = _ref2$master === undefined ? {
         gain: 50,
         polyphony: 1,
-        detune: 0
+        detune: 0,
+        voices: 4,
+        glide: 0
       } : _ref2$master,
           _ref2$ampEnv = _ref2.ampEnv,
           ampEnv = _ref2$ampEnv === undefined ? {
@@ -1082,7 +1084,7 @@ window.Subtractor = Subtractor;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BellsOfGuidia = exports.ElectroFifth = exports.ElectroBass = exports.DarkBass = exports.Plucky = exports.SuperFunk = exports.Acid = exports.Init = undefined;
+exports.BellsOfGuidia = exports.ElectroFifth = exports.ElectroBass = exports.Reese = exports.DarkBass = exports.Plucky = exports.SuperFunk = exports.Acid = exports.Init = undefined;
 
 var _Init = __webpack_require__(9);
 
@@ -1112,6 +1114,10 @@ var _ElectroFifth = __webpack_require__(15);
 
 var _ElectroFifth2 = _interopRequireDefault(_ElectroFifth);
 
+var _Reese = __webpack_require__(29);
+
+var _Reese2 = _interopRequireDefault(_Reese);
+
 var _BellsOfGuidia = __webpack_require__(16);
 
 var _BellsOfGuidia2 = _interopRequireDefault(_BellsOfGuidia);
@@ -1123,6 +1129,7 @@ exports.Acid = _Acid2.default;
 exports.SuperFunk = _SuperFunk2.default;
 exports.Plucky = _Plucky2.default;
 exports.DarkBass = _DarkBass2.default;
+exports.Reese = _Reese2.default;
 exports.ElectroBass = _ElectroBass2.default;
 exports.ElectroFifth = _ElectroFifth2.default;
 exports.BellsOfGuidia = _BellsOfGuidia2.default;
@@ -1137,43 +1144,43 @@ module.exports = {"name":"Init","author":"Subtractor Team","description":""}
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":0,"decay":45,"sustain":0,"release":40,"amount":42},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":4,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":15,"q":15,"gain":0},"filter2":{"type":2,"freq":10,"q":0.1,"gain":0}}
+module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":0,"decay":45,"sustain":0,"release":40,"amount":42},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":4,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":15,"q":15,"gain":0},"filter2":{"type":2,"freq":10,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Super Funk","author":"Jon Sakas","description":"Play chords!","master":{"gain":20,"polyphony":4,"detune":17},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":35},"filterEnv":{"attack":61,"decay":53,"sustain":0,"release":35,"amount":40},"osc1":{"enabled":1,"waveform":3,"octave":0,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":3,"octave":2,"semi":0,"detune":32},"filter1":{"type":1,"freq":10,"q":0,"gain":0}}
+module.exports = {"name":"Super Funk","author":"Jon Sakas","description":"Play chords!","master":{"gain":20,"polyphony":4,"detune":17,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":35},"filterEnv":{"attack":61,"decay":53,"sustain":0,"release":35,"amount":40},"osc1":{"enabled":1,"waveform":3,"octave":0,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":3,"octave":2,"semi":0,"detune":32},"filter1":{"type":1,"freq":10,"q":0,"gain":0}}
 
 /***/ }),
 /* 12 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Plucky","author":"Jon Sakas","description":"A little pluck","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":36,"sustain":24,"release":52},"filterEnv":{"attack":0,"decay":45,"sustain":0,"release":40,"amount":127},"osc1":{"enabled":1,"waveform":3,"octave":0,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":10,"q":0.1,"gain":0}}
+module.exports = {"name":"Plucky","author":"Jon Sakas","description":"A little pluck","master":{"gain":50,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":36,"sustain":24,"release":52},"filterEnv":{"attack":0,"decay":45,"sustain":0,"release":40,"amount":127},"osc1":{"enabled":1,"waveform":3,"octave":0,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":10,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 13 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Dark Bass","author":"Jon Sakas","description":"Not quite a reese but getting there","master":{"gain":30,"polyphony":2,"detune":11},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":46,"decay":74,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-1,"semi":0,"detune":5},"filter1":{"type":1,"freq":45,"q":0.1,"gain":0}}
+module.exports = {"name":"Dark Bass","author":"Jon Sakas","description":"Not quite a reese but getting there","master":{"gain":30,"polyphony":2,"detune":11,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":46,"decay":74,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-1,"semi":0,"detune":5},"filter1":{"type":1,"freq":45,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 14 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Electro Bass","author":"Jon Sakas","description":"A bit of whomp","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":52,"decay":43,"sustain":0,"release":40,"amount":40},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"filter1":{"type":1,"freq":0,"q":0.10000000149011612,"gain":0}}
+module.exports = {"name":"Electro Bass","author":"Jon Sakas","description":"A bit of whomp","master":{"gain":50,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":52,"decay":43,"sustain":0,"release":40,"amount":40},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"filter1":{"type":1,"freq":0,"q":0.10000000149011612,"gain":0}}
 
 /***/ }),
 /* 15 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Electro Fifth","author":"Jon Sakas","description":"A fatty fifth","master":{"gain":50,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":23},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":3,"octave":0,"semi":7,"detune":0},"filter1":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
+module.exports = {"name":"Electro Fifth","author":"Jon Sakas","description":"A fatty fifth","master":{"gain":50,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":23},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":3,"octave":0,"semi":7,"detune":0},"filter1":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
 
 /***/ }),
 /* 16 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Bells of Guidia","author":"Jon Sakas","description":"","master":{"gain":25,"polyphony":1,"detune":0},"ampEnv":{"attack":0,"decay":34,"sustain":64,"release":61},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":1,"octave":2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":127,"q":0.1,"gain":0}}
+module.exports = {"name":"Bells of Guidia","author":"Jon Sakas","description":"","master":{"gain":25,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":34,"sustain":64,"release":61},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":1,"octave":2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":127,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 17 */
@@ -2127,6 +2134,12 @@ exports.push([module.i, ".knob {\n  display: inline-flex;\n  align-items: center
 
 // exports
 
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports) {
+
+module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":2,"detune":74,"voices":1,"glide":38},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":48},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":64,"q":0.10000000149011612,"gain":0},"filter2":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
 
 /***/ })
 /******/ ]);

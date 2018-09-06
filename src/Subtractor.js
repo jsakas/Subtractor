@@ -182,7 +182,9 @@ class Subtractor extends Observable {
     master = {
       gain: 50,
       polyphony: 1,
-      detune: 0
+      detune: 0,
+      voices: 4,
+      glide: 0
     },
     ampEnv = {
       attack: 0,
