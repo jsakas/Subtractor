@@ -329,9 +329,9 @@ exports.renameObjectKey = renameObjectKey;
 __webpack_require__(5);
 __webpack_require__(6);
 __webpack_require__(7);
-__webpack_require__(22);
-__webpack_require__(24);
-module.exports = __webpack_require__(27);
+__webpack_require__(23);
+__webpack_require__(25);
+module.exports = __webpack_require__(28);
 
 
 /***/ }),
@@ -466,15 +466,15 @@ var _presets = __webpack_require__(8);
 
 var Presets = _interopRequireWildcard(_presets);
 
-__webpack_require__(17);
+__webpack_require__(18);
 
-var _Osc = __webpack_require__(18);
+var _Osc = __webpack_require__(19);
 
-var _Filter = __webpack_require__(19);
+var _Filter = __webpack_require__(20);
 
-var _Envelope = __webpack_require__(20);
+var _Envelope = __webpack_require__(21);
 
-var _Oscilloscope = __webpack_require__(21);
+var _Oscilloscope = __webpack_require__(22);
 
 var _Observe = __webpack_require__(1);
 
@@ -484,7 +484,7 @@ var _helpers = __webpack_require__(3);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -501,8 +501,8 @@ var Subtractor = function (_Observable) {
     var _this = _possibleConstructorReturn(this, (Subtractor.__proto__ || Object.getPrototypeOf(Subtractor)).call(this));
 
     _this.context = new AudioContext();
-    _this.osc1 = new _Osc.Osc(_this.context, true);
-    _this.osc2 = new _Osc.Osc(_this.context, false);
+    _this.osc1 = new _Observe.Observable();
+    _this.osc2 = new _Observe.Observable();
     _this.filter1 = new _Filter.Filter(_this.context);
     _this.filter2 = new _Filter.Filter(_this.context);
     _this.dynamicFilters = [];
@@ -531,6 +531,8 @@ var Subtractor = function (_Observable) {
     _this.filter2.filter.connect(_this.masterGain);
     _this.masterGain.connect(_this.context.destination);
 
+    _this.pipeline = _this.pipeline.bind(_this);
+
     // only perform certain tasks once the DOM is ready
     document.addEventListener('DOMContentLoaded', function () {
       _this.startOscilloscope();
@@ -546,17 +548,17 @@ var Subtractor = function (_Observable) {
 
       console.debug('moveNote', n1, n2);
 
-      var oscs = this._activeNotes[n1];
-      var baseFreq = (0, _maths.getNoteFreq)(n2);
-      var freqs = (0, _maths.getFrequencySpread)(baseFreq, this._polyphony, this._detune);
+      var voices = this._activeNotes[n1];
 
-      if (oscs) {
-        oscs.forEach(function (osc, i) {
-          return osc.frequency.linearRampToValueAtTime(freqs[i], _this2.context.currentTime + (0, _maths.knobToSeconds)(_this2._glide));
+      Object.keys(voices).filter(function (i) {
+        return voices[i];
+      }).forEach(function (voice) {
+        Object.keys(voice).forEach(function (v) {
+          voices[voice[v]].move(n2, _this2._polyphony, _this2._detune, _this2.context.currentTime + (0, _maths.knobToSeconds)(_this2._glide));
         });
+      });
 
-        (0, _helpers.renameObjectKey)(this._activeNotes, n1, n2);
-      }
+      (0, _helpers.renameObjectKey)(this._activeNotes, n1, n2);
     }
   }, {
     key: 'noteOn',
@@ -570,20 +572,15 @@ var Subtractor = function (_Observable) {
       if (activeNoteKeys.length >= this._voices) {
         this.moveNote(activeNoteKeys[0], note);
       } else {
-        var _ref;
-
-        var returnOscs = [this.osc1, this.osc2].map(function (osc) {
+        this._activeNotes[note] = [new _Osc.Osc(this.context, this.osc1), new _Osc.Osc(this.context, this.osc2)].map(function (osc) {
           if (!osc.enabled) {
-            return [];
+            return null;
           }
-          return osc.start(note, _this3._polyphony, _this3._detune).map(function (startedOsc) {
-            return _this3.pipeline(startedOsc);
-          });
-        });
-
-        var oscs = (_ref = []).concat.apply(_ref, _toConsumableArray(returnOscs));
-
-        this._activeNotes[note] = oscs;
+          osc.start(note, _this3._polyphony, _this3._detune).map(_this3.pipeline);
+          return osc;
+        }).reduce(function (acc, cur, i) {
+          return Object.assign(acc, _defineProperty({}, i + 1, cur));
+        }, {});
       }
     }
   }, {
@@ -594,10 +591,16 @@ var Subtractor = function (_Observable) {
       console.debug('noteOff', note);
 
       if (this._activeNotes[note]) {
-        this._activeNotes[note].forEach(function (osc) {
-          osc.oscEnvelope.reset();
-          osc.filterEnvelope.reset();
-          osc.stop(_this4.context.currentTime + (0, _maths.knobToSeconds)(_this4.release));
+        var oscs = this._activeNotes[note];
+
+        Object.keys(oscs).filter(function (i) {
+          return oscs[i];
+        }).forEach(function (oscKey) {
+          oscs[oscKey].oscs.forEach(function (o) {
+            o.oscEnvelope.reset();
+            o.filterEnvelope.reset();
+            o.stop(_this4.context.currentTime + (0, _maths.knobToSeconds)(_this4.release));
+          });
         });
 
         delete this._activeNotes[note];
@@ -682,66 +685,66 @@ var Subtractor = function (_Observable) {
 
   }, {
     key: 'loadPreset',
-    value: function loadPreset(_ref2) {
-      var _ref2$name = _ref2.name,
-          name = _ref2$name === undefined ? 'init' : _ref2$name,
-          _ref2$author = _ref2.author,
-          author = _ref2$author === undefined ? '' : _ref2$author,
-          _ref2$description = _ref2.description,
-          description = _ref2$description === undefined ? '' : _ref2$description,
-          _ref2$master = _ref2.master,
-          master = _ref2$master === undefined ? {
+    value: function loadPreset(_ref) {
+      var _ref$name = _ref.name,
+          name = _ref$name === undefined ? 'init' : _ref$name,
+          _ref$author = _ref.author,
+          author = _ref$author === undefined ? '' : _ref$author,
+          _ref$description = _ref.description,
+          description = _ref$description === undefined ? '' : _ref$description,
+          _ref$master = _ref.master,
+          master = _ref$master === undefined ? {
         gain: 50,
         polyphony: 1,
         detune: 0,
         voices: 4,
         glide: 0
-      } : _ref2$master,
-          _ref2$ampEnv = _ref2.ampEnv,
-          ampEnv = _ref2$ampEnv === undefined ? {
+      } : _ref$master,
+          _ref$ampEnv = _ref.ampEnv,
+          ampEnv = _ref$ampEnv === undefined ? {
         attack: 0,
         decay: 100,
         sustain: 64,
         release: 10
-      } : _ref2$ampEnv,
-          _ref2$filterEnv = _ref2.filterEnv,
-          filterEnv = _ref2$filterEnv === undefined ? {
+      } : _ref$ampEnv,
+          _ref$filterEnv = _ref.filterEnv,
+          filterEnv = _ref$filterEnv === undefined ? {
         attack: 0,
         decay: 40,
         sustain: 0,
         release: 40,
         amount: 0
-      } : _ref2$filterEnv,
-          _ref2$osc = _ref2.osc1,
-          osc1 = _ref2$osc === undefined ? {
+      } : _ref$filterEnv,
+          _ref$osc = _ref.osc1,
+          osc1 = _ref$osc === undefined ? {
         enabled: 1,
         waveform: 3,
         octave: 0,
         semi: 0,
         detune: 0
-      } : _ref2$osc,
-          _ref2$osc2 = _ref2.osc2,
-          osc2 = _ref2$osc2 === undefined ? {
+      } : _ref$osc,
+          _ref$osc2 = _ref.osc2,
+          osc2 = _ref$osc2 === undefined ? {
         enabled: 0,
         waveform: 3,
         octave: 0,
         semi: 0,
         detune: 0
-      } : _ref2$osc2,
-          _ref2$filter = _ref2.filter1,
-          filter1 = _ref2$filter === undefined ? {
+      } : _ref$osc2,
+          _ref$filter = _ref.filter1,
+          filter1 = _ref$filter === undefined ? {
         type: 1,
         freq: 64,
         q: 0.10,
         gain: 0
-      } : _ref2$filter,
-          _ref2$filter2 = _ref2.filter2,
-          filter2 = _ref2$filter2 === undefined ? {
+      } : _ref$filter,
+          _ref$filter2 = _ref.filter2,
+          filter2 = _ref$filter2 === undefined ? {
         type: 1,
         freq: 127,
         q: 0.10,
         gain: 0
-      } : _ref2$filter2;
+      } : _ref$filter2;
 
       this.name = name;
       this.author = author;
@@ -1130,11 +1133,11 @@ var _ElectroFifth = __webpack_require__(15);
 
 var _ElectroFifth2 = _interopRequireDefault(_ElectroFifth);
 
-var _Reese = __webpack_require__(29);
+var _Reese = __webpack_require__(16);
 
 var _Reese2 = _interopRequireDefault(_Reese);
 
-var _BellsOfGuidia = __webpack_require__(16);
+var _BellsOfGuidia = __webpack_require__(17);
 
 var _BellsOfGuidia2 = _interopRequireDefault(_BellsOfGuidia);
 
@@ -1196,16 +1199,22 @@ module.exports = {"name":"Electro Fifth","author":"Jon Sakas","description":"A f
 /* 16 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Bells of Guidia","author":"Jon Sakas","description":"","master":{"gain":25,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":34,"sustain":64,"release":61},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":1,"octave":2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":127,"q":0.1,"gain":0}}
+module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":2,"detune":10,"voices":1,"glide":38},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":48},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":64,"q":0.10000000149011612,"gain":0},"filter2":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
 
 /***/ }),
 /* 17 */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
+module.exports = {"name":"Bells of Guidia","author":"Jon Sakas","description":"","master":{"gain":25,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":34,"sustain":64,"release":61},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":1,"octave":2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":127,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 18 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1233,19 +1242,19 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Osc = function (_Observable) {
   _inherits(Osc, _Observable);
 
-  function Osc(audioContext) {
-    var enabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
+  function Osc(audioContext, options) {
     _classCallCheck(this, Osc);
 
     var _this = _possibleConstructorReturn(this, (Osc.__proto__ || Object.getPrototypeOf(Osc)).call(this));
 
+    console.debug('Constructing new Oscillator with options', options);
     _this.audioContext = audioContext;
-    _this._enabled = enabled;
-    _this._waveform = 'sine';
-    _this._octave = 0;
-    _this._semi = 0;
-    _this._detune = 0;
+    _this._enabled = options.enabled || false;
+    _this._waveform = (0, _helpers.intToWaveform)(options.waveform) || 'sine';
+    _this._octave = options.octave || 0;
+    _this._semi = options.semi || 0;
+    _this._detune = options.detune || 0;
+    _this._oscs = [];
     return _this;
   }
 
@@ -1255,13 +1264,27 @@ var Osc = function (_Observable) {
       var polyphony = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
       var detune = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
-      // shift the base note based on oscillator octave and semitone settings
       var shiftedNote = note + this._octave * 12 + this._semi;
-
       var baseFreq = (0, _maths.getNoteFreq)(shiftedNote);
       var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * 10);
 
-      return freqs.map(this.startFreqOscillator.bind(this));
+      this._oscs = freqs.map(this.startFreqOscillator.bind(this));
+      return this._oscs;
+    }
+  }, {
+    key: 'move',
+    value: function move(note) {
+      var polyphony = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+      var detune = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+      var time = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+
+      var shiftedNote = note + this._octave * 12 + this._semi;
+      var baseFreq = (0, _maths.getNoteFreq)(shiftedNote);
+      var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * 10);
+
+      this._oscs.forEach(function (osc, i) {
+        osc.frequency.linearRampToValueAtTime(freqs[i], time);
+      });
     }
   }, {
     key: 'startFreqOscillator',
@@ -1327,6 +1350,11 @@ var Osc = function (_Observable) {
     get: function get() {
       return this._detune;
     }
+  }, {
+    key: 'oscs',
+    get: function get() {
+      return this._oscs;
+    }
   }]);
 
   return Osc;
@@ -1335,7 +1363,7 @@ var Osc = function (_Observable) {
 exports.Osc = Osc;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1438,7 +1466,7 @@ var Filter = function (_Observable) {
 exports.Filter = Filter;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1594,7 +1622,7 @@ var Envelope = function (_Observable) {
 exports.Envelope = Envelope;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1680,14 +1708,14 @@ var Oscilloscope = function () {
 exports.Oscilloscope = Oscilloscope;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_maths__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_maths___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_maths__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_fader_scss__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_fader_scss__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_fader_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__sass_fader_scss__);
 
 
@@ -1810,7 +1838,7 @@ class Fader extends HTMLElement {
 window.customElements.define('x-fader', Fader);
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -1824,14 +1852,14 @@ exports.push([module.i, ".fader {\n  display: inline-flex;\n  align-items: cente
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_keyboard___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_keyboard__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_keyboard_scss__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_keyboard_scss__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_keyboard_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__sass_keyboard_scss__);
 
 
@@ -1975,7 +2003,7 @@ class Keyboard extends HTMLElement {
 window.customElements.define('x-keyboard', Keyboard);
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1990,7 +2018,7 @@ var keyboardKeys = new Map([['a', 0], ['w', 1], ['s', 2], ['e', 3], ['d', 4], ['
 exports.keyboardKeys = keyboardKeys;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -2004,14 +2032,14 @@ exports.push([module.i, ".keyboard {\n  display: block;\n  box-sizing: border-bo
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_maths__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_maths___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_maths__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_knob_scss__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_knob_scss__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_knob_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__sass_knob_scss__);
 
 
@@ -2130,7 +2158,7 @@ class Knob extends HTMLElement {
 window.customElements.define('x-knob', Knob);
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -2142,12 +2170,6 @@ exports.push([module.i, ".knob {\n  display: inline-flex;\n  align-items: center
 
 // exports
 
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports) {
-
-module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":2,"detune":10,"voices":1,"glide":38},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":48},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":64,"q":0.10000000149011612,"gain":0},"filter2":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
 
 /***/ })
 /******/ ]);
