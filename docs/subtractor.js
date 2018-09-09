@@ -536,7 +536,7 @@ var Subtractor = function (_Observable) {
     // only perform certain tasks once the DOM is ready
     document.addEventListener('DOMContentLoaded', function () {
       _this.startOscilloscope();
-      _this.loadPreset(Presets.Reese);
+      _this.loadPreset({});
       _this.osc1.notifyObservers();
       _this.osc2.notifyObservers();
     });

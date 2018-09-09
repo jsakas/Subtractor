@@ -49,7 +49,7 @@ class Subtractor extends Observable {
     // only perform certain tasks once the DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
       this.startOscilloscope()
-      this.loadPreset(Presets.Reese)
+      this.loadPreset({})
       this.osc1.notifyObservers()
       this.osc2.notifyObservers()
     })
