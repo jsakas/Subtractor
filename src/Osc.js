@@ -5,7 +5,6 @@ import { Observable } from './Observe'
 class Osc extends Observable {
     constructor(audioContext, options) {
       super()
-      console.debug('Constructing new Oscillator with options', options)
       this.audioContext = audioContext
       this._enabled = options.enabled || false
       this._waveform = intToWaveform(options.waveform) || 'sine'

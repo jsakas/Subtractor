@@ -54,8 +54,6 @@ class Subtractor extends Observable {
   }
   
   moveNote(n1, n2) {
-    console.debug('moveNote', n1, n2)
-
     const voices = this._activeNotes[n1]
 
     Object.keys(voices)
@@ -75,8 +73,6 @@ class Subtractor extends Observable {
   }
 
   noteOn(note) {
-    console.debug('noteOn', note)
-
     const activeNoteKeys = Object.keys(this._activeNotes)
 
     if (activeNoteKeys.length >= this._voices) {
@@ -96,8 +92,6 @@ class Subtractor extends Observable {
   }
 
   noteOff(note) {
-    console.debug('noteOff', note);
-    
     if (this._activeNotes[note]) {
       const oscs = this._activeNotes[note];
       
@@ -112,8 +106,6 @@ class Subtractor extends Observable {
         })
       
       delete this._activeNotes[note];
-    } else {
-      console.debug(`could not find active note ${note}, activeNotes are:`, this._activeNotes)
     }
   }
 

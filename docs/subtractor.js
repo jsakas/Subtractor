@@ -546,8 +546,6 @@ var Subtractor = function (_Observable) {
     value: function moveNote(n1, n2) {
       var _this2 = this;
 
-      console.debug('moveNote', n1, n2);
-
       var voices = this._activeNotes[n1];
 
       Object.keys(voices).filter(function (i) {
@@ -564,8 +562,6 @@ var Subtractor = function (_Observable) {
     key: 'noteOn',
     value: function noteOn(note) {
       var _this3 = this;
-
-      console.debug('noteOn', note);
 
       var activeNoteKeys = Object.keys(this._activeNotes);
 
@@ -588,8 +584,6 @@ var Subtractor = function (_Observable) {
     value: function noteOff(note) {
       var _this4 = this;
 
-      console.debug('noteOff', note);
-
       if (this._activeNotes[note]) {
         var oscs = this._activeNotes[note];
 
@@ -604,8 +598,6 @@ var Subtractor = function (_Observable) {
         });
 
         delete this._activeNotes[note];
-      } else {
-        console.debug('could not find active note ' + note + ', activeNotes are:', this._activeNotes);
       }
     }
 
@@ -1247,7 +1239,6 @@ var Osc = function (_Observable) {
 
     var _this = _possibleConstructorReturn(this, (Osc.__proto__ || Object.getPrototypeOf(Osc)).call(this));
 
-    console.debug('Constructing new Oscillator with options', options);
     _this.audioContext = audioContext;
     _this._enabled = options.enabled || false;
     _this._waveform = (0, _helpers.intToWaveform)(options.waveform) || 'sine';

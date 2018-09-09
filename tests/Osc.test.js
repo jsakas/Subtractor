@@ -12,7 +12,7 @@ describe('Osc', () => {
     })
 
     afterEach(() => {
-      maths.getNoteFreq.mockReset()
+      maths.getNoteFreq.mockClear()
     })
 
     test('calls maths.getNoteFreq with 43 when note is 36, octave is 0, and semi is 7', () => {
