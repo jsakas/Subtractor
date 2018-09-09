@@ -7,7 +7,7 @@
   "polyphony": 2,
   "detune": 10,
   "voices": 1,
-  "glide": 38
+  "glide": 36
  },
  "ampEnv": {
   "attack": 0,
@@ -38,8 +38,8 @@
  },
  "filter1": {
   "type": 1,
-  "freq": 64,
-  "q": 0.10000000149011612,
+  "freq": 23,
+  "q": 4,
   "gain": 0
  },
  "filter2": {

@@ -1193,7 +1193,7 @@ module.exports = {"name":"Electro Fifth","author":"Jon Sakas","description":"A f
 /* 16 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":2,"detune":10,"voices":1,"glide":38},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":48},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":64,"q":0.10000000149011612,"gain":0},"filter2":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
+module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":2,"detune":10,"voices":1,"glide":36},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":48},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":23,"q":4,"gain":0},"filter2":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
 
 /***/ }),
 /* 17 */
