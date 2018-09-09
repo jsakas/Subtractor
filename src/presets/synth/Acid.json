@@ -1,13 +1,13 @@
 {
- "name": "init",
- "author": "",
- "description": "",
+ "name": "Acid",
+ "author": "Jon Sakas",
+ "description": "Replicating a 303 acid saw",
  "master": {
   "gain": 50,
   "polyphony": 1,
   "detune": 0,
-  "voices": 4,
-  "glide": 0
+  "voices": 1,
+  "glide": 15
  },
  "ampEnv": {
   "attack": 0,

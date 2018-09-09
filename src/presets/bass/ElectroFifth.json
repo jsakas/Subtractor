@@ -6,8 +6,8 @@
   "gain": 50,
   "polyphony": 1,
   "detune": 0,
-  "voices": 4,
-  "glide": 0
+  "voices": 1,
+  "glide": 41
  },
  "ampEnv": {
   "attack": 0,

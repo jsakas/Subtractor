@@ -329,9 +329,9 @@ exports.renameObjectKey = renameObjectKey;
 __webpack_require__(5);
 __webpack_require__(6);
 __webpack_require__(7);
-__webpack_require__(23);
-__webpack_require__(25);
-module.exports = __webpack_require__(28);
+__webpack_require__(22);
+__webpack_require__(24);
+module.exports = __webpack_require__(27);
 
 
 /***/ }),
@@ -466,15 +466,15 @@ var _presets = __webpack_require__(8);
 
 var Presets = _interopRequireWildcard(_presets);
 
-__webpack_require__(18);
+__webpack_require__(17);
 
-var _Osc = __webpack_require__(19);
+var _Osc = __webpack_require__(18);
 
-var _Filter = __webpack_require__(20);
+var _Filter = __webpack_require__(19);
 
-var _Envelope = __webpack_require__(21);
+var _Envelope = __webpack_require__(20);
 
-var _Oscilloscope = __webpack_require__(22);
+var _Oscilloscope = __webpack_require__(21);
 
 var _Observe = __webpack_require__(1);
 
@@ -540,6 +540,10 @@ var Subtractor = function (_Observable) {
       _this.osc1.notifyObservers();
       _this.osc2.notifyObservers();
     });
+
+    window.debug = function () {
+      return console.log(_this);
+    };
     return _this;
   }
 
@@ -1097,7 +1101,7 @@ window.Subtractor = Subtractor;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BellsOfGuidia = exports.ElectroFifth = exports.ElectroBass = exports.Reese = exports.DarkBass = exports.Plucky = exports.SuperFunk = exports.Acid = exports.Init = undefined;
+exports.BellsOfGuidia = exports.ElectroFifth = exports.ElectroBass = exports.Reese = exports.Plucky = exports.SuperFunk = exports.Acid = exports.Init = undefined;
 
 var _Init = __webpack_require__(9);
 
@@ -1115,23 +1119,19 @@ var _Plucky = __webpack_require__(12);
 
 var _Plucky2 = _interopRequireDefault(_Plucky);
 
-var _DarkBass = __webpack_require__(13);
-
-var _DarkBass2 = _interopRequireDefault(_DarkBass);
-
-var _ElectroBass = __webpack_require__(14);
+var _ElectroBass = __webpack_require__(13);
 
 var _ElectroBass2 = _interopRequireDefault(_ElectroBass);
 
-var _ElectroFifth = __webpack_require__(15);
+var _ElectroFifth = __webpack_require__(14);
 
 var _ElectroFifth2 = _interopRequireDefault(_ElectroFifth);
 
-var _Reese = __webpack_require__(16);
+var _Reese = __webpack_require__(15);
 
 var _Reese2 = _interopRequireDefault(_Reese);
 
-var _BellsOfGuidia = __webpack_require__(17);
+var _BellsOfGuidia = __webpack_require__(16);
 
 var _BellsOfGuidia2 = _interopRequireDefault(_BellsOfGuidia);
 
@@ -1141,7 +1141,6 @@ exports.Init = _Init2.default;
 exports.Acid = _Acid2.default;
 exports.SuperFunk = _SuperFunk2.default;
 exports.Plucky = _Plucky2.default;
-exports.DarkBass = _DarkBass2.default;
 exports.Reese = _Reese2.default;
 exports.ElectroBass = _ElectroBass2.default;
 exports.ElectroFifth = _ElectroFifth2.default;
@@ -1157,7 +1156,7 @@ module.exports = {"name":"Init","author":"Subtractor Team","description":""}
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":0,"decay":45,"sustain":0,"release":40,"amount":42},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":4,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":15,"q":15,"gain":0},"filter2":{"type":2,"freq":10,"q":0.1,"gain":0}}
+module.exports = {"name":"Acid","author":"Jon Sakas","description":"Replicating a 303 acid saw","master":{"gain":50,"polyphony":1,"detune":0,"voices":1,"glide":15},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":0,"decay":45,"sustain":0,"release":40,"amount":42},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":4,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":15,"q":15,"gain":0},"filter2":{"type":2,"freq":10,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 11 */
@@ -1175,40 +1174,34 @@ module.exports = {"name":"Plucky","author":"Jon Sakas","description":"A little p
 /* 13 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Dark Bass","author":"Jon Sakas","description":"Not quite a reese but getting there","master":{"gain":30,"polyphony":2,"detune":11,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":46,"decay":74,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-1,"semi":0,"detune":5},"filter1":{"type":1,"freq":45,"q":0.1,"gain":0}}
+module.exports = {"name":"Electro Bass","author":"Jon Sakas","description":"A bit of whomp","master":{"gain":50,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":52,"decay":43,"sustain":0,"release":40,"amount":40},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"filter1":{"type":1,"freq":0,"q":0.10000000149011612,"gain":0}}
 
 /***/ }),
 /* 14 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Electro Bass","author":"Jon Sakas","description":"A bit of whomp","master":{"gain":50,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":10},"filterEnv":{"attack":52,"decay":43,"sustain":0,"release":40,"amount":40},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":2,"octave":-2,"semi":0,"detune":0},"filter1":{"type":1,"freq":0,"q":0.10000000149011612,"gain":0}}
+module.exports = {"name":"Electro Fifth","author":"Jon Sakas","description":"A fatty fifth","master":{"gain":50,"polyphony":1,"detune":0,"voices":1,"glide":41},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":23},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":3,"octave":0,"semi":7,"detune":0},"filter1":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
 
 /***/ }),
 /* 15 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Electro Fifth","author":"Jon Sakas","description":"A fatty fifth","master":{"gain":50,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":23},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":1,"waveform":3,"octave":0,"semi":7,"detune":0},"filter1":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
+module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":2,"detune":10,"voices":1,"glide":36},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":48},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":23,"q":4,"gain":0},"filter2":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
 
 /***/ }),
 /* 16 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"init","author":"","description":"","master":{"gain":50,"polyphony":2,"detune":10,"voices":1,"glide":36},"ampEnv":{"attack":0,"decay":100,"sustain":64,"release":48},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":3,"octave":-2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":23,"q":4,"gain":0},"filter2":{"type":1,"freq":127,"q":0.10000000149011612,"gain":0}}
+module.exports = {"name":"Bells of Guidia","author":"Jon Sakas","description":"","master":{"gain":25,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":34,"sustain":64,"release":61},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":1,"octave":2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":127,"q":0.1,"gain":0}}
 
 /***/ }),
 /* 17 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Bells of Guidia","author":"Jon Sakas","description":"","master":{"gain":25,"polyphony":1,"detune":0,"voices":4,"glide":0},"ampEnv":{"attack":0,"decay":34,"sustain":64,"release":61},"filterEnv":{"attack":0,"decay":40,"sustain":0,"release":40,"amount":0},"osc1":{"enabled":1,"waveform":1,"octave":2,"semi":0,"detune":0},"osc2":{"enabled":0,"waveform":3,"octave":0,"semi":0,"detune":0},"filter1":{"type":1,"freq":127,"q":0.1,"gain":0}}
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports) {
-
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1358,7 +1351,7 @@ var Osc = function (_Observable) {
 exports.Osc = Osc;
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1461,7 +1454,7 @@ var Filter = function (_Observable) {
 exports.Filter = Filter;
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1617,7 +1610,7 @@ var Envelope = function (_Observable) {
 exports.Envelope = Envelope;
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1703,14 +1696,14 @@ var Oscilloscope = function () {
 exports.Oscilloscope = Oscilloscope;
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_maths__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_maths___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_maths__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_fader_scss__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_fader_scss__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_fader_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__sass_fader_scss__);
 
 
@@ -1833,7 +1826,7 @@ class Fader extends HTMLElement {
 window.customElements.define('x-fader', Fader);
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -1847,14 +1840,14 @@ exports.push([module.i, ".fader {\n  display: inline-flex;\n  align-items: cente
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_keyboard___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_keyboard__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_keyboard_scss__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_keyboard_scss__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_keyboard_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__sass_keyboard_scss__);
 
 
@@ -1998,7 +1991,7 @@ class Keyboard extends HTMLElement {
 window.customElements.define('x-keyboard', Keyboard);
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2013,7 +2006,7 @@ var keyboardKeys = new Map([['a', 0], ['w', 1], ['s', 2], ['e', 3], ['d', 4], ['
 exports.keyboardKeys = keyboardKeys;
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
@@ -2027,14 +2020,14 @@ exports.push([module.i, ".keyboard {\n  display: block;\n  box-sizing: border-bo
 
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_maths__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_maths___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_maths__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_knob_scss__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_knob_scss__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sass_knob_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__sass_knob_scss__);
 
 
@@ -2153,7 +2146,7 @@ class Knob extends HTMLElement {
 window.customElements.define('x-knob', Knob);
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(undefined);
