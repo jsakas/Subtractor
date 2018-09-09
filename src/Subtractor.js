@@ -53,6 +53,8 @@ class Subtractor extends Observable {
       this.osc1.notifyObservers()
       this.osc2.notifyObservers()
     })
+
+    window.debug = () => console.log(this)
   }
   
   moveNote(n1, n2) {
