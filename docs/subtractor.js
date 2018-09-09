@@ -548,26 +548,9 @@ var Subtractor = function (_Observable) {
   }
 
   _createClass(Subtractor, [{
-    key: 'moveNote',
-    value: function moveNote(n1, n2) {
-      var _this2 = this;
-
-      var voices = this._activeNotes[n1];
-
-      Object.keys(voices).filter(function (i) {
-        return voices[i];
-      }).forEach(function (voice) {
-        Object.keys(voice).forEach(function (v) {
-          voices[voice[v]].move(n2, _this2._polyphony, _this2._detune, _this2.context.currentTime + (0, _maths.knobToSeconds)(_this2._glide));
-        });
-      });
-
-      (0, _helpers.renameObjectKey)(this._activeNotes, n1, n2);
-    }
-  }, {
     key: 'noteOn',
     value: function noteOn(note) {
-      var _this3 = this;
+      var _this2 = this;
 
       var activeNoteKeys = Object.keys(this._activeNotes);
 
@@ -578,7 +561,7 @@ var Subtractor = function (_Observable) {
           if (!osc.enabled) {
             return null;
           }
-          osc.start(note, _this3._polyphony, _this3._detune).map(_this3.pipeline);
+          osc.start(note, _this2._polyphony, _this2._detune).map(_this2.pipeline);
           return osc;
         }).reduce(function (acc, cur, i) {
           return Object.assign(acc, _defineProperty({}, i + 1, cur));
@@ -588,23 +571,43 @@ var Subtractor = function (_Observable) {
   }, {
     key: 'noteOff',
     value: function noteOff(note) {
+      var _this3 = this;
+
+      this.getOscsForNote(note).forEach(function (o) {
+        o.oscs.forEach(function (osc) {
+          osc.oscEnvelope.reset();
+          osc.filterEnvelope.reset();
+          osc.stop(_this3.context.currentTime + (0, _maths.knobToSeconds)(_this3.release));
+        });
+      });
+
+      delete this._activeNotes[note];
+    }
+  }, {
+    key: 'moveNote',
+    value: function moveNote(n1, n2) {
       var _this4 = this;
 
+      this.getOscsForNote(n1).forEach(function (osc) {
+        osc.move(n2, _this4._polyphony, _this4._detune, _this4.context.currentTime + (0, _maths.knobToSeconds)(_this4._glide));
+      });
+
+      (0, _helpers.renameObjectKey)(this._activeNotes, n1, n2);
+    }
+  }, {
+    key: 'getOscsForNote',
+    value: function getOscsForNote(note) {
       if (this._activeNotes[note]) {
         var oscs = this._activeNotes[note];
 
-        Object.keys(oscs).filter(function (i) {
+        return Object.keys(oscs).filter(function (i) {
           return oscs[i];
-        }).forEach(function (oscKey) {
-          oscs[oscKey].oscs.forEach(function (o) {
-            o.oscEnvelope.reset();
-            o.filterEnvelope.reset();
-            o.stop(_this4.context.currentTime + (0, _maths.knobToSeconds)(_this4.release));
-          });
+        }).map(function (oscKey) {
+          return oscs[oscKey];
         });
-
-        delete this._activeNotes[note];
       }
+
+      return [];
     }
 
     // route an oscillator thru the pipeline of modifiers.
