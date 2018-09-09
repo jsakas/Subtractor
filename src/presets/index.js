@@ -5,6 +5,7 @@ import Plucky from './synth/Plucky'
 import DarkBass from './bass/DarkBass'
 import ElectroBass from './bass/ElectroBass'
 import ElectroFifth from './bass/ElectroFifth'
+import Reese from './bass/Reese'
 import BellsOfGuidia from './pluck/BellsOfGuidia'
 
 export { 
@@ -12,7 +13,8 @@ export {
   Acid, 
   SuperFunk, 
   Plucky, 
-  DarkBass, 
+  DarkBass,
+  Reese,
   ElectroBass, 
   ElectroFifth,
   BellsOfGuidia

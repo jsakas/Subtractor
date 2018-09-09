@@ -1,36 +1,39 @@
-import { getNoteFreq } from './utils/maths'
+import { getFrequencySpread, getNoteFreq } from './utils/maths'
 import { intToWaveform, waveformToInt } from './utils/helpers'
 import { Observable } from './Observe'
 
 class Osc extends Observable {
-    constructor(audioContext, enabled = true) {
+    constructor(audioContext, options = {}) {
       super()
       this.audioContext = audioContext
-      this._enabled = enabled
-      this._waveform = 'sine'
-      this._octave = 0
-      this._semi = 0
-      this._detune = 0
+      this._enabled = options.enabled || false
+      this._waveform = intToWaveform(options.waveform) || 'sine'
+      this._octave = options.octave || 0
+      this._semi = options.semi || 0
+      this._detune = options.detune || 0
+      this._oscs = [];
     }
 
-    // returns an array of oscillator nodes depending on the polyphony value
     start(note, polyphony = 1, detune = 0) {
-      // number of intervals on the upper side of the root note
-      const numIntervals = Math.floor(polyphony / 2)
-      // width of interval based on the detune and polyphony measured in notes
-      const interval = numIntervals == 0
-        ? 0
-        : detune / numIntervals
-        // ternary gaurds interval being Infinity
-
-      // shift the base note based on oscillator octave and semitone settings
       const shiftedNote = note + (this._octave * 12) + this._semi
-      
-      return Array(polyphony).fill()
-        .map((_,i) => shiftedNote + (numIntervals - i) * interval)
-        .reverse()
-        .map(getNoteFreq)
-        .map(this.startFreqOscillator.bind(this))
+      const baseFreq = getNoteFreq(shiftedNote)
+      const freqs = getFrequencySpread(baseFreq, polyphony, detune * 10);
+
+      this._oscs = freqs.map(this.startFreqOscillator.bind(this))
+      return this._oscs;
+    }
+
+    move(note, polyphony = 1, detune = 0, time = 0) {
+      const shiftedNote = note + (this._octave * 12) + this._semi
+      const baseFreq = getNoteFreq(shiftedNote)
+      const freqs = getFrequencySpread(baseFreq, polyphony, detune * 10);
+
+      this._oscs.forEach((osc, i) => {
+        osc.frequency.linearRampToValueAtTime(
+          freqs[i],
+          time
+        )
+      })
     }
 
     startFreqOscillator(f) {
@@ -93,6 +96,10 @@ class Osc extends Observable {
 
     get detune() {
       return this._detune
+    }
+
+    get oscs() {
+      return this._oscs
     }
 }
 

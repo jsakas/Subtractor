@@ -33,4 +33,10 @@ const filterToInt = function(f) {
   ].indexOf(f) + 1
 }
 
-export { intToWaveform, waveformToInt, intToFilter, filterToInt }
+const renameObjectKey = (obj, oldKey, newKey) => {
+  obj[newKey] = obj[oldKey];
+  delete obj[oldKey];
+  return obj;
+}
+
+export { intToWaveform, waveformToInt, intToFilter, filterToInt, renameObjectKey }

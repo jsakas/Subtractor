@@ -30,6 +30,7 @@
             <option value="ElectroFifth">Electro Fifth</option>
             <option value="ElectroBass">Electro Bass</option>
             <option value="DarkBass">Dark Bass</option>
+            <option value="Reese">Reeese</option>
           </optgroup>
           <optgroup label="Pluck">
             <option value="BellsOfGuidia">Bells of Guidia</option>
@@ -40,9 +41,16 @@
       </div>
     </div>
     <section>
-      <h2>Super</h2>
-      <x-knob id="polyphony" name="Poly" value="1" min="1" max="10" observe="subtractor" bind="polyphony"></x-knob>
-      <x-knob id="detune" name="Detune" value="0" min="0" max="100" observe="subtractor" bind="detune"></x-knob>
+      <div>
+        <h2>Super</h2>
+        <x-knob id="polyphony" name="Poly" value="1" min="1" max="10" observe="subtractor" bind="polyphony"></x-knob>
+        <x-knob id="detune" name="Detune" value="0" min="0" max="100" observe="subtractor" bind="detune"></x-knob>
+      </div>
+      <div>
+        <h2>Voices</h2>
+        <x-knob id="voices" name="Voices" value="4" min="1" max="8" observe="subtractor" bind="voices"></x-knob>
+        <x-knob id="glide" name="Glide" value="0" min="0" max="127" observe="subtractor" bind="glide"></x-knob>
+      </div>
     </section>
     <section>
       <div>

@@ -7,15 +7,15 @@ import { Envelope } from './Envelope'
 import { Oscilloscope } from './Oscilloscope'
 import { Observable } from './Observe'
 import { knobToSeconds, knobToFreq } from './utils/maths'
-import { intToFilter } from './utils/helpers'
+import { intToFilter, renameObjectKey } from './utils/helpers'
 
 
 class Subtractor extends Observable {
   constructor() {
     super()
     this.context    = new AudioContext()
-    this.osc1       = new Osc(this.context, true)
-    this.osc2       = new Osc(this.context, false)
+    this.osc1       = new Osc()
+    this.osc2       = new Osc()
     this.filter1    = new Filter(this.context)
     this.filter2    = new Filter(this.context)
     this.dynamicFilters = []
@@ -33,45 +33,88 @@ class Subtractor extends Observable {
     this._polyphony = 1
     this._detune = 0
 
+    this._voices = 4
+    this._glide = 1
+
+    this._activeNotes = {};
+
     this.masterGain = this.context.createGain()
 
     // static connections
     this.filter2.filter.connect(this.masterGain)
     this.masterGain.connect(this.context.destination)
 
+    this.pipeline = this.pipeline.bind(this)
+
     // only perform certain tasks once the DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
       this.startOscilloscope()
       this.loadPreset({})
+      this.osc1.notifyObservers()
+      this.osc2.notifyObservers()
     })
+  }
+  
+  moveNote(n1, n2) {
+    const voices = this._activeNotes[n1]
+
+    Object.keys(voices)
+      .filter(i => voices[i])
+      .forEach((voice) => {
+        Object.keys(voice).forEach((v) => {
+          voices[voice[v]].move(
+            n2, 
+            this._polyphony, 
+            this._detune, 
+            this.context.currentTime + knobToSeconds(this._glide)
+          )
+        })
+      })
+      
+    renameObjectKey(this._activeNotes, n1, n2);
   }
 
   noteOn(note) {
-    let returnOscs = [this.osc1, this.osc2].map((osc) => {
-      if (!osc.enabled) { 
-        return []
-      }
-      return osc.start(note, this._polyphony, this._detune)
-                .map(startedOsc => this.pipeline(startedOsc))
-    })
+    const activeNoteKeys = Object.keys(this._activeNotes)
 
-    // osc.start returns an array of osc references, 
-    return [].concat(...returnOscs)
+    if (activeNoteKeys.length >= this._voices) {
+      this.moveNote(activeNoteKeys[0], note);
+    } else { 
+      this._activeNotes[note] = [
+        new Osc(this.context, this.osc1),
+        new Osc(this.context, this.osc2)
+      ].map((osc) => {
+        if (!osc.enabled) { 
+          return null
+        }
+        osc.start(note, this._polyphony, this._detune).map(this.pipeline)
+        return osc;
+      }).reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {})
+    }
   }
 
-  noteOff(osc) {
-    osc.oscEnvelope.reset()
-    osc.filterEnvelope.reset()
-    osc.stop(this.context.currentTime + knobToSeconds(this.release))
+  noteOff(note) {
+    if (this._activeNotes[note]) {
+      const oscs = this._activeNotes[note];
+      
+      Object.keys(oscs)
+        .filter(i => oscs[i])
+        .forEach((oscKey) => {
+          oscs[oscKey].oscs.forEach((o) => {
+            o.oscEnvelope.reset();
+            o.filterEnvelope.reset();
+            o.stop(this.context.currentTime + knobToSeconds(this.release))
+          })
+        })
+      
+      delete this._activeNotes[note];
+    }
   }
 
   // route an oscillator thru the pipeline of modifiers.
   // e.g. gains, filter, distortions etc.
   //
   pipeline(osc) {
-    // add noteOff to the osc prototype
-    osc.noteOff = this.noteOff.bind(this)
-
     // create a gain node for the envelope
     const gainNode = this.context.createGain()
     gainNode.gain.value = 0
@@ -146,7 +189,9 @@ class Subtractor extends Observable {
     master = {
       gain: 50,
       polyphony: 1,
-      detune: 0
+      detune: 0,
+      voices: 4,
+      glide: 0
     },
     ampEnv = {
       attack: 0,
@@ -193,6 +238,8 @@ class Subtractor extends Observable {
     this.description = description
     this.gain = master.gain
     this.polyphony = master.polyphony
+    this.voices = master.voices
+    this.glide = master.glide
     this.detune = master.detune
     this.attack = ampEnv.attack
     this.decay = ampEnv.decay
@@ -234,6 +281,8 @@ class Subtractor extends Observable {
         'gain': this.gain,
         'polyphony': this.polyphony,
         'detune': this.detune,
+        'voices': this.voices,
+        'glide': this.glide,
       },
       'ampEnv': {
         'attack': this.attack,
@@ -485,6 +534,22 @@ class Subtractor extends Observable {
 
   get filterAmount() {
     return this._filterAmount
+  }
+
+  get voices() {
+    return this._voices;
+  }
+
+  set voices(value) {
+    this._voices = value;
+  }
+
+  get glide() {
+    return this._glide;
+  }
+
+  set glide(value) {
+    this._glide = value;
   }
 }
 
