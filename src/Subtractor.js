@@ -14,8 +14,8 @@ class Subtractor extends Observable {
   constructor() {
     super()
     this.context    = new AudioContext()
-    this.osc1       = new Observable();
-    this.osc2       = new Observable();
+    this.osc1       = new Osc()
+    this.osc2       = new Osc()
     this.filter1    = new Filter(this.context)
     this.filter2    = new Filter(this.context)
     this.dynamicFilters = []
@@ -50,6 +50,8 @@ class Subtractor extends Observable {
     document.addEventListener('DOMContentLoaded', () => {
       this.startOscilloscope()
       this.loadPreset(Presets.Reese)
+      this.osc1.notifyObservers()
+      this.osc2.notifyObservers()
     })
   }
   

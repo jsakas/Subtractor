@@ -3,7 +3,7 @@ import { intToWaveform, waveformToInt } from './utils/helpers'
 import { Observable } from './Observe'
 
 class Osc extends Observable {
-    constructor(audioContext, options) {
+    constructor(audioContext, options = {}) {
       super()
       this.audioContext = audioContext
       this._enabled = options.enabled || false

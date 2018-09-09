@@ -78,7 +78,7 @@ class Knob extends HTMLElement {
     })
   }
 
-  notify(observable) {
+  notify() {
     this.knobInput.value = this.observable[this.bind]
     this.knobValue.innerText = this.observable[this.label] || parseInt(this.observable[this.bind])
     this.setRotation(this.observable[this.bind])

@@ -501,8 +501,8 @@ var Subtractor = function (_Observable) {
     var _this = _possibleConstructorReturn(this, (Subtractor.__proto__ || Object.getPrototypeOf(Subtractor)).call(this));
 
     _this.context = new AudioContext();
-    _this.osc1 = new _Observe.Observable();
-    _this.osc2 = new _Observe.Observable();
+    _this.osc1 = new _Osc.Osc();
+    _this.osc2 = new _Osc.Osc();
     _this.filter1 = new _Filter.Filter(_this.context);
     _this.filter2 = new _Filter.Filter(_this.context);
     _this.dynamicFilters = [];
@@ -537,6 +537,8 @@ var Subtractor = function (_Observable) {
     document.addEventListener('DOMContentLoaded', function () {
       _this.startOscilloscope();
       _this.loadPreset(Presets.Reese);
+      _this.osc1.notifyObservers();
+      _this.osc2.notifyObservers();
     });
     return _this;
   }
@@ -1234,7 +1236,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Osc = function (_Observable) {
   _inherits(Osc, _Observable);
 
-  function Osc(audioContext, options) {
+  function Osc(audioContext) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
     _classCallCheck(this, Osc);
 
     var _this = _possibleConstructorReturn(this, (Osc.__proto__ || Object.getPrototypeOf(Osc)).call(this));
@@ -2112,7 +2116,7 @@ class Knob extends HTMLElement {
     });
   }
 
-  notify(observable) {
+  notify() {
     this.knobInput.value = this.observable[this.bind];
     this.knobValue.innerText = this.observable[this.label] || parseInt(this.observable[this.bind]);
     this.setRotation(this.observable[this.bind]);
