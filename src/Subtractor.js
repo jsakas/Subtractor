@@ -80,18 +80,27 @@ class Subtractor extends Observable {
     this.getOscsForNote(note)
       .forEach((o) => {
         o.oscs.forEach((osc) => {
-          osc.oscEnvelope.reset();
-          osc.filterEnvelope.reset();
+          osc.oscEnvelope.reset()
+          osc.filterEnvelope.reset()
+          osc.onended = () => {
+            delete this._activeNotes[note]
+          }
           osc.stop(this.context.currentTime + knobToSeconds(this.release))
         })
-    })
-    
-    delete this._activeNotes[note]  
+      })
+
   }
 
   moveNote(n1, n2) {
     this.getOscsForNote(n1)
       .forEach((osc) => {
+        osc.oscs.forEach((o) => {
+          o.oscEnvelope.cancel()
+          o.filterEnvelope.cancel()
+
+          o.oscEnvelope.schedule()
+          o.filterEnvelope.schedule()
+        })
         osc.move(
           n2, 
           this._polyphony, 

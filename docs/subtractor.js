@@ -577,11 +577,12 @@ var Subtractor = function (_Observable) {
         o.oscs.forEach(function (osc) {
           osc.oscEnvelope.reset();
           osc.filterEnvelope.reset();
+          osc.onended = function () {
+            delete _this3._activeNotes[note];
+          };
           osc.stop(_this3.context.currentTime + (0, _maths.knobToSeconds)(_this3.release));
         });
       });
-
-      delete this._activeNotes[note];
     }
   }, {
     key: 'moveNote',
@@ -589,6 +590,13 @@ var Subtractor = function (_Observable) {
       var _this4 = this;
 
       this.getOscsForNote(n1).forEach(function (osc) {
+        osc.oscs.forEach(function (o) {
+          o.oscEnvelope.cancel();
+          o.filterEnvelope.cancel();
+
+          o.oscEnvelope.schedule();
+          o.filterEnvelope.schedule();
+        });
         osc.move(n2, _this4._polyphony, _this4._detune, _this4.context.currentTime + (0, _maths.knobToSeconds)(_this4._glide));
       });
 
@@ -1543,6 +1551,11 @@ var Envelope = function (_Observable) {
 
       // start decay from current value to min
       this.audioParam.linearRampToValueAtTime(this.startValue, this.context.currentTime + (0, _maths.knobToSeconds)(this._release));
+    }
+  }, {
+    key: 'cancel',
+    value: function cancel() {
+      this.audioParam.cancelScheduledValues(this.context.currentTime);
     }
   }, {
     key: 'attack',
