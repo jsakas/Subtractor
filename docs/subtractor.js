@@ -2038,7 +2038,8 @@ class Keyboard extends HTMLElement {
     });
 
     window.addEventListener('keydown', eKeyDown => {
-      const note = __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__["keyboardKeys"].get(eKeyDown.key);
+      const key = eKeyDown.key.toLowerCase();
+      const note = __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__["keyboardKeys"].get(key);
       if (note >= 0 && !noteWasPressed[note]) {
         this.keys[note].classList.add('keyboard__pressed');
         const n = note + this.observable.octave * 12;
@@ -2046,7 +2047,7 @@ class Keyboard extends HTMLElement {
         this.observable.noteOn(n);
 
         const unPressThisKey = eNoteKeyUp => {
-          if (note === __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__["keyboardKeys"].get(eNoteKeyUp.key)) {
+          if (note === __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__["keyboardKeys"].get(eNoteKeyUp.key.toLowerCase())) {
             this.keys[note].classList.remove('keyboard__pressed');
             this.observable.noteOff(n);
             window.removeEventListener('keyup', unPressThisKey);
@@ -2055,20 +2056,22 @@ class Keyboard extends HTMLElement {
         window.addEventListener('keyup', unPressThisKey);
       }
 
-      if (eKeyDown.key == 'z' && this.observable.octave > 0) {
+      if (key == 'z' && this.observable.octave > 0) {
         this.observable.octave--;
       }
-      if (eKeyDown.key == 'x' && this.observable.octave < 12) {
+      if (key == 'x' && this.observable.octave < 12) {
         this.observable.octave++;
       }
 
       noteWasPressed[note] = true;
-      keyWasPressed[eKeyDown.key] = true;
+      keyWasPressed[key] = true;
     });
+
     window.addEventListener('keyup', eKeyUp => {
-      const note = __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__["keyboardKeys"].get(eKeyUp.key);
+      const key = eKeyUp.key.toLowerCase();
+      const note = __WEBPACK_IMPORTED_MODULE_0__utils_keyboard__["keyboardKeys"].get(key);
       noteWasPressed[note] = false;
-      keyWasPressed[eKeyUp.key] = false;
+      keyWasPressed[key] = false;
     });
   }
 
