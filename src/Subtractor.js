@@ -48,6 +48,7 @@ class Subtractor extends Observable {
 
     // only perform certain tasks once the DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
+      this.initMIDIController()
       this.startOscilloscope()
       this.loadPreset({})
       this.osc1.notifyObservers()
@@ -55,6 +56,42 @@ class Subtractor extends Observable {
     })
 
     window.debug = () => console.log(this)
+  }
+
+  initMIDIController() {
+    navigator.requestMIDIAccess({ sysex: true })
+    .then((midi) => {
+      midi.onstatechange = this.handleMIDIStateChange;
+
+      let input = midi.inputs.values();
+      let result = input.next();
+        while (!result.done) {
+          result = input.next();
+          if (result.value) {
+              result.value.onmidimessage = this.handleMIDIMessage.bind(this);
+          }
+      }
+    })
+    .catch(console.error);
+
+  }
+
+  handleMIDIStateChange (e) {
+    // print information about the (dis)connected MIDI controller
+    console.log(e.port.name, e.port.manufacturer, e.port.state);
+  }
+
+  handleMIDIMessage (message) {
+    switch (message.data[0]) {
+      case 144:
+        this.noteOn(message.data[1]);
+        break;
+      case 128:
+        this.noteOff(message.data[1]);
+        break;
+      default:
+        break
+    }
   }
 
   noteOn(note) {
