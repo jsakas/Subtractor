@@ -126,7 +126,7 @@ describe('Subtractor', () => {
     })
 
     test('sets filter1->Q', () => {
-      expect(subtractor.filter1.filter.Q.value).toBe(0.15)
+      expect(subtractor.filter1.filter.Q.value).toBe(0.015)
     })
 
     test('sets filter1->gain', () => {

@@ -1526,11 +1526,11 @@ var Filter = function (_Observable) {
   }, {
     key: 'q',
     set: function set(value) {
-      this._filter.Q.value = value;
+      this._filter.Q.value = value / 10;
       this.notifyObservers();
     },
     get: function get() {
-      return this._filter.Q.value;
+      return this._filter.Q.value * 10;
     }
   }, {
     key: 'gain',
