@@ -685,21 +685,49 @@ var Subtractor = function (_Observable) {
     value: function noteOff(note) {
       var _this5 = this;
 
+      this.getOscsForNote(note).forEach(function (o) {
+        o.oscs.forEach(function (osc) {
+          osc.oscEnvelope.reset();
+          osc.filterEnvelope.reset();
+          osc.onended = function () {
+            delete _this5._activeNotes[note];
+          };
+          osc.stop(_this5.context.currentTime + (0, _maths.knobToSeconds)(_this5.release));
+        });
+      });
+    }
+  }, {
+    key: 'moveNote',
+    value: function moveNote(n1, n2) {
+      var _this6 = this;
+
+      this.getOscsForNote(n1).forEach(function (osc) {
+        osc.oscs.forEach(function (o) {
+          o.oscEnvelope.cancel();
+          o.filterEnvelope.cancel();
+
+          o.oscEnvelope.schedule();
+          o.filterEnvelope.schedule();
+        });
+        osc.move(n2, _this6._polyphony, _this6._detune, _this6.context.currentTime + (0, _maths.knobToSeconds)(_this6._glide));
+      });
+
+      (0, _helpers.renameObjectKey)(this._activeNotes, n1, n2);
+    }
+  }, {
+    key: 'getOscsForNote',
+    value: function getOscsForNote(note) {
       if (this._activeNotes[note]) {
         var oscs = this._activeNotes[note];
 
-        Object.keys(oscs).filter(function (i) {
+        return Object.keys(oscs).filter(function (i) {
           return oscs[i];
-        }).forEach(function (oscKey) {
-          oscs[oscKey].oscs.forEach(function (o) {
-            o.oscEnvelope.reset();
-            o.filterEnvelope.reset();
-            o.stop(_this5.context.currentTime + (0, _maths.knobToSeconds)(_this5.release));
-          });
+        }).map(function (oscKey) {
+          return oscs[oscKey];
         });
-
-        delete this._activeNotes[note];
       }
+
+      return [];
     }
 
     // route an oscillator thru the pipeline of modifiers.
@@ -941,13 +969,13 @@ var Subtractor = function (_Observable) {
   }, {
     key: 'loadPresetFile',
     value: function loadPresetFile() {
-      var _this6 = this;
+      var _this7 = this;
 
       var fileReader = new FileReader();
       fileReader.addEventListener('load', function () {
         var fileContents = fileReader.result;
         var preset = JSON.parse(fileContents);
-        _this6.loadPreset(preset);
+        _this7.loadPreset(preset);
       });
 
       var input = document.createElement('input');
@@ -1635,6 +1663,11 @@ var Envelope = function (_Observable) {
 
       // start decay from current value to min
       this.audioParam.linearRampToValueAtTime(this.startValue, this.context.currentTime + (0, _maths.knobToSeconds)(this._release));
+    }
+  }, {
+    key: 'cancel',
+    value: function cancel() {
+      this.audioParam.cancelScheduledValues(this.context.currentTime);
     }
   }, {
     key: 'attack',

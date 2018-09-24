@@ -93,25 +93,6 @@ class Subtractor extends Observable {
         break
     }
   }
-  
-  moveNote(n1, n2) {
-    const voices = this._activeNotes[n1]
-
-    Object.keys(voices)
-      .filter(i => voices[i])
-      .forEach((voice) => {
-        Object.keys(voice).forEach((v) => {
-          voices[voice[v]].move(
-            n2, 
-            this._polyphony, 
-            this._detune, 
-            this.context.currentTime + knobToSeconds(this._glide)
-          )
-        })
-      })
-      
-    renameObjectKey(this._activeNotes, n1, n2);
-  }
 
   noteOn(note) {
     const activeNoteKeys = Object.keys(this._activeNotes)
@@ -133,21 +114,51 @@ class Subtractor extends Observable {
   }
 
   noteOff(note) {
+    this.getOscsForNote(note)
+      .forEach((o) => {
+        o.oscs.forEach((osc) => {
+          osc.oscEnvelope.reset()
+          osc.filterEnvelope.reset()
+          osc.onended = () => {
+            delete this._activeNotes[note]
+          }
+          osc.stop(this.context.currentTime + knobToSeconds(this.release))
+        })
+      })
+
+  }
+
+  moveNote(n1, n2) {
+    this.getOscsForNote(n1)
+      .forEach((osc) => {
+        osc.oscs.forEach((o) => {
+          o.oscEnvelope.cancel()
+          o.filterEnvelope.cancel()
+
+          o.oscEnvelope.schedule()
+          o.filterEnvelope.schedule()
+        })
+        osc.move(
+          n2, 
+          this._polyphony, 
+          this._detune, 
+          this.context.currentTime + knobToSeconds(this._glide)
+        )
+      })
+
+    renameObjectKey(this._activeNotes, n1, n2);  
+  }
+
+  getOscsForNote(note) {
     if (this._activeNotes[note]) {
       const oscs = this._activeNotes[note];
       
-      Object.keys(oscs)
+      return Object.keys(oscs)
         .filter(i => oscs[i])
-        .forEach((oscKey) => {
-          oscs[oscKey].oscs.forEach((o) => {
-            o.oscEnvelope.reset();
-            o.filterEnvelope.reset();
-            o.stop(this.context.currentTime + knobToSeconds(this.release))
-          })
-        })
-      
-      delete this._activeNotes[note];
-    }
+        .map(oscKey => oscs[oscKey])
+    } 
+
+    return []
   }
 
   // route an oscillator thru the pipeline of modifiers.

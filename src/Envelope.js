@@ -59,6 +59,10 @@ class Envelope extends Observable {
       this.audioParam.linearRampToValueAtTime(this.startValue, this.context.currentTime + knobToSeconds(this._release))
     }
 
+    cancel() {
+      this.audioParam.cancelScheduledValues(this.context.currentTime)
+    }
+
     set attack(value) {
       this._attack = value
       this.notifyObservers()
