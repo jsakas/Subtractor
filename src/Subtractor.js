@@ -1,61 +1,61 @@
-import * as Presets from './presets'
+import * as Presets from './presets';
 import './sass/subtractor.scss';
 
-import { Osc } from './Osc'
-import { Filter } from './Filter'
-import { Envelope } from './Envelope'
-import { Oscilloscope } from './Oscilloscope'
-import { Observable } from './Observe'
-import { knobToSeconds, knobToFreq } from './utils/maths'
-import { intToFilter, renameObjectKey } from './utils/helpers'
+import { Osc } from './Osc';
+import { Filter } from './Filter';
+import { Envelope } from './Envelope';
+import { Oscilloscope } from './Oscilloscope';
+import { Observable } from './Observe';
+import { knobToSeconds, knobToFreq } from './utils/maths';
+import { intToFilter, renameObjectKey } from './utils/helpers';
 
 
 class Subtractor extends Observable {
   constructor() {
-    super()
-    this.context    = new AudioContext()
-    this.osc1       = new Osc()
-    this.osc2       = new Osc()
-    this.filter1    = new Filter(this.context)
-    this.filter2    = new Filter(this.context)
-    this.dynamicFilters = []
+    super();
+    this.context    = new AudioContext();
+    this.osc1       = new Osc();
+    this.osc2       = new Osc();
+    this.filter1    = new Filter(this.context);
+    this.filter2    = new Filter(this.context);
+    this.dynamicFilters = [];
 
-    this.name = ''
-    this.description = ''
-    this.author = ''
+    this.name = '';
+    this.description = '';
+    this.author = '';
 
     // octave value is used only for the qwerty controls, this value should not be used
     // when MIDI is integrated. 
-    this._octave = 4
+    this._octave = 4;
 
     // here polyphony refers to the number of oscs started for each key press,
     // detune refers to the spread of frequencies across the poly notes
-    this._polyphony = 1
-    this._detune = 0
+    this._polyphony = 1;
+    this._detune = 0;
 
-    this._voices = 4
-    this._glide = 1
+    this._voices = 4;
+    this._glide = 1;
 
     this._activeNotes = {};
 
-    this.masterGain = this.context.createGain()
+    this.masterGain = this.context.createGain();
 
     // static connections
-    this.filter2.filter.connect(this.masterGain)
-    this.masterGain.connect(this.context.destination)
+    this.filter2.filter.connect(this.masterGain);
+    this.masterGain.connect(this.context.destination);
 
-    this.pipeline = this.pipeline.bind(this)
+    this.pipeline = this.pipeline.bind(this);
 
     // only perform certain tasks once the DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
-      this.initMIDIController()
-      this.startOscilloscope()
-      this.loadPreset({})
-      this.osc1.notifyObservers()
-      this.osc2.notifyObservers()
-    })
+      this.initMIDIController();
+      this.startOscilloscope();
+      this.loadPreset({});
+      this.osc1.notifyObservers();
+      this.osc2.notifyObservers();
+    });
 
-    window.debug = () => console.log(this)
+    window.debug = () => console.log(this);
   }
 
   initMIDIController() {
@@ -90,12 +90,12 @@ class Subtractor extends Observable {
         this.noteOff(message.data[1]);
         break;
       default:
-        break
+        break;
     }
   }
   
   moveNote(n1, n2) {
-    const voices = this._activeNotes[n1]
+    const voices = this._activeNotes[n1];
 
     Object.keys(voices)
       .filter(i => voices[i])
@@ -106,15 +106,15 @@ class Subtractor extends Observable {
             this._polyphony, 
             this._detune, 
             this.context.currentTime + knobToSeconds(this._glide)
-          )
-        })
-      })
+          );
+        });
+      });
       
     renameObjectKey(this._activeNotes, n1, n2);
   }
 
   noteOn(note) {
-    const activeNoteKeys = Object.keys(this._activeNotes)
+    const activeNoteKeys = Object.keys(this._activeNotes);
 
     if (activeNoteKeys.length >= this._voices) {
       this.moveNote(activeNoteKeys[0], note);
@@ -124,11 +124,11 @@ class Subtractor extends Observable {
         new Osc(this.context, this.osc2)
       ].map((osc) => {
         if (!osc.enabled) { 
-          return null
+          return null;
         }
-        osc.start(note, this._polyphony, this._detune).map(this.pipeline)
+        osc.start(note, this._polyphony, this._detune).map(this.pipeline);
         return osc;
-      }).reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {})
+      }).reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {});
     }
   }
 
@@ -142,9 +142,9 @@ class Subtractor extends Observable {
           oscs[oscKey].oscs.forEach((o) => {
             o.oscEnvelope.reset();
             o.filterEnvelope.reset();
-            o.stop(this.context.currentTime + knobToSeconds(this.release))
-          })
-        })
+            o.stop(this.context.currentTime + knobToSeconds(this.release));
+          });
+        });
       
       delete this._activeNotes[note];
     }
@@ -155,68 +155,68 @@ class Subtractor extends Observable {
   //
   pipeline(osc) {
     // create a gain node for the envelope
-    const gainNode = this.context.createGain()
-    gainNode.gain.value = 0
+    const gainNode = this.context.createGain();
+    gainNode.gain.value = 0;
 
     // attach an envelope to the gain node
-    const oscEnvelope = new Envelope(this.context, gainNode.gain)
-    oscEnvelope.maxValue = 1
-    oscEnvelope.minValue = 0
-    oscEnvelope.attack = this.attack
-    oscEnvelope.sustain = this.sustain
-    oscEnvelope.decay = this.decay
-    oscEnvelope.release = this.release
-    oscEnvelope.schedule()
+    const oscEnvelope = new Envelope(this.context, gainNode.gain);
+    oscEnvelope.maxValue = 1;
+    oscEnvelope.minValue = 0;
+    oscEnvelope.attack = this.attack;
+    oscEnvelope.sustain = this.sustain;
+    oscEnvelope.decay = this.decay;
+    oscEnvelope.release = this.release;
+    oscEnvelope.schedule();
 
     // create a filter, base it on the global filter
-    const filter = new Filter(this.context)
-    filter.type = this.filter1.frType
-    filter.freq = this.filter1.freq
-    filter.q = this.filter1.q
-    filter.gain = this.filter1.gain
-    this.dynamicFilters.push(filter)
+    const filter = new Filter(this.context);
+    filter.type = this.filter1.frType;
+    filter.freq = this.filter1.freq;
+    filter.q = this.filter1.q;
+    filter.gain = this.filter1.gain;
+    this.dynamicFilters.push(filter);
 
     // attach an envelope to the filter frequency
-    const filterEnvelope = new Envelope(this.context, filter.filter.frequency)
-    filterEnvelope.maxValue = knobToFreq(127)
-    filterEnvelope.minValue = knobToFreq(0)
-    filterEnvelope.attack = this.filterAttack
-    filterEnvelope.sustain = this.filterSustain
-    filterEnvelope.decay = this.filterDecay
-    filterEnvelope.release = this.filterRelease
-    filterEnvelope.amount = this.filterAmount
-    filterEnvelope.schedule()
+    const filterEnvelope = new Envelope(this.context, filter.filter.frequency);
+    filterEnvelope.maxValue = knobToFreq(127);
+    filterEnvelope.minValue = knobToFreq(0);
+    filterEnvelope.attack = this.filterAttack;
+    filterEnvelope.sustain = this.filterSustain;
+    filterEnvelope.decay = this.filterDecay;
+    filterEnvelope.release = this.filterRelease;
+    filterEnvelope.amount = this.filterAmount;
+    filterEnvelope.schedule();
 
     // route the osc thru everything we just created 
-    osc.connect(gainNode)
-    gainNode.connect(filter.filter)
-    filter.filter.connect(this.filter2.filter)
+    osc.connect(gainNode);
+    gainNode.connect(filter.filter);
+    filter.filter.connect(this.filter2.filter);
 
     // attach the envelopes to the osc the gain node so it can be reset on noteOff
-    osc.oscEnvelope = oscEnvelope
-    osc.filterEnvelope = filterEnvelope
+    osc.oscEnvelope = oscEnvelope;
+    osc.filterEnvelope = filterEnvelope;
     
     // start and return the osc
-    osc.start()
-    return osc
+    osc.start();
+    return osc;
   }
 
   startOscilloscope() {
     try {
-      const canvas = document.getElementById('oscilloscope')
+      const canvas = document.getElementById('oscilloscope');
       const oscilloscope = new Oscilloscope(
         this.context, 
         canvas
-      )
-      this.masterGain.connect(oscilloscope.analyzer)
-      oscilloscope.start()
+      );
+      this.masterGain.connect(oscilloscope.analyzer);
+      oscilloscope.start();
     } catch (e) {
-      console.log('Failed to start Oscilloscope')
+      console.log('Failed to start Oscilloscope');
     }
   }
 
   setPresetFromSelect(preset) {
-    this.loadPreset(Presets[preset])
+    this.loadPreset(Presets[preset]);
   }
 
   // take a preset object and load it into the synth
@@ -272,41 +272,41 @@ class Subtractor extends Observable {
       gain: 0
     }
   }) {
-    this.name = name
-    this.author = author
-    this.description = description
-    this.gain = master.gain
-    this.polyphony = master.polyphony
-    this.voices = master.voices
-    this.glide = master.glide
-    this.detune = master.detune
-    this.attack = ampEnv.attack
-    this.decay = ampEnv.decay
-    this.sustain = ampEnv.sustain
-    this.release = ampEnv.release
-    this.filterAttack = filterEnv.attack
-    this.filterDecay = filterEnv.decay
-    this.filterSustain = filterEnv.sustain
-    this.filterRelease = filterEnv.release
-    this.filterAmount = filterEnv.amount
-    this.osc1.enabled = osc1.enabled
-    this.osc1.waveform = osc1.waveform
-    this.osc1.octave = osc1.octave
-    this.osc1.semi = osc1.semi
-    this.osc1.detune = osc1.detune
-    this.osc2.enabled = osc2.enabled
-    this.osc2.waveform = osc2.waveform
-    this.osc2.octave = osc2.octave
-    this.osc2.semi = osc2.semi
-    this.osc2.detune = osc2.detune
-    this.filter1Type = filter1.type
-    this.filter1Freq = filter1.freq
-    this.filter1Q = filter1.q
-    this.filter1Gain = filter1.gain
-    this.filter2.type = filter2.type
-    this.filter2.freq = filter2.freq
-    this.filter2.q = filter2.q
-    this.filter2.gain = filter2.gain
+    this.name = name;
+    this.author = author;
+    this.description = description;
+    this.gain = master.gain;
+    this.polyphony = master.polyphony;
+    this.voices = master.voices;
+    this.glide = master.glide;
+    this.detune = master.detune;
+    this.attack = ampEnv.attack;
+    this.decay = ampEnv.decay;
+    this.sustain = ampEnv.sustain;
+    this.release = ampEnv.release;
+    this.filterAttack = filterEnv.attack;
+    this.filterDecay = filterEnv.decay;
+    this.filterSustain = filterEnv.sustain;
+    this.filterRelease = filterEnv.release;
+    this.filterAmount = filterEnv.amount;
+    this.osc1.enabled = osc1.enabled;
+    this.osc1.waveform = osc1.waveform;
+    this.osc1.octave = osc1.octave;
+    this.osc1.semi = osc1.semi;
+    this.osc1.detune = osc1.detune;
+    this.osc2.enabled = osc2.enabled;
+    this.osc2.waveform = osc2.waveform;
+    this.osc2.octave = osc2.octave;
+    this.osc2.semi = osc2.semi;
+    this.osc2.detune = osc2.detune;
+    this.filter1Type = filter1.type;
+    this.filter1Freq = filter1.freq;
+    this.filter1Q = filter1.q;
+    this.filter1Gain = filter1.gain;
+    this.filter2.type = filter2.type;
+    this.filter2.freq = filter2.freq;
+    this.filter2.q = filter2.q;
+    this.filter2.gain = filter2.gain;
   }
 
   // take the current synth settings and return an object
@@ -362,219 +362,219 @@ class Subtractor extends Observable {
         'q': this.filter2.q,
         'gain': this.filter2.gain
       }
-    }
+    };
   }
 
   // trigger an upload dialog load the file contents as a preset
   //
   loadPresetFile() {
-    const fileReader = new FileReader()
+    const fileReader = new FileReader();
     fileReader.addEventListener('load', () => {
-      const fileContents = fileReader.result
-      const preset = JSON.parse(fileContents)
-      this.loadPreset(preset)
-    })
+      const fileContents = fileReader.result;
+      const preset = JSON.parse(fileContents);
+      this.loadPreset(preset);
+    });
 
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'application/json'
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
     input.addEventListener('change', () => {
-      fileReader.readAsText(input.files[0])
-    })
+      fileReader.readAsText(input.files[0]);
+    });
 
-    input.click()
+    input.click();
   }
 
   // download the current preset as JSON file
   //
   savePresetFile() {
-    const preset = this.getPreset()
-    const json = JSON.stringify(preset, null, ' ')
-    const blob = new Blob([json], { 'type': 'application/json' })
-    const objectURL = URL.createObjectURL(blob)
+    const preset = this.getPreset();
+    const json = JSON.stringify(preset, null, ' ');
+    const blob = new Blob([json], { 'type': 'application/json' });
+    const objectURL = URL.createObjectURL(blob);
 
-    const presetName = prompt('Preset name', preset.name || '')
+    const presetName = prompt('Preset name', preset.name || '');
 
-    const a = document.createElement('a')
-    a.download = `${presetName}.json`
-    a.href = objectURL
+    const a = document.createElement('a');
+    a.download = `${presetName}.json`;
+    a.href = objectURL;
 
-    a.click()
+    a.click();
   }
   set octave(value) {
-    this._octave = value
-    this.notifyObservers()
+    this._octave = value;
+    this.notifyObservers();
   }
 
   get octave() {
-    return this._octave
+    return this._octave;
   }
 
   set polyphony(value) {
-    this._polyphony = value
-    this.notifyObservers()
+    this._polyphony = value;
+    this.notifyObservers();
   }
 
   get polyphony() {
-    return this._polyphony
+    return this._polyphony;
   }
 
   set detune(value) {
-    this._detune = value * .01
-    this.notifyObservers()
+    this._detune = value * .01;
+    this.notifyObservers();
   }
 
   get detune() {
-    return this._detune * 100
+    return this._detune * 100;
   }
 
   set gain(value) {
-    this.masterGain.gain.value = value * .01
-    this.notifyObservers()
+    this.masterGain.gain.value = value * .01;
+    this.notifyObservers();
   }
 
   get gain() {
-    return this.masterGain.gain.value * 100
+    return this.masterGain.gain.value * 100;
   }
 
   // amp envelope getter and setters
   set attack(value) {
-    this._attack = value
-    this.notifyObservers()
+    this._attack = value;
+    this.notifyObservers();
   }
 
   get attack() {
-    return this._attack
+    return this._attack;
   }
 
   set decay(value) {
-    this._decay = value
-    this.notifyObservers()
+    this._decay = value;
+    this.notifyObservers();
   }
 
   get decay() {
-    return this._decay
+    return this._decay;
   }
 
   set sustain(value) {
-    this._sustain = value
-    this.notifyObservers()
+    this._sustain = value;
+    this.notifyObservers();
   }
 
   get sustain() {
-    return this._sustain
+    return this._sustain;
   }
 
   set release(value) {
-    this._release = value
-    this.notifyObservers()
+    this._release = value;
+    this.notifyObservers();
   }
 
   get release() {
-    return this._release
+    return this._release;
   }
 
   // filter 1
   set filter1Type(value) {
-    this.filter1.type = intToFilter(value)
+    this.filter1.type = intToFilter(value);
     this.dynamicFilters.forEach((filter) => { 
-      filter.type = intToFilter(value) 
-    })
-    this.notifyObservers()
+      filter.type = intToFilter(value); 
+    });
+    this.notifyObservers();
   }
 
   get filter1Type() {
-    return this.filter1.type
+    return this.filter1.type;
   }
 
   get filter1FrType() {
-    return this.filter1.frType
+    return this.filter1.frType;
   }
 
   set filter1Freq(value) {
-    this.filter1.freq = value
+    this.filter1.freq = value;
     this.dynamicFilters.forEach((filter) => { 
-      filter.freq = value 
-    })
-    this.notifyObservers()
+      filter.freq = value; 
+    });
+    this.notifyObservers();
   }
 
   get filter1Freq() {
-    return this.filter1.freq
+    return this.filter1.freq;
   }
 
   get filter1FrFreq() {
-    return this.filter1.frFreq
+    return this.filter1.frFreq;
   }
 
   set filter1Q(value) {
-    this.filter1.q = value
+    this.filter1.q = value;
     this.dynamicFilters.forEach((filter) => { 
-      filter.q = value 
-    })
-    this.notifyObservers()
+      filter.q = value; 
+    });
+    this.notifyObservers();
   }
 
   get filter1Q() {
-    return this.filter1.q
+    return this.filter1.q;
   }
 
   set filter1Gain(value) {
-    this.filter1.gain = value
+    this.filter1.gain = value;
     this.dynamicFilters.forEach((filter) => { 
-      filter.gain = value 
-    })
-    this.notifyObservers()
+      filter.gain = value; 
+    });
+    this.notifyObservers();
   }
 
   get filter1Gain() {
-    return this.filter1.gain
+    return this.filter1.gain;
   }
 
   // filter envelope getters and setters
   set filterAttack(value) {
-    this._filterAttack = value
-    this.notifyObservers()
+    this._filterAttack = value;
+    this.notifyObservers();
   }
 
   get filterAttack() {
-    return this._filterAttack
+    return this._filterAttack;
   }
 
   set filterDecay(value) {
-    this._filterDecay = value
-    this.notifyObservers()
+    this._filterDecay = value;
+    this.notifyObservers();
   }
 
   get filterDecay() {
-    return this._filterDecay
+    return this._filterDecay;
   }
 
   set filterSustain(value) {
-    this._filterSustain = value
-    this.notifyObservers()
+    this._filterSustain = value;
+    this.notifyObservers();
   }
 
   get filterSustain() {
-    return this._filterSustain
+    return this._filterSustain;
   }
 
   set filterRelease(value) {
-    this._filterRelease = value
-    this.notifyObservers()
+    this._filterRelease = value;
+    this.notifyObservers();
   }
   
   get filterRelease() {
-    return this._filterRelease
+    return this._filterRelease;
   }
 
   set filterAmount(value) {
-    this._filterAmount = value
-    this.notifyObservers()
+    this._filterAmount = value;
+    this.notifyObservers();
   }
 
   get filterAmount() {
-    return this._filterAmount
+    return this._filterAmount;
   }
 
   get voices() {
@@ -594,5 +594,5 @@ class Subtractor extends Observable {
   }
 }
 
-export { Subtractor }
-window.Subtractor = Subtractor
+export { Subtractor };
+window.Subtractor = Subtractor;

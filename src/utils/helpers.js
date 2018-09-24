@@ -1,11 +1,11 @@
 
 const intToWaveform = function(i) {
-  return ['sine', 'square', 'sawtooth', 'triangle'][i - 1] || 'sine'
-}
+  return ['sine', 'square', 'sawtooth', 'triangle'][i - 1] || 'sine';
+};
 
 const waveformToInt = function(w) {
-  return ['sine', 'square', 'sawtooth', 'triangle'].indexOf(w) + 1
-}
+  return ['sine', 'square', 'sawtooth', 'triangle'].indexOf(w) + 1;
+};
 
 const intToFilter = function(i) {
   return [
@@ -17,8 +17,8 @@ const intToFilter = function(i) {
     'peaking',
     'notch',
     'allpass'
-  ][i - 1] || 'lowpass'
-}
+  ][i - 1] || 'lowpass';
+};
 
 const filterToInt = function(f) {
   return [
@@ -30,13 +30,13 @@ const filterToInt = function(f) {
     'peaking',
     'notch',
     'allpass'
-  ].indexOf(f) + 1
-}
+  ].indexOf(f) + 1;
+};
 
 const renameObjectKey = (obj, oldKey, newKey) => {
   obj[newKey] = obj[oldKey];
   delete obj[oldKey];
   return obj;
-}
+};
 
-export { intToWaveform, waveformToInt, intToFilter, filterToInt, renameObjectKey }
+export { intToWaveform, waveformToInt, intToFilter, filterToInt, renameObjectKey };

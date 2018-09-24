@@ -18,6 +18,6 @@ const keyboardKeys = new Map([
     ['p', 15],
     [';', 16],
     ['\'', 17],
-  ])
+  ]);
 
-export { keyboardKeys }
+export { keyboardKeys };

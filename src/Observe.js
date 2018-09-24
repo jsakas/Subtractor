@@ -1,27 +1,27 @@
 class Observable {
   constructor() {
-    this.observers = []
+    this.observers = [];
   }
 
   registerObserver(observer) {
-    this.observers.push(observer)
+    this.observers.push(observer);
   }
 
   notifyObservers(message = null) {
     this.observers.forEach((observer) => {
-      observer.notify(message || this)
-    })
+      observer.notify(message || this);
+    });
   }
 }
 
 class Observer {
   constructor(observable) {
-    observable.registerObserver(this)
+    observable.registerObserver(this);
   }
 
   notify(observable) {
-    console.log('Got update from', observable)
+    console.log('Got update from', observable);
   }
 }
 
-export { Observable, Observer }
+export { Observable, Observer };

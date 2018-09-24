@@ -1,18 +1,18 @@
-import { keyboardKeys } from '../utils/keyboard'
+import { keyboardKeys } from '../utils/keyboard';
 import styles from '../sass/keyboard.scss';
 
 class Keyboard extends HTMLElement {
   connectedCallback() {
     // if observable and bind attributes are preset, register this element as an observer
-    this.observable = eval(this.getAttribute('observe'))
-    this.bind = this.getAttribute('bind')
+    this.observable = eval(this.getAttribute('observe'));
+    this.bind = this.getAttribute('bind');
 
     if (this.observable && this.bind) {
-      this.observable.registerObserver(this)
+      this.observable.registerObserver(this);
     }
 
-    this.id = this.getAttribute('id')
-    this.name = this.getAttribute('name')
+    this.id = this.getAttribute('id');
+    this.name = this.getAttribute('name');
     
     this.template = `
       <svg id="keyboard" class="keyboard" viewBox="0, 0, 44, 12" >
@@ -43,102 +43,102 @@ class Keyboard extends HTMLElement {
 
         <rect id="octave" y="11" width="8" height="1" class="keyboard__octave_indicator" />        
       </svg>
-    `
+    `;
 
     // create shadow dom
-    this.shadow = this.attachShadow({ 'mode': 'open' })
+    this.shadow = this.attachShadow({ 'mode': 'open' });
     
     // create style sheet node
-    this.stylesheet = document.createElement('style')
-    this.stylesheet.type = 'text/css'
-    this.stylesheet.textContent = styles.toString()
+    this.stylesheet = document.createElement('style');
+    this.stylesheet.type = 'text/css';
+    this.stylesheet.textContent = styles.toString();
 
     // create dom nodes from template
-    this.templateDOM = document.createRange().createContextualFragment(this.template)
+    this.templateDOM = document.createRange().createContextualFragment(this.template);
     
     // inject nodes into shadow dom
-    this.shadow.appendChild(this.stylesheet)
-    this.shadow.appendChild(this.templateDOM)
+    this.shadow.appendChild(this.stylesheet);
+    this.shadow.appendChild(this.templateDOM);
     // ^^ DOM is now constructed
 
     this.keys = [...new Array(keyboardKeys.size)]
-      .map((_,i) => this.shadow.getElementById(`key-${i}`))
-    this.octaveIndicator = this.shadow.getElementById('octave')
+      .map((_,i) => this.shadow.getElementById(`key-${i}`));
+    this.octaveIndicator = this.shadow.getElementById('octave');
 
-    this.handleInput()
+    this.handleInput();
   }
 
   handleInput() {
-    let keyWasPressed = []
-    let noteWasPressed = []
+    let keyWasPressed = [];
+    let noteWasPressed = [];
     
     this.keys.forEach((key) => {
       key.addEventListener('mousedown', (eMouseDown) => {
-        const note = parseInt(eMouseDown.target.id.replace('key-', ''))
+        const note = parseInt(eMouseDown.target.id.replace('key-', ''));
         if (note >= 0 && !noteWasPressed[note]) {
           this.keys[note].classList.add('keyboard__pressed');
 
           const n = note + this.observable.octave * 12;
 
           const releaseThisKey = () => {
-            this.keys[note].classList.remove('keyboard__pressed')
+            this.keys[note].classList.remove('keyboard__pressed');
             this.observable.noteOff(n);
-            window.removeEventListener('mouseup', releaseThisKey)
-            noteWasPressed[note] = false
-          }
-          window.addEventListener('mouseup', releaseThisKey)
-          noteWasPressed[note] = true
+            window.removeEventListener('mouseup', releaseThisKey);
+            noteWasPressed[note] = false;
+          };
+          window.addEventListener('mouseup', releaseThisKey);
+          noteWasPressed[note] = true;
         }
-      })
-    })
+      });
+    });
     
     window.addEventListener('keydown', (eKeyDown) => {
-      const key = eKeyDown.key.toLowerCase()
-      const note = keyboardKeys.get(key)
+      const key = eKeyDown.key.toLowerCase();
+      const note = keyboardKeys.get(key);
       if (note >= 0 && !noteWasPressed[note]) {
-        this.keys[note].classList.add('keyboard__pressed')
+        this.keys[note].classList.add('keyboard__pressed');
         const n = note + this.observable.octave * 12;
 
-        this.observable.noteOn(n)
+        this.observable.noteOn(n);
 
         const unPressThisKey = (eNoteKeyUp) => {
           if (note === keyboardKeys.get(eNoteKeyUp.key.toLowerCase())) {
-            this.keys[note].classList.remove('keyboard__pressed')
+            this.keys[note].classList.remove('keyboard__pressed');
             this.observable.noteOff(n);
-            window.removeEventListener('keyup', unPressThisKey)
+            window.removeEventListener('keyup', unPressThisKey);
           }
-        }
-        window.addEventListener('keyup', unPressThisKey)
+        };
+        window.addEventListener('keyup', unPressThisKey);
       }
 
       if (key == 'z' && this.observable.octave > 0) {
-        this.observable.octave--
+        this.observable.octave--;
       }
       if (key == 'x' && this.observable.octave < 12) {
-        this.observable.octave++
+        this.observable.octave++;
       }
 
-      noteWasPressed[note] = true
-      keyWasPressed[key] = true
-    })
+      noteWasPressed[note] = true;
+      keyWasPressed[key] = true;
+    });
 
     window.addEventListener('keyup', (eKeyUp) => {
-      const key = eKeyUp.key.toLowerCase()
-      const note = keyboardKeys.get(key)
-      noteWasPressed[note] = false
-      keyWasPressed[key] = false
-    })
+      const key = eKeyUp.key.toLowerCase();
+      const note = keyboardKeys.get(key);
+      noteWasPressed[note] = false;
+      keyWasPressed[key] = false;
+    });
   }
 
   notify(observable) {
-    this.setOctaveIndicator(observable.octave)
+    this.setOctaveIndicator(observable.octave);
   }
 
   setOctaveIndicator() {
     // this should be calculated better
-    this.octaveIndicator.setAttribute('x', this.observable.octave * 3)
+    this.octaveIndicator.setAttribute('x', this.observable.octave * 3);
   }
 
 }
 
-window.customElements.define('x-keyboard', Keyboard)
+window.customElements.define('x-keyboard', Keyboard);

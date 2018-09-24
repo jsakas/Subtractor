@@ -1,17 +1,17 @@
-import 'web-audio-test-api'
-import { Subtractor } from '../src/Subtractor'
+import 'web-audio-test-api';
+import { Subtractor } from '../src/Subtractor';
 
 
 describe('Subtractor', () => {
 
   describe('loadPreset', () => {
     test('can set a preset that is missing values', () => {
-      const mockPreset = { 'description': 'This is a preset with no values :(' }
-      const subtractor = new Subtractor()
+      const mockPreset = { 'description': 'This is a preset with no values :(' };
+      const subtractor = new Subtractor();
 
-      subtractor.loadPreset(mockPreset)
-    })
-  })
+      subtractor.loadPreset(mockPreset);
+    });
+  });
 
   describe('loadPreset', () => {
     const mockPreset = {
@@ -43,94 +43,94 @@ describe('Subtractor', () => {
         'q': 0.15,
         'gain': -3
       }
-    }
-    const subtractor = new Subtractor()
-    subtractor.loadPreset(mockPreset)
+    };
+    const subtractor = new Subtractor();
+    subtractor.loadPreset(mockPreset);
     
     // meta
     test('sets name', () => {
-      expect(subtractor.name).toBe('Rando Syntho')
-    })
+      expect(subtractor.name).toBe('Rando Syntho');
+    });
 
     test('sets author', () => {
-      expect(subtractor.author).toBe('Jon Sakas')
-    })
+      expect(subtractor.author).toBe('Jon Sakas');
+    });
 
     test('sets description', () => {
-      expect(subtractor.description).toBe('A bunch of random non-default values')
-    })
+      expect(subtractor.description).toBe('A bunch of random non-default values');
+    });
 
     // master
     test('sets master gain', () => {
-      expect(subtractor.gain).toBe(75)
-    })
+      expect(subtractor.gain).toBe(75);
+    });
 
     // super
     test('sets polyphony', () => {
-      expect(subtractor.polyphony).toBe(3)
-    })
+      expect(subtractor.polyphony).toBe(3);
+    });
 
     test('sets detune', () => {
-      expect(subtractor.detune).toBe(1)
-    })
+      expect(subtractor.detune).toBe(1);
+    });
 
     // osc 1
     test('sets osc1->enabled', () => {
-      expect(subtractor.osc1.enabled).toBe(0)
-    })
+      expect(subtractor.osc1.enabled).toBe(0);
+    });
 
     test('sets osc1->waveform', () => {
-      expect(subtractor.osc1.waveform).toBe(3)
-    })
+      expect(subtractor.osc1.waveform).toBe(3);
+    });
 
     test('sets osc1->octave', () => {
-      expect(subtractor.osc1.octave).toBe(-2)
-    })
+      expect(subtractor.osc1.octave).toBe(-2);
+    });
 
     test('sets osc1->semi', () => {
-      expect(subtractor.osc1.semi).toBe(3)
-    })
+      expect(subtractor.osc1.semi).toBe(3);
+    });
 
     test('sets osc1->detune', () => {
-      expect(subtractor.osc1.detune).toBe(27)
-    })
+      expect(subtractor.osc1.detune).toBe(27);
+    });
 
     // osc 2
     test('sets osc2->enabled', () => {
-      expect(subtractor.osc2.enabled).toBe(1)
-    })
+      expect(subtractor.osc2.enabled).toBe(1);
+    });
 
     test('sets osc2->waveform', () => {
-      expect(subtractor.osc2.waveform).toBe(2)
-    })
+      expect(subtractor.osc2.waveform).toBe(2);
+    });
 
     test('sets osc2->octave', () => {
-      expect(subtractor.osc2.octave).toBe(-1)
-    })
+      expect(subtractor.osc2.octave).toBe(-1);
+    });
 
     test('sets osc2->semi', () => {
-      expect(subtractor.osc2.semi).toBe(5)
-    })
+      expect(subtractor.osc2.semi).toBe(5);
+    });
 
     test('sets osc2->detune', () => {
-      expect(subtractor.osc2.detune).toBe(23)
-    })
+      expect(subtractor.osc2.detune).toBe(23);
+    });
 
     // filter
     test('sets filter1->type', () => {
-      expect(subtractor.filter1.filter.type).toBe('highpass')
-    })
+      expect(subtractor.filter1.filter.type).toBe('highpass');
+    });
 
     test('sets filter1->frequency', () => {
-      expect(subtractor.filter1.filter.frequency.value).toBe(Math.pow(127, 2))
-    })
+      expect(subtractor.filter1.filter.frequency.value).toBe(Math.pow(127, 2));
+    });
 
     test('sets filter1->Q', () => {
-      expect(subtractor.filter1.filter.Q.value).toBe(0.015)
-    })
+      expect(subtractor.filter1.filter.Q.value).toBe(0.015);
+    });
 
     test('sets filter1->gain', () => {
-      expect(subtractor.filter1.filter.gain.value).toBe(-3)
-    })
-  })
-})
+      expect(subtractor.filter1.filter.gain.value).toBe(-3);
+    });
+  });
+});

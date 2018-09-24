@@ -1,4 +1,4 @@
-import 'web-audio-test-api'
+import 'web-audio-test-api';
 // import { Subtractor } from '../src/Subtractor'
 // import '../src/components/Keyboard'
 
@@ -7,8 +7,8 @@ describe('Keyboard', () => {
   describe('qwerty keyboard', () => {
 
     test('true is true', () => {
-        expect(true).toBe(true)
-    })
+        expect(true).toBe(true);
+    });
     // need to determine an approach to testing Custom Elements
 
     // test('key "a" triggers note 39 when octave is 4', () => {
@@ -46,6 +46,6 @@ describe('Keyboard', () => {
     //   window.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'k' }))
     //   expect(subtractor.startPolyNote.mock.calls[0]).toEqual([60])
     // })
-  })
+  });
 
-})
+});
