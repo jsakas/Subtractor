@@ -971,8 +971,10 @@ var Subtractor = function (_Observable) {
       var blob = new Blob([json], { 'type': 'application/json' });
       var objectURL = URL.createObjectURL(blob);
 
+      var presetName = prompt('Preset name', preset.name || '');
+
       var a = document.createElement('a');
-      a.download = (preset.name || 'Untitled') + '.json';
+      a.download = presetName + '.json';
       a.href = objectURL;
 
       a.click();
