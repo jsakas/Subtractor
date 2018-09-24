@@ -1349,7 +1349,7 @@ var Osc = function (_Observable) {
 
       var shiftedNote = note + this._octave * 12 + this._semi;
       var baseFreq = (0, _maths.getNoteFreq)(shiftedNote);
-      var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * 10);
+      var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * (10 / polyphony));
 
       this._oscs = freqs.map(this.startFreqOscillator.bind(this));
       return this._oscs;
@@ -1363,7 +1363,7 @@ var Osc = function (_Observable) {
 
       var shiftedNote = note + this._octave * 12 + this._semi;
       var baseFreq = (0, _maths.getNoteFreq)(shiftedNote);
-      var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * 10);
+      var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * (10 / polyphony));
 
       this._oscs.forEach(function (osc, i) {
         osc.frequency.linearRampToValueAtTime(freqs[i], time);

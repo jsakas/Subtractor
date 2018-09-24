@@ -17,7 +17,7 @@ class Osc extends Observable {
     start(note, polyphony = 1, detune = 0) {
       const shiftedNote = note + (this._octave * 12) + this._semi
       const baseFreq = getNoteFreq(shiftedNote)
-      const freqs = getFrequencySpread(baseFreq, polyphony, detune * 10);
+      const freqs = getFrequencySpread(baseFreq, polyphony, detune * (10 / polyphony));
 
       this._oscs = freqs.map(this.startFreqOscillator.bind(this))
       return this._oscs;
@@ -26,7 +26,7 @@ class Osc extends Observable {
     move(note, polyphony = 1, detune = 0, time = 0) {
       const shiftedNote = note + (this._octave * 12) + this._semi
       const baseFreq = getNoteFreq(shiftedNote)
-      const freqs = getFrequencySpread(baseFreq, polyphony, detune * 10);
+      const freqs = getFrequencySpread(baseFreq, polyphony, detune * (10 / polyphony));
 
       this._oscs.forEach((osc, i) => {
         osc.frequency.linearRampToValueAtTime(
