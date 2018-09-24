@@ -971,8 +971,10 @@ var Subtractor = function (_Observable) {
       var blob = new Blob([json], { 'type': 'application/json' });
       var objectURL = URL.createObjectURL(blob);
 
+      var presetName = prompt('Preset name', preset.name || '');
+
       var a = document.createElement('a');
-      a.download = (preset.name || 'Untitled') + '.json';
+      a.download = presetName + '.json';
       a.href = objectURL;
 
       a.click();
@@ -1349,7 +1351,7 @@ var Osc = function (_Observable) {
 
       var shiftedNote = note + this._octave * 12 + this._semi;
       var baseFreq = (0, _maths.getNoteFreq)(shiftedNote);
-      var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * 10);
+      var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * (10 / polyphony));
 
       this._oscs = freqs.map(this.startFreqOscillator.bind(this));
       return this._oscs;
@@ -1363,7 +1365,7 @@ var Osc = function (_Observable) {
 
       var shiftedNote = note + this._octave * 12 + this._semi;
       var baseFreq = (0, _maths.getNoteFreq)(shiftedNote);
-      var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * 10);
+      var freqs = (0, _maths.getFrequencySpread)(baseFreq, polyphony, detune * (10 / polyphony));
 
       this._oscs.forEach(function (osc, i) {
         osc.frequency.linearRampToValueAtTime(freqs[i], time);
@@ -1526,11 +1528,11 @@ var Filter = function (_Observable) {
   }, {
     key: 'q',
     set: function set(value) {
-      this._filter.Q.value = value;
+      this._filter.Q.value = value / 10;
       this.notifyObservers();
     },
     get: function get() {
-      return this._filter.Q.value;
+      return this._filter.Q.value * 10;
     }
   }, {
     key: 'gain',

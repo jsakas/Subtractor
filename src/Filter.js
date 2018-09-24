@@ -46,12 +46,12 @@ class Filter extends Observable {
     }
 
     set q(value) {
-      this._filter.Q.value = value
+      this._filter.Q.value = value / 10
       this.notifyObservers()
     }
 
     get q() {
-      return this._filter.Q.value
+      return this._filter.Q.value * 10
     }
 
     set gain(value) {

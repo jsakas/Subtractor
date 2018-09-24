@@ -393,8 +393,10 @@ class Subtractor extends Observable {
     const blob = new Blob([json], { 'type': 'application/json' })
     const objectURL = URL.createObjectURL(blob)
 
+    const presetName = prompt('Preset name', preset.name || '')
+
     const a = document.createElement('a')
-    a.download = `${preset.name || 'Untitled'}.json`
+    a.download = `${presetName}.json`
     a.href = objectURL
 
     a.click()
