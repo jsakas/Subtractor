@@ -1,7 +1,16 @@
-machine:
+version: 2.1
+
+executors:
   node:
-    version: 8.5.0
-test:
-  override:
-    - yarn test
-    - yarn lint
+    docker:
+      - image: circleci/node
+
+jobs:
+  build:
+    executor: node
+    steps:
+      - checkout
+      - run: yarn install
+      - run: yarn build
+      - run: yarn test
+
