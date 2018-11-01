@@ -1,14 +1,26 @@
 const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const extractSass = new ExtractTextPlugin({
-  filename: 'subtractor.css'
-});
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
+
+const mode = process.env.WEBPACK_MODE || 'production';
 
 module.exports = {
-  entry: ['custom-elements', 'shadydom', './src/Subtractor.js', './src/components/Fader.js', './src/components/Keyboard.js', './src/components/Knob.js'],
+  mode,
+  entry: {
+    main: [
+      'custom-elements',
+      'shadydom',
+      './src/Subtractor.js',
+      './src/components/Fader.js',
+      './src/components/Keyboard.js',
+      './src/components/Knob.js'
+    ]
+  },
   output: {
     filename: 'subtractor.js',
-    path: path.resolve(__dirname, 'docs')
+    path: path.resolve(__dirname, 'build', 'static'),
+    publicPath: '/static/',
   },
   resolve: {
     alias: {
@@ -17,9 +29,23 @@ module.exports = {
       'shadydom': path.resolve(__dirname, 'node_modules/@webcomponents/shadydom/shadydom.min')
     }
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src', 'html', 'index.html'),
+      filename: '../index.html',
+      inject: 'head',
+      alwaysWriteToDisk: true,
+    }),
+    new HtmlWebpackHarddiskPlugin(),
+    new ExtractCssChunks(),
+  ],
   devServer: {
-    contentBase: path.join(__dirname, 'docs'),
-    port: 7200
+    host: '0.0.0.0',
+    port: 7200,
+    historyApiFallback: true,
+    disableHostCheck: true,
+    index: path.join(__dirname, 'build', 'index.html'),
+    contentBase: path.join(__dirname, 'build'),
   },
   module: {
     rules: [
@@ -29,36 +55,13 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test: /\.json$/,
-        loader: 'json-loader'
-      },
-      {
         test: /\.scss$/,
-        include: [path.resolve(__dirname, 'src/sass')],
-        exclude: [path.resolve(__dirname, 'src/sass/subtractor.scss')],
         use: [
-          {
-            loader: 'css-loader'
-          },
-          {
-            loader: 'sass-loader'
-          }
+          ExtractCssChunks.loader,
+          'css-loader',
+          'sass-loader',
         ]
-      },
-      {
-        test: path.resolve(__dirname, 'src/sass/subtractor.scss'),
-        use: extractSass.extract({
-          use: [
-            {
-              loader: 'css-loader'
-            },
-            {
-              loader: 'sass-loader'
-            }
-          ]
-        })
       }
     ]
   },
-  plugins: [extractSass]
 };

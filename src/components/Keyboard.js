@@ -1,5 +1,5 @@
 import { keyboardKeys } from '../utils/keyboard';
-import styles from '../sass/keyboard.scss';
+import styles from '!css-loader!sass-loader?modules!./Keyboard.scss';
 
 class Keyboard extends HTMLElement {
   connectedCallback() {
