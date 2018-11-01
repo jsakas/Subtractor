@@ -563,6 +563,17 @@ var Subtractor = function (_Observable) {
     _this.filter2 = new _Filter.Filter(_this.context);
     _this.dynamicFilters = [];
 
+    // lFO 1 set up
+    // currently connected to Filter 2 frequency
+    _this.lfo1Node = _this.context.createOscillator();
+    _this.lfo1Node.frequency.value = 1;
+    _this.lfo1Node.start();
+
+    _this.lfo1GainNode = _this.context.createGain();
+    _this.lfo1GainNode.gain.value = 1;
+    _this.lfo1Node.connect(_this.lfo1GainNode);
+    _this.lfo1GainNode.connect(_this.filter2.filter.frequency);
+
     _this.name = '';
     _this.description = '';
     _this.author = '';
@@ -596,6 +607,7 @@ var Subtractor = function (_Observable) {
       _this.loadPreset({});
       _this.osc1.notifyObservers();
       _this.osc2.notifyObservers();
+      _this.notifyObservers();
     });
 
     window.debug = function () {
@@ -764,7 +776,7 @@ var Subtractor = function (_Observable) {
         this.masterGain.connect(oscilloscope.analyzer);
         oscilloscope.start();
       } catch (e) {
-        console.log('Failed to start Oscilloscope');
+        console.error('Failed to start Oscilloscope');
       }
     }
   }, {
@@ -837,7 +849,13 @@ var Subtractor = function (_Observable) {
         freq: 127,
         q: 0.10,
         gain: 0
-      } : _ref$filter2;
+      } : _ref$filter2,
+          _ref$lfo = _ref.lfo1,
+          lfo1 = _ref$lfo === undefined ? {
+        'type': 1,
+        'freq': 1,
+        'amount': 0
+      } : _ref$lfo;
 
       this.name = name;
       this.author = author;
@@ -874,6 +892,9 @@ var Subtractor = function (_Observable) {
       this.filter2.freq = filter2.freq;
       this.filter2.q = filter2.q;
       this.filter2.gain = filter2.gain;
+      this.lfo1Type = lfo1.type;
+      this.lfo1Freq = lfo1.freq;
+      this.lfo1Amount = lfo1.amount;
     }
 
     // take the current synth settings and return an object
@@ -931,6 +952,11 @@ var Subtractor = function (_Observable) {
           'freq': this.filter2.freq,
           'q': this.filter2.q,
           'gain': this.filter2.gain
+        },
+        'lfo1': {
+          'type': this.lfo1Type,
+          'freq': this.lfo1Freq,
+          'amount': this.lfo1Amount
         }
       };
     }
@@ -1022,7 +1048,6 @@ var Subtractor = function (_Observable) {
     key: 'attack',
     set: function set(value) {
       this._attack = value;
-      this.notifyObservers();
     },
     get: function get() {
       return this._attack;
@@ -1031,7 +1056,6 @@ var Subtractor = function (_Observable) {
     key: 'decay',
     set: function set(value) {
       this._decay = value;
-      this.notifyObservers();
     },
     get: function get() {
       return this._decay;
@@ -1040,7 +1064,6 @@ var Subtractor = function (_Observable) {
     key: 'sustain',
     set: function set(value) {
       this._sustain = value;
-      this.notifyObservers();
     },
     get: function get() {
       return this._sustain;
@@ -1049,7 +1072,6 @@ var Subtractor = function (_Observable) {
     key: 'release',
     set: function set(value) {
       this._release = value;
-      this.notifyObservers();
     },
     get: function get() {
       return this._release;
@@ -1064,7 +1086,6 @@ var Subtractor = function (_Observable) {
       this.dynamicFilters.forEach(function (filter) {
         filter.type = (0, _helpers.intToFilter)(value);
       });
-      this.notifyObservers();
     },
     get: function get() {
       return this.filter1.type;
@@ -1081,7 +1102,6 @@ var Subtractor = function (_Observable) {
       this.dynamicFilters.forEach(function (filter) {
         filter.freq = value;
       });
-      this.notifyObservers();
     },
     get: function get() {
       return this.filter1.freq;
@@ -1098,7 +1118,6 @@ var Subtractor = function (_Observable) {
       this.dynamicFilters.forEach(function (filter) {
         filter.q = value;
       });
-      this.notifyObservers();
     },
     get: function get() {
       return this.filter1.q;
@@ -1110,7 +1129,6 @@ var Subtractor = function (_Observable) {
       this.dynamicFilters.forEach(function (filter) {
         filter.gain = value;
       });
-      this.notifyObservers();
     },
     get: function get() {
       return this.filter1.gain;
@@ -1122,7 +1140,6 @@ var Subtractor = function (_Observable) {
     key: 'filterAttack',
     set: function set(value) {
       this._filterAttack = value;
-      this.notifyObservers();
     },
     get: function get() {
       return this._filterAttack;
@@ -1131,7 +1148,6 @@ var Subtractor = function (_Observable) {
     key: 'filterDecay',
     set: function set(value) {
       this._filterDecay = value;
-      this.notifyObservers();
     },
     get: function get() {
       return this._filterDecay;
@@ -1140,7 +1156,6 @@ var Subtractor = function (_Observable) {
     key: 'filterSustain',
     set: function set(value) {
       this._filterSustain = value;
-      this.notifyObservers();
     },
     get: function get() {
       return this._filterSustain;
@@ -1149,7 +1164,6 @@ var Subtractor = function (_Observable) {
     key: 'filterRelease',
     set: function set(value) {
       this._filterRelease = value;
-      this.notifyObservers();
     },
     get: function get() {
       return this._filterRelease;
@@ -1158,7 +1172,6 @@ var Subtractor = function (_Observable) {
     key: 'filterAmount',
     set: function set(value) {
       this._filterAmount = value;
-      this.notifyObservers();
     },
     get: function get() {
       return this._filterAmount;
@@ -1178,6 +1191,36 @@ var Subtractor = function (_Observable) {
     },
     set: function set(value) {
       this._glide = value;
+    }
+  }, {
+    key: 'lfo1Type',
+    get: function get() {
+      return (0, _helpers.waveformToInt)(this.lfo1Node.type);
+    },
+    set: function set(value) {
+      this.lfo1Node.type = (0, _helpers.intToWaveform)(value);
+    }
+  }, {
+    key: 'frlfo1Type',
+    get: function get() {
+      return this.lfo1Node.type;
+    }
+  }, {
+    key: 'lfo1Freq',
+    get: function get() {
+      return this.lfo1Node.frequency.value * 100;
+    },
+    set: function set(value) {
+      this.lfo1Node.frequency.value = value / 100;
+    }
+  }, {
+    key: 'lfo1Amount',
+    get: function get() {
+      return this._lfo1Amount;
+    },
+    set: function set(value) {
+      this.lfo1GainNode.gain.value = value;
+      this._lfo1Amount = value;
     }
   }]);
 

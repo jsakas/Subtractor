@@ -7,7 +7,7 @@ import { Envelope } from './Envelope';
 import { Oscilloscope } from './Oscilloscope';
 import { Observable } from './Observe';
 import { knobToSeconds, knobToFreq } from './utils/maths';
-import { intToFilter, renameObjectKey } from './utils/helpers';
+import { intToFilter, renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
 
 
 class Subtractor extends Observable {
@@ -19,6 +19,17 @@ class Subtractor extends Observable {
     this.filter1    = new Filter(this.context);
     this.filter2    = new Filter(this.context);
     this.dynamicFilters = [];
+
+    // lFO 1 set up
+    // currently connected to Filter 2 frequency
+    this.lfo1Node = this.context.createOscillator();
+    this.lfo1Node.frequency.value = 1;
+    this.lfo1Node.start();
+
+    this.lfo1GainNode = this.context.createGain();
+    this.lfo1GainNode.gain.value = 1;
+    this.lfo1Node.connect(this.lfo1GainNode);
+    this.lfo1GainNode.connect(this.filter2.filter.frequency);
 
     this.name = '';
     this.description = '';
@@ -53,6 +64,7 @@ class Subtractor extends Observable {
       this.loadPreset({});
       this.osc1.notifyObservers();
       this.osc2.notifyObservers();
+      this.notifyObservers();
     });
 
     window.debug = () => console.log(this);
@@ -211,7 +223,7 @@ class Subtractor extends Observable {
       this.masterGain.connect(oscilloscope.analyzer);
       oscilloscope.start();
     } catch (e) {
-      console.log('Failed to start Oscilloscope');
+      console.error('Failed to start Oscilloscope');
     }
   }
 
@@ -270,6 +282,11 @@ class Subtractor extends Observable {
       freq: 127,
       q: 0.10,
       gain: 0
+    },
+    lfo1 = {
+      'type': 1,
+      'freq': 1,
+      'amount': 0
     }
   }) {
     this.name = name;
@@ -307,6 +324,9 @@ class Subtractor extends Observable {
     this.filter2.freq = filter2.freq;
     this.filter2.q = filter2.q;
     this.filter2.gain = filter2.gain;
+    this.lfo1Type = lfo1.type;
+    this.lfo1Freq = lfo1.freq;
+    this.lfo1Amount = lfo1.amount;
   }
 
   // take the current synth settings and return an object
@@ -361,6 +381,11 @@ class Subtractor extends Observable {
         'freq': this.filter2.freq,
         'q': this.filter2.q,
         'gain': this.filter2.gain
+      },
+      'lfo1': {
+        'type': this.lfo1Type,
+        'freq': this.lfo1Freq,
+        'amount': this.lfo1Amount
       }
     };
   }
@@ -401,6 +426,7 @@ class Subtractor extends Observable {
 
     a.click();
   }
+  
   set octave(value) {
     this._octave = value;
     this.notifyObservers();
@@ -440,7 +466,6 @@ class Subtractor extends Observable {
   // amp envelope getter and setters
   set attack(value) {
     this._attack = value;
-    this.notifyObservers();
   }
 
   get attack() {
@@ -449,7 +474,6 @@ class Subtractor extends Observable {
 
   set decay(value) {
     this._decay = value;
-    this.notifyObservers();
   }
 
   get decay() {
@@ -458,7 +482,6 @@ class Subtractor extends Observable {
 
   set sustain(value) {
     this._sustain = value;
-    this.notifyObservers();
   }
 
   get sustain() {
@@ -467,7 +490,6 @@ class Subtractor extends Observable {
 
   set release(value) {
     this._release = value;
-    this.notifyObservers();
   }
 
   get release() {
@@ -480,7 +502,6 @@ class Subtractor extends Observable {
     this.dynamicFilters.forEach((filter) => { 
       filter.type = intToFilter(value); 
     });
-    this.notifyObservers();
   }
 
   get filter1Type() {
@@ -496,7 +517,6 @@ class Subtractor extends Observable {
     this.dynamicFilters.forEach((filter) => { 
       filter.freq = value; 
     });
-    this.notifyObservers();
   }
 
   get filter1Freq() {
@@ -512,7 +532,6 @@ class Subtractor extends Observable {
     this.dynamicFilters.forEach((filter) => { 
       filter.q = value; 
     });
-    this.notifyObservers();
   }
 
   get filter1Q() {
@@ -524,7 +543,6 @@ class Subtractor extends Observable {
     this.dynamicFilters.forEach((filter) => { 
       filter.gain = value; 
     });
-    this.notifyObservers();
   }
 
   get filter1Gain() {
@@ -534,7 +552,6 @@ class Subtractor extends Observable {
   // filter envelope getters and setters
   set filterAttack(value) {
     this._filterAttack = value;
-    this.notifyObservers();
   }
 
   get filterAttack() {
@@ -543,7 +560,6 @@ class Subtractor extends Observable {
 
   set filterDecay(value) {
     this._filterDecay = value;
-    this.notifyObservers();
   }
 
   get filterDecay() {
@@ -552,7 +568,6 @@ class Subtractor extends Observable {
 
   set filterSustain(value) {
     this._filterSustain = value;
-    this.notifyObservers();
   }
 
   get filterSustain() {
@@ -561,7 +576,6 @@ class Subtractor extends Observable {
 
   set filterRelease(value) {
     this._filterRelease = value;
-    this.notifyObservers();
   }
   
   get filterRelease() {
@@ -570,7 +584,6 @@ class Subtractor extends Observable {
 
   set filterAmount(value) {
     this._filterAmount = value;
-    this.notifyObservers();
   }
 
   get filterAmount() {
@@ -591,6 +604,35 @@ class Subtractor extends Observable {
 
   set glide(value) {
     this._glide = value;
+  }
+  
+  get lfo1Type() {
+    return waveformToInt(this.lfo1Node.type);
+  }
+
+  set lfo1Type(value) {
+    this.lfo1Node.type = intToWaveform(value);
+  }
+
+  get frlfo1Type() {
+    return this.lfo1Node.type;
+  }
+
+  get lfo1Freq() {
+    return this.lfo1Node.frequency.value * 100;
+  }
+
+  set lfo1Freq(value) {
+    this.lfo1Node.frequency.value = value / 100;
+  }
+
+  get lfo1Amount() {
+    return this._lfo1Amount;
+  }
+
+  set lfo1Amount(value) {
+    this.lfo1GainNode.gain.value = value;
+    this._lfo1Amount = value;
   }
 }
 
