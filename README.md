@@ -32,8 +32,8 @@ ASDFGHJKL;'
 ## Development
 
 ```shell
-npm install
-npm start
+yarn install
+yarn start
 ```
 
 Then open [localhost:7200](http://localhost:7200/)
@@ -43,7 +43,7 @@ Then open [localhost:7200](http://localhost:7200/)
 via Jest
 
 ```shell
-npm test
+yarn test
 ```
 
 # About

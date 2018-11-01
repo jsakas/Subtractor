@@ -3,5 +3,5 @@ machine:
     version: 8.5.0
 test:
   override:
-    - npm run test
-    - npm run lint
+    - yarn test
+    - yarn lint
