@@ -612,6 +612,7 @@ class Subtractor extends Observable {
 
   set lfo1Type(value) {
     this.lfo1Node.type = intToWaveform(value);
+    this.notifyObservers();
   }
 
   get frlfo1Type() {
@@ -624,6 +625,7 @@ class Subtractor extends Observable {
 
   set lfo1Freq(value) {
     this.lfo1Node.frequency.value = value / 100;
+    this.notifyObservers();
   }
 
   get lfo1Amount() {
@@ -633,6 +635,7 @@ class Subtractor extends Observable {
   set lfo1Amount(value) {
     this.lfo1GainNode.gain.value = value;
     this._lfo1Amount = value;
+    this.notifyObservers();
   }
 }
 
