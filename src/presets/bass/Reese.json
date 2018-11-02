@@ -1,19 +1,19 @@
 {
- "name": "init",
- "author": "",
+ "name": "Init",
+ "author": "Subtractor Team",
  "description": "",
  "master": {
-  "gain": 50,
-  "polyphony": 2,
-  "detune": 10,
+  "gain": 34.00000035762787,
+  "polyphony": 1,
+  "detune": 0,
   "voices": 1,
-  "glide": 36
+  "glide": 26
  },
  "ampEnv": {
   "attack": 0,
   "decay": 100,
   "sustain": 64,
-  "release": 48
+  "release": 10
  },
  "filterEnv": {
   "attack": 0,
@@ -30,22 +30,27 @@
   "detune": 0
  },
  "osc2": {
-  "enabled": 0,
+  "enabled": 1,
   "waveform": 3,
-  "octave": 0,
+  "octave": -2,
   "semi": 0,
-  "detune": 0
+  "detune": 44
  },
  "filter1": {
   "type": 1,
-  "freq": 23,
-  "q": 4,
+  "freq": 64,
+  "q": 0.09999999776482582,
   "gain": 0
  },
  "filter2": {
   "type": 1,
-  "freq": 127,
-  "q": 0.10000000149011612,
+  "freq": 42,
+  "q": 25,
   "gain": 0
+ },
+ "lfo1": {
+  "type": 4,
+  "freq": 640.9999847412109,
+  "amount": 600
  }
 }
