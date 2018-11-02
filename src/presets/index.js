@@ -4,6 +4,7 @@ import Plucky from './synth/Plucky';
 import ElectroFifth from './bass/ElectroFifth';
 import Reese from './bass/Reese';
 import BellsOfGuidia from './pluck/BellsOfGuidia';
+import Mellow from './pad/Mellow';
 
 export { 
   Init, 
@@ -11,5 +12,6 @@ export {
   Plucky, 
   Reese,
   ElectroFifth,
-  BellsOfGuidia
+  BellsOfGuidia,
+  Mellow
 };

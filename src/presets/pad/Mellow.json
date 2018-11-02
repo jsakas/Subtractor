@@ -1,56 +1,56 @@
 {
- "name": "Reese",
+ "name": "Mellow",
  "author": "Jon Sakas",
  "description": "",
  "master": {
-  "gain": 34.00000035762787,
-  "polyphony": 1,
-  "detune": 0,
-  "voices": 1,
-  "glide": 26
+  "gain": 50,
+  "polyphony": 4,
+  "detune": 43,
+  "voices": 8,
+  "glide": 0
  },
  "ampEnv": {
   "attack": 0,
-  "decay": 100,
-  "sustain": 64,
-  "release": 10
+  "decay": 12,
+  "sustain": 24,
+  "release": 69
  },
  "filterEnv": {
-  "attack": 0,
-  "decay": 40,
+  "attack": 127,
+  "decay": 14,
   "sustain": 0,
-  "release": 40,
-  "amount": 0
+  "release": 94,
+  "amount": 115
  },
  "osc1": {
   "enabled": 1,
   "waveform": 3,
-  "octave": -2,
+  "octave": 0,
   "semi": 0,
   "detune": 0
  },
  "osc2": {
   "enabled": 1,
   "waveform": 3,
-  "octave": -2,
-  "semi": 0,
-  "detune": 44
+  "octave": 0,
+  "semi": 7,
+  "detune": 17
  },
  "filter1": {
   "type": 1,
-  "freq": 64,
+  "freq": 0,
   "q": 0.09999999776482582,
   "gain": 0
  },
  "filter2": {
   "type": 1,
-  "freq": 42,
-  "q": 25,
+  "freq": 127,
+  "q": 0.09999999776482582,
   "gain": 0
  },
  "lfo1": {
-  "type": 4,
-  "freq": 640.9999847412109,
-  "amount": 600
+  "type": 1,
+  "freq": 0.9999999776482582,
+  "amount": 0
  }
 }
