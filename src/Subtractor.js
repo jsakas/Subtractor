@@ -93,10 +93,10 @@ class Subtractor extends Observable {
     const m = this.parseMIDIMessage(message);
     switch (m.command) {
       case 144:
-        this.noteOn(m.note);
+        this.noteOn(m.note, m.velocity);
         break;
       case 128:
-        this.noteOff(m.note);
+        this.noteOff(m.note, m.velocity);
         break;
       default:
         break;
@@ -130,7 +130,7 @@ class Subtractor extends Observable {
     renameObjectKey(this._activeNotes, n1, n2);
   }
 
-  noteOn(note) {
+  noteOn(note, velocity = .7) {
     const activeNoteKeys = Object.keys(this._activeNotes);
 
     if (activeNoteKeys.length >= this._voices) {
@@ -143,7 +143,7 @@ class Subtractor extends Observable {
         if (!osc.enabled) { 
           return null;
         }
-        osc.start(note, this._polyphony, this._detune).map(this.pipeline);
+        osc.start(note, this._polyphony, this._detune).map(o => this.pipeline(o, velocity));
         return osc;
       }).reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {});
     }
@@ -170,13 +170,17 @@ class Subtractor extends Observable {
   // route an oscillator thru the pipeline of modifiers.
   // e.g. gains, filter, distortions etc.
   //
-  pipeline(osc) {
+  pipeline(osc, velocity) {
+    // create a velocity node
+    const velocityGainNode = this.context.createGain();
+    velocityGainNode.gain.value = velocity;
+
     // create a gain node for the envelope
-    const gainNode = this.context.createGain();
-    gainNode.gain.value = 0;
+    const ampEnvelopeGainNode = this.context.createGain();
+    ampEnvelopeGainNode.gain.value = 0;
 
     // attach an envelope to the gain node
-    const oscEnvelope = new Envelope(this.context, gainNode.gain);
+    const oscEnvelope = new Envelope(this.context, ampEnvelopeGainNode.gain);
     oscEnvelope.maxValue = 1;
     oscEnvelope.minValue = 0;
     oscEnvelope.attack = this.attack;
@@ -205,8 +209,9 @@ class Subtractor extends Observable {
     filterEnvelope.schedule();
 
     // route the osc thru everything we just created 
-    osc.connect(gainNode);
-    gainNode.connect(filter.filter);
+    osc.connect(velocityGainNode);
+    velocityGainNode.connect(ampEnvelopeGainNode);
+    ampEnvelopeGainNode.connect(filter.filter);
     filter.filter.connect(this.filter2.filter);
 
     // attach the envelopes to the osc the gain node so it can be reset on noteOff
