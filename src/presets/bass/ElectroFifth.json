@@ -13,7 +13,7 @@
   "attack": 0,
   "decay": 100,
   "sustain": 64,
-  "release": 23
+  "release": 18
  },
  "filterEnv": {
   "attack": 0,
@@ -39,7 +39,18 @@
  "filter1": {
   "type": 1,
   "freq": 127,
-  "q": 0.10000000149011612,
+  "q": 0.09999999776482582,
   "gain": 0
+ },
+ "filter2": {
+  "type": 1,
+  "freq": 127,
+  "q": 0.09999999776482582,
+  "gain": 0
+ },
+ "lfo1": {
+  "type": 1,
+  "freq": 0.9999999776482582,
+  "amount": 0
  }
 }

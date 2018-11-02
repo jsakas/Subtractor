@@ -41,11 +41,8 @@ const pointToPercent = function(min, max, point) {
     : percent;
 };
 
-// a non linear equation for converting a value from 0 to 127 to seconds, good for envelopes
-// slightly modelled after Reason's Subtractor but needs more tests & research
-//
 const knobToSeconds = function(value) {
-  return Math.pow(value, 5) / 500000000;
+  return Math.pow(value, 2) / 1000;
 };
 
 const knobToFreq = function(value) {
