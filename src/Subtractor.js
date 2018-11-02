@@ -75,13 +75,9 @@ class Subtractor extends Observable {
     .then((midi) => {
       midi.onstatechange = this.handleMIDIStateChange;
 
-      let input = midi.inputs.values();
-      let result = input.next();
-        while (!result.done) {
-          result = input.next();
-          if (result.value) {
-              result.value.onmidimessage = this.handleMIDIMessage.bind(this);
-          }
+      let inputs = midi.inputs.values();
+      for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+        input.value.onmidimessage = this.handleMIDIMessage.bind(this);
       }
     })
     .catch(console.error);
@@ -94,16 +90,25 @@ class Subtractor extends Observable {
   }
 
   handleMIDIMessage (message) {
-    switch (message.data[0]) {
+    const m = this.parseMIDIMessage(message);
+    switch (m.command) {
       case 144:
-        this.noteOn(message.data[1]);
+        this.noteOn(m.note);
         break;
       case 128:
-        this.noteOff(message.data[1]);
+        this.noteOff(m.note);
         break;
       default:
         break;
     }
+  }
+
+  parseMIDIMessage (message) {
+    return {
+      command: message.data[0],
+      note: message.data[1],
+      velocity: message.data[2] / 127
+    };
   }
   
   moveNote(n1, n2) {
