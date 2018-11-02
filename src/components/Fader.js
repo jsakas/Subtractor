@@ -1,5 +1,5 @@
 import { pointToPercent } from '../utils/maths';
-import styles from '../sass/fader.scss';
+import styles from '!css-loader!sass-loader?modules!./Fader.scss';
 
 class Fader extends HTMLElement {
   connectedCallback() {

@@ -7,8 +7,6 @@
 </head>
 
 <body>
-  <script src="./subtractor.js" type="text/javascript"></script>
-  <link href="./subtractor.css" rel="stylesheet" type="text/css">
   
   <script>
     var subtractor = new Subtractor();
@@ -113,7 +111,7 @@
       <x-fader id="master-gain" name="Gain" value="50" min="1" max="100" observe="subtractor" bind="gain"></x-fader>
     </section>
     <canvas id="oscilloscope" class="oscilloscope"></canvas>
-    <x-keyboard id"keyboard" name="Keyboard" observe="subtractor" bind="octave"></x-keyboard>
+    <x-keyboard id="keyboard" name="Keyboard" observe="subtractor" bind="octave"></x-keyboard>
   </div>
 </body>
 

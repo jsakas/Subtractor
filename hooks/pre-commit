@@ -2,9 +2,9 @@
 
 linter='eslint'
 
-if [[ ! -x "$(npm bin)/$linter" ]]; then
-  echo "please run `npm i` to install $linter."
-  echo "please \`npm i\` to install $linter for this pre-commit hook"
+if [[ ! -x "$(yarn bin)/$linter" ]]; then
+  echo "please run `yarn` to install $linter."
+  echo "please \`yarn\` to install $linter for this pre-commit hook"
   exit 1
 fi
 
@@ -23,7 +23,7 @@ fi
 
 echo "linting changes to /src ..."
 echo "$changed_files"
-"$(npm bin)/$linter" $changed_files
+"$(yarn bin)/$linter" $changed_files
 
 if [[ "$?" == 0 ]]; then
   echo "\033[32m$linter passed\033[0m"

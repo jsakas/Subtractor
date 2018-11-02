@@ -1,5 +1,5 @@
 import { percentToPoint, pointToPercent } from '../utils/maths';
-import styles from '../sass/knob.scss';
+import styles from '!css-loader!sass-loader?modules!./Knob.scss';
 
 class Knob extends HTMLElement {
   connectedCallback() {
