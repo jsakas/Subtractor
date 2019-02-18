@@ -1,6 +1,6 @@
 # Subtractor
 
-[![Play](https://img.shields.io/badge/launch-subtractor-green.svg?longCache=true&style=for-the-badge)](https://jsakas.github.io/Subtractor/)
+[![Play](https://img.shields.io/badge/launch-subtractor-green.svg?longCache=true&style=for-the-badge)](https://subtractor.netlify.com/)
 
 A WebAudio API Synth
 
