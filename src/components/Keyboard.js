@@ -77,8 +77,9 @@ class Keyboard extends HTMLElement {
         const note = parseInt(eMouseDown.target.id.replace('key-', ''));
         if (note >= 0 && !noteWasPressed[note]) {
           this.keys[note].classList.add('keyboard__pressed');
-
           const n = note + this.observable.octave * 12;
+
+          this.observable.noteOn(n);
 
           const releaseThisKey = () => {
             this.keys[note].classList.remove('keyboard__pressed');
