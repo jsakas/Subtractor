@@ -72,15 +72,17 @@ class Subtractor extends Observable {
 
   initMIDIController() {
     navigator.requestMIDIAccess({ sysex: true })
-    .then((midi) => {
-      midi.onstatechange = this.handleMIDIStateChange;
+      .then((midi) => {
+        midi.onstatechange = this.handleMIDIStateChange;
 
-      let inputs = midi.inputs.values();
-      for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
-        input.value.onmidimessage = this.handleMIDIMessage.bind(this);
-      }
-    })
-    .catch(console.error);
+        let inputs = midi.inputs.values();
+        for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+          input.value.onmidimessage = this.handleMIDIMessage.bind(this);
+        }
+      })
+      .catch((e) => {
+        console.warn('Failed to initialize MIDI Controller.', e);
+      });
 
   }
 
