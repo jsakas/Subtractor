@@ -7,14 +7,17 @@ const mode = process.env.WEBPACK_MODE || 'production';
 
 module.exports = {
   mode,
+  devtool: 'eval',
   entry: {
     main: [
-      'custom-elements',
-      'shadydom',
-      './src/Subtractor.js',
-      './src/components/Fader.js',
-      './src/components/Keyboard.js',
-      './src/components/Knob.js'
+      // 'custom-elements',
+      // 'shadydom',
+      // './src/Subtractor.js',
+      // './src/components/Fader.js',
+      // './src/components/FaderVue.js',
+      // './src/components/Keyboard.js',
+      // './src/components/Knob.js'
+      './src/main',
     ]
   },
   output: {
@@ -26,14 +29,15 @@ module.exports = {
     alias: {
       'web-audio-test-api': path.resolve(__dirname, 'node_modules/web-audio-test-api'),
       'custom-elements': path.resolve(__dirname, 'node_modules/@webcomponents/custom-elements/custom-elements.min'),
-      'shadydom': path.resolve(__dirname, 'node_modules/@webcomponents/shadydom/shadydom.min')
+      'shadydom': path.resolve(__dirname, 'node_modules/@webcomponents/shadydom/shadydom.min'),
+      'vue$': 'vue/dist/vue.esm.js'
     }
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'html', 'index.html'),
       filename: '../index.html',
-      inject: 'head',
+      inject: 'body',
       alwaysWriteToDisk: true,
     }),
     new HtmlWebpackHarddiskPlugin(),

@@ -6,7 +6,7 @@ class Osc extends Observable {
     constructor(audioContext, options = {}) {
       super();
       this.audioContext = audioContext;
-      this._enabled = options.enabled || false;
+      this._enabled = options.enabled || 0;
       this._waveform = intToWaveform(options.waveform) || 'sine';
       this._octave = options.octave || 0;
       this._semi = options.semi || 0;
@@ -45,7 +45,7 @@ class Osc extends Observable {
     }
 
     set enabled(value) {
-      this._enabled = value;
+      this._enabled = Number(value);
       this.notifyObservers();
     }
 
@@ -54,12 +54,8 @@ class Osc extends Observable {
     }
 
     set waveform(value) {
-      if (typeof value == 'number') {
-        this._waveform = intToWaveform(value);
-      } else {
-        this._waveform = value;
-      }
-      
+      this._waveform = intToWaveform(Number(value).toFixed());
+
       this.notifyObservers();
     }
 
@@ -72,7 +68,7 @@ class Osc extends Observable {
     }
 
     set octave(value) {
-      this._octave = value;
+      this._octave = Number(value);
       this.notifyObservers();
     }
 
@@ -81,7 +77,7 @@ class Osc extends Observable {
     }
 
     set semi(value) {
-      this._semi = value;
+      this._semi = Number(value);
       this.notifyObservers();
     }
 
@@ -90,7 +86,7 @@ class Osc extends Observable {
     }
 
     set detune(value) {
-      this._detune = value;
+      this._detune = Number(value);
       this.notifyObservers();
     }
 

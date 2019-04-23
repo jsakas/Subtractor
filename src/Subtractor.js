@@ -1,14 +1,14 @@
 import * as Presets from './presets';
-import './Subtractor.scss';
 
+
+import { Observable } from './Observe';
 import { Osc } from './Osc';
 import { Filter } from './Filter';
 import { Envelope } from './Envelope';
-import { Oscilloscope } from './Oscilloscope';
-import { Observable } from './Observe';
 import { knobToSeconds, knobToFreq } from './utils/maths';
 import { intToFilter, renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
 
+import './Subtractor.scss';
 
 class Subtractor extends Observable {
   constructor() {
@@ -56,61 +56,6 @@ class Subtractor extends Observable {
     this.masterGain.connect(this.context.destination);
 
     this.pipeline = this.pipeline.bind(this);
-
-    // only perform certain tasks once the DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
-      this.initMIDIController();
-      this.startOscilloscope();
-      this.loadPreset({});
-      this.osc1.notifyObservers();
-      this.osc2.notifyObservers();
-      this.notifyObservers();
-    });
-
-    window.debug = () => console.log(this);
-  }
-
-  initMIDIController() {
-    navigator.requestMIDIAccess({ sysex: true })
-      .then((midi) => {
-        midi.onstatechange = this.handleMIDIStateChange;
-
-        let inputs = midi.inputs.values();
-        for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
-          input.value.onmidimessage = this.handleMIDIMessage.bind(this);
-        }
-      })
-      .catch((e) => {
-        console.warn('Failed to initialize MIDI Controller.', e);
-      });
-
-  }
-
-  handleMIDIStateChange (e) {
-    // print information about the (dis)connected MIDI controller
-    console.log(e.port.name, e.port.manufacturer, e.port.state);
-  }
-
-  handleMIDIMessage (message) {
-    const m = this.parseMIDIMessage(message);
-    switch (m.command) {
-      case 144:
-        this.noteOn(m.note, m.velocity);
-        break;
-      case 128:
-        this.noteOff(m.note, m.velocity);
-        break;
-      default:
-        break;
-    }
-  }
-
-  parseMIDIMessage (message) {
-    return {
-      command: message.data[0],
-      note: message.data[1],
-      velocity: message.data[2] / 127
-    };
   }
   
   moveNote(n1, n2) {
@@ -130,6 +75,7 @@ class Subtractor extends Observable {
       });
       
     renameObjectKey(this._activeNotes, n1, n2);
+    this.notifyObservers();
   }
 
   noteOn(note, velocity = .7) {
@@ -149,6 +95,8 @@ class Subtractor extends Observable {
         return osc;
       }).reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {});
     }
+    this.notifyObservers();
+    // this.emit(EVENTS.NOTE_CHANGED, note);
   }
 
   noteOff(note) {
@@ -166,6 +114,8 @@ class Subtractor extends Observable {
         });
       
       delete this._activeNotes[note];
+
+      this.notifyObservers();
     }
   }
 
@@ -223,20 +173,6 @@ class Subtractor extends Observable {
     // start and return the osc
     osc.start();
     return osc;
-  }
-
-  startOscilloscope() {
-    try {
-      const canvas = document.getElementById('oscilloscope');
-      const oscilloscope = new Oscilloscope(
-        this.context, 
-        canvas
-      );
-      this.masterGain.connect(oscilloscope.analyzer);
-      oscilloscope.start();
-    } catch (e) {
-      console.error('Failed to start Oscilloscope');
-    }
   }
 
   setPresetFromSelect(preset) {
@@ -402,41 +338,8 @@ class Subtractor extends Observable {
     };
   }
 
-  // trigger an upload dialog load the file contents as a preset
-  //
-  loadPresetFile() {
-    const fileReader = new FileReader();
-    fileReader.addEventListener('load', () => {
-      const fileContents = fileReader.result;
-      const preset = JSON.parse(fileContents);
-      this.loadPreset(preset);
-    });
-
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-    input.addEventListener('change', () => {
-      fileReader.readAsText(input.files[0]);
-    });
-
-    input.click();
-  }
-
-  // download the current preset as JSON file
-  //
-  savePresetFile() {
-    const preset = this.getPreset();
-    const json = JSON.stringify(preset, null, ' ');
-    const blob = new Blob([json], { 'type': 'application/json' });
-    const objectURL = URL.createObjectURL(blob);
-
-    const presetName = prompt('Preset name', preset.name || '');
-
-    const a = document.createElement('a');
-    a.download = `${presetName}.json`;
-    a.href = objectURL;
-
-    a.click();
+  get activeNotes() {
+    return this._activeNotes;
   }
   
   set octave(value) {
@@ -449,7 +352,7 @@ class Subtractor extends Observable {
   }
 
   set polyphony(value) {
-    this._polyphony = value;
+    this._polyphony = parseInt(value);
     this.notifyObservers();
   }
 
@@ -564,6 +467,7 @@ class Subtractor extends Observable {
   // filter envelope getters and setters
   set filterAttack(value) {
     this._filterAttack = value;
+    this.notifyObservers();
   }
 
   get filterAttack() {
@@ -572,6 +476,7 @@ class Subtractor extends Observable {
 
   set filterDecay(value) {
     this._filterDecay = value;
+    this.notifyObservers();
   }
 
   get filterDecay() {
@@ -580,6 +485,7 @@ class Subtractor extends Observable {
 
   set filterSustain(value) {
     this._filterSustain = value;
+    this.notifyObservers();
   }
 
   get filterSustain() {
@@ -588,6 +494,7 @@ class Subtractor extends Observable {
 
   set filterRelease(value) {
     this._filterRelease = value;
+    this.notifyObservers();
   }
   
   get filterRelease() {
@@ -596,6 +503,7 @@ class Subtractor extends Observable {
 
   set filterAmount(value) {
     this._filterAmount = value;
+    this.notifyObservers();
   }
 
   get filterAmount() {
@@ -607,7 +515,7 @@ class Subtractor extends Observable {
   }
 
   set voices(value) {
-    this._voices = value;
+    this._voices = Number(value);
   }
 
   get glide() {
@@ -615,7 +523,7 @@ class Subtractor extends Observable {
   }
 
   set glide(value) {
-    this._glide = value;
+    this._glide = Number(value);
   }
   
   get lfo1Type() {
@@ -623,7 +531,7 @@ class Subtractor extends Observable {
   }
 
   set lfo1Type(value) {
-    this.lfo1Node.type = intToWaveform(value);
+    this.lfo1Node.type = intToWaveform(Number(Number(value).toFixed()));
     this.notifyObservers();
   }
 
@@ -651,5 +559,4 @@ class Subtractor extends Observable {
   }
 }
 
-export { Subtractor };
-window.Subtractor = Subtractor;
+export default Subtractor;

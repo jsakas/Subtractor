@@ -1,3 +1,6 @@
 {
-	"presets": ["es2015"]
+  "presets": [
+		"@vue/babel-preset-jsx",
+		"@babel/preset-env"
+	]
 }

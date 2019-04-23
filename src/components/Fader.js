@@ -1,119 +1,115 @@
+import Vue from 'vue';
 import { pointToPercent } from '../utils/maths';
-import styles from '!css-loader!sass-loader?modules!./Fader.scss';
 
-class Fader extends HTMLElement {
-  connectedCallback() {
-    // if observable and bind attributes are preset, register this element as an observer
-    this.observable = eval(this.getAttribute('observe'));
-    this.bind = this.getAttribute('bind');
-    this.label = this.getAttribute('label');
+import './Fader.scss';
 
-    if (this.observable && this.bind) {
-      this.observable.registerObserver(this);
-    }
-    
-    this.id = this.getAttribute('id');
-    this.name = this.getAttribute('name');
-    this.min = this.getAttribute('min');
-    this.max = this.getAttribute('max');
-    this.value = this.getAttribute('value');
-    this.template = `
-      <label for="fader__input" class="fader" id="fader">
-        <input class="fader__input" id="fader__input" type="range" 
-          min="${this.min}" max="${this.max}" value="${this.value}" 
-        />
-        <div class="fader__control" id="fader__control">
-          <div class="fader__range" id="fader__range"></div>
-          <div class="fader__knob" id="fader__knob"></div>
-        </div>
-        <div class="fader__name" id="fader__name">${this.name}</div>
-        <div class="fader__value" id="fader__value"></div>
-      </label>
-    `;
+Vue.component('x-fader', {
+  mounted() {
+    let refs = this.$refs;
 
-    // create shadow dom
-    this.shadow = this.attachShadow({ 'mode': 'open' });
-    
-    // create style sheet node
-    this.stylesheet = document.createElement('style');
-    this.stylesheet.type = 'text/css';
-    this.stylesheet.textContent = styles.toString();
+    this.rangeRect = refs.faderRange.getBoundingClientRect();
+    this.knobRect = refs.faderKnob.getBoundingClientRect();
+    this.maxTop = this.rangeRect.height - this.knobRect.height;
+    this.setTop();
+  },
+  beforeUpdate() {
+    this.setTop();
+  },
+  props: {
+    name: {
+      type: String,
+      required: true,
+      default: '',
+    },
+    min: { 
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    max: { 
+      type: Number,
+      required: true,
+      default: 127, 
+    },
+    value: { 
+      type: Number,
+      required: true,
+      default: 0,
+    },
+  },
+  methods: {
+    mousedown(e) {
+      let refs = this.$refs;
 
-    // create dom nodes from template
-    this.templateDOM = document.createRange().createContextualFragment(this.template);
+      refs.faderInput.dispatchEvent(new Event('focus'));
+      refs.faderKnob.style.transition = 'none';
+      const currentValue = parseInt(refs.faderInput.value);
 
-    // inject nodes into shadow dom
-    this.shadow.appendChild(this.stylesheet);
-    this.shadow.appendChild(this.templateDOM);
-    // ^^ DOM is now constructed
-
-    this.fader = this.shadow.getElementById('fader');
-    this.faderControl = this.shadow.getElementById('fader__control');
-    this.faderKnob = this.shadow.getElementById('fader__knob');
-    this.faderRange = this.shadow.getElementById('fader__range');
-    this.faderInput = this.shadow.getElementById('fader__input');
-    this.faderValue = this.shadow.getElementById('fader__value');
-
-    this.rangeRect = this.faderRange.getBoundingClientRect();
-    this.knobRect = this.faderKnob.getBoundingClientRect();
-    this.maxTop = this.rangeRect.height - this.knobRect.height; 
-
-    this.setupEvents();
-  }
-
-  setupEvents() {
-    this.faderKnob.addEventListener('mousedown', (e) => {
-      this.faderInput.dispatchEvent(new Event('focus'));
-      this.faderKnob.style.transition = 'none';
-      const currentValue = parseInt(this.faderInput.value);
       const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentValue);
       document.addEventListener('mousemove', boundMousemove);
       document.addEventListener('mouseup', () => {
-        this.faderKnob.style.transition = '';
+        refs.faderKnob.style.transition = '';
         document.removeEventListener('mousemove', boundMousemove);
       });
-    });
+    },
+    mousemove (_this, x, y, oldValue, e) {
+      let refs = _this.$refs;
 
-    this.faderInput.addEventListener('input', (e) => {
-      const inputValue = parseInt(e.target.value);
-      this.setTop(inputValue);
-      this.faderValue.innerText = this.observable[this.label] || parseInt(inputValue);
-      this.observable[this.bind] = parseInt(inputValue);
-    });
-  }
+      const yDiff = (e.clientY - parseInt(y));
+      const range = _this.max - _this.min;
+      const changeInterval = range / _this.rangeRect.height;
+  
+      let value = oldValue - (changeInterval * yDiff);
+      if (value > _this.max) { 
+        value = _this.max; 
+      }
+      if (value < _this.min) { 
+        value = _this.min; 
+      }
+  
+      refs.faderInput.value = Number(value);
+      this.$emit('update:value', value);
+    },
+    onInput (e) {
+      let value = Number(e.target.value);
+      this.$emit('update:value', value);
+    },
+    setTop(value = this.value) {
+      const inputMax = parseInt(this.max);
+      const inputMin = parseInt(this.min); 
+      
+      const percent = pointToPercent(inputMin, inputMax, value);
+      const top = this.maxTop * (1 - percent);
 
-  notify(observable) {
-    this.faderInput.value = this.observable[this.bind];
-    this.faderValue.innerText = this.observable[this.label] || parseInt(this.observable[this.bind]);
-    this.setTop(this.observable[this.bind]);
-  }
-
-  setTop(inputValue) {
-    const inputMax = parseInt(this.faderInput.max);
-    const inputMin = parseInt(this.faderInput.min); 
-    
-    const percent = pointToPercent(inputMin, inputMax, inputValue);
-    const top = this.maxTop * (1 - percent);
-    
-    this.faderKnob.style.top = `${parseInt(top)}px`;
-  }
-
-  mousemove (_this, x, y, oldValue, e) {
-    const yDiff = (e.clientY - parseInt(y));
-    const range = _this.max - _this.min;
-    const changeInterval = range / _this.rangeRect.height;
-
-    let newValue = oldValue - (changeInterval * yDiff);
-    if (newValue > _this.max) { 
-      newValue = _this.max; 
-    }
-    if (newValue < _this.min) { 
-      newValue = _this.min; 
-    }
-
-    _this.faderInput.value = newValue;
-    _this.faderInput.dispatchEvent(new Event('input'));
-  }
-}
-
-window.customElements.define('x-fader', Fader);
+      let refs = this.$refs;
+      refs.faderKnob.style.top = `${top}px`;
+    },
+  },
+  filters: {
+    label (value) {
+      return parseInt(value).toFixed(0);
+    },
+  },
+  template: `
+    <label ref="fader" for="fader__input" class="fader" id="fader">
+      <input
+        ref="faderInput"
+        class="fader__input"
+        id="fader__input"
+        type="range"
+        :min="min"
+        :max="max"
+        :value="value"
+        v-on:input="onInput"
+      />
+      <div ref="faderControl" v-on:mousedown="this.mousedown" class="fader__control" id="fader__control">
+        <div ref="faderRange" class="fader__range" id="fader__range" />
+        <div ref="faderKnob" class="fader__knob" id="fader__knob" />
+      </div>
+      <div class="fader__name" id="fader__name">
+        {{ name }}
+      </div>
+      <div ref="faderValue" class="fader__value" id="fader__value">{{ value | label }}</div>
+    </label>
+  `
+});

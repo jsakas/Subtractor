@@ -7,17 +7,12 @@
 </head>
 
 <body>
-  
-  <script>
-    var subtractor = new Subtractor();
-  </script>
-
-  <div class="subtractor">
+  <div class="subtractor" id="subtractor">
     <div class="top">
       <h1 class="logo">Subtractor</h1>
       <div class="preset">
         <h3>Preset</h3>
-        <select class="preset-select" onchange="subtractor.setPresetFromSelect(this.value); this.blur()">
+        <select class="preset-select" @change="setPresetFromSelect($event)">
           <option value="Init">Init</option>
           <optgroup label="Synth">
             <option value="Acid">Acid</option>
@@ -34,85 +29,85 @@
             <option value="BellsOfGuidia">Bells of Guidia</option>
           </optgroup>
         </select>
-        <button onclick="subtractor.loadPresetFile()">Load</button>
-        <button onclick="subtractor.savePresetFile()">Save</button>
+        <button v-on:click="loadPreset">Load</button>
+        <button v-on:click="savePreset">Save</button>
       </div>
     </div>
     <section>
       <div>
         <h2>Super</h2>
-        <x-knob id="polyphony" name="Poly" value="1" min="1" max="8" observe="subtractor" bind="polyphony"></x-knob>
-        <x-knob id="detune" name="Detune" value="0" min="0" max="100" observe="subtractor" bind="detune"></x-knob>
+        <x-knob id="poly" name="Poly" :min="1" :max="8" v-bind:value.sync="subtractor.polyphony"></x-knob>
+        <x-knob id="detune" name="Detune" :min="0" :max="100" v-bind:value.sync="subtractor.detune"></x-knob>
       </div>
       <div>
         <h2>Voices</h2>
-        <x-knob id="voices" name="Voices" value="4" min="1" max="8" observe="subtractor" bind="voices"></x-knob>
-        <x-knob id="glide" name="Glide" value="0" min="0" max="127" observe="subtractor" bind="glide"></x-knob>
+        <x-knob id="voices" name="Voices" :min="1" :max="8" v-bind:value.sync="subtractor.voices"></x-knob>
+        <x-knob id="glide" name="Glide" :min="0" :max="127" v-bind:value.sync="subtractor.glide"></x-knob>
       </div>
     </section>
-    <section>
+   <section>
       <div>
         <h2>Osc 1</h2>
-        <x-knob id="enabled" name="On" value="1" min="0" max="1" observe="subtractor.osc1" bind="enabled"></x-knob>
-        <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" observe="subtractor.osc1" bind="waveform" label="frWaveform"></x-knob> 
-        <x-knob id="octave" name="Octave" value="0" min="-5" max="5" observe="subtractor.osc1" bind="octave"></x-knob>
-        <x-knob id="semi" name="Semi" value="0" min="-12" max="12" observe="subtractor.osc1" bind="semi"></x-knob>
-        <x-knob id="cent" name="Cent" value="0" min="0" max="100" observe="subtractor.osc1" bind="detune"></x-knob>
+        <x-knob id="enabled" name="On" :min="0" :max="1" v-bind:value.sync="subtractor.osc1.enabled"></x-knob>
+        <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc1.waveform" label="frWaveform"></x-knob> 
+        <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc1.octave"></x-knob>
+        <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc1.semi"></x-knob>
+        <x-knob id="cent" name="Cent" :min="0" :max="100" v-bind:value.sync="subtractor.osc1.detune"></x-knob>
       </div>
       <div>
         <h2>Osc 2</h2>
-        <x-knob id="enabled" name="On" value="0" min="0" max="1" observe="subtractor.osc2" bind="enabled"></x-knob>
-        <x-knob id="waveform" name="Waveform" value="3" min="1" max="4" observe="subtractor.osc2" bind="waveform" label="frWaveform"></x-knob> 
-        <x-knob id="octave" name="Octave" value="0" min="-5" max="5" observe="subtractor.osc2" bind="octave"></x-knob>
-        <x-knob id="semi" name="Semi" value="0" min="-12" max="12" observe="subtractor.osc2" bind="semi"></x-knob>
-        <x-knob id="cent" name="Cent" value="0" min="0" max="100" observe="subtractor.osc2" bind="detune"></x-knob>
+        <x-knob id="enabled" name="On" :min="0" :max="1" v-bind:value.sync="subtractor.osc2.enabled"></x-knob>
+        <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc2.waveform" label="frWaveform"></x-knob> 
+        <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc2.octave"></x-knob>
+        <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc2.semi"></x-knob>
+        <x-knob id="cent" name="Cent" :min="0" :max="100" v-bind:value.sync="subtractor.osc2.detune"></x-knob>
       </div>
     </section>
-    <section>
+     <section>
       <div>
         <h2>Filter 1</h2>
-        <x-knob id="filter-type" name="Fiter Type" value="1" min="1" max="8" observe="subtractor" bind="filter1Type" label="filter1FrType"></x-knob>
-        <x-knob id="filter-freq" name="Fiter Freq" value="127" min="0" max="127" observe="subtractor" bind="filter1Freq" label="filter1FrFreq"></x-knob>
-        <x-knob id="filter-q" name="Fiter Q" value="0" min="0" max="100" observe="subtractor" bind="filter1Q"></x-knob>
-        <x-knob id="filter-gain" name="Fiter Gain" value="0" min="-40" max="40" observe="subtractor" bind="filter1Gain"></x-knob>
+        <x-knob id="filter-type" name="Fiter Type" :min="1" :max="8" v-bind:value.sync="subtractor.filter1Type" label="filter1FrType"></x-knob>
+        <x-knob id="filter-freq" name="Fiter Freq" :min="0" :max="127" v-bind:value.sync="subtractor.filter1Freq" label="filter1FrFreq"></x-knob>
+        <x-knob id="filter-q" name="Fiter Q" :min="0" :max="100" v-bind:value.sync="subtractor.filter1Q"></x-knob>
+        <x-knob id="filter-gain" name="Fiter Gain" :min="-40" :max="40" v-bind:value.sync="subtractor.filter1Gain"></x-knob>
       </div>
       <div>
         <h2>Filter Envelope</h2>
-        <x-knob id="filterenv-attack" name="Attack" value="0" min="0" max="127" observe="subtractor" bind="filterAttack"></x-knob>
-        <x-knob id="filterenv-decay" name="Decay" value="40" min="0" max="127" observe="subtractor" bind="filterDecay"></x-knob>
-        <x-knob id="filterenv-sustain" name="Sustain" value="0" min="0" max="127" observe="subtractor" bind="filterSustain"></x-knob>
-        <x-knob id="filterenv-release" name="Release" value="40" min="0" max="127" observe="subtractor" bind="filterRelease"></x-knob>
-        <x-knob id="filterenv-amount" name="Amount" value="0" min="0" max="127" observe="subtractor" bind="filterAmount"></x-knob>
+        <x-knob id="filterenv-attack" name="Attack" :min="0" :max="127" v-bind:value.sync="subtractor.filterAttack"></x-knob>
+        <x-knob id="filterenv-decay" name="Decay" :min="0" :max="127" v-bind:value.sync="subtractor.filterDecay"></x-knob>
+        <x-knob id="filterenv-sustain" name="Sustain" :min="0" :max="127" v-bind:value.sync="subtractor.filterSustain"></x-knob>
+        <x-knob id="filterenv-release" name="Release" :min="0" :max="127" v-bind:value.sync="subtractor.filterRelease"></x-knob>
+        <x-knob id="filterenv-amount" name="Amount" :min="0" :max="127" v-bind:value.sync="subtractor.filterAmount"></x-knob>
       </div>
     </section>
     <section>
       <div>
         <h2>Filter 2</h2>
-        <x-knob id="filter-2-type" name="Fiter Type" value="1" min="1" max="8" observe="subtractor.filter2" bind="type" label="frType"></x-knob>
-        <x-knob id="filter-2-freq" name="Fiter Freq" value="127" min="0" max="127" observe="subtractor.filter2" bind="freq" label="frFreq"></x-knob>
-        <x-knob id="filter-2-q" name="Fiter Q" value="0" min="0" max="100" observe="subtractor.filter2" bind="q"></x-knob>
-        <x-knob id="filter-2-gain" name="Fiter Gain" value="0" min="-40" max="40" observe="subtractor.filter2" bind="gain"></x-knob>  
+        <x-knob id="filter-2-type" name="Fiter Type" :min="1" :max="8" v-bind:value.sync="subtractor.filter2.type" label="frType"></x-knob>
+        <x-knob id="filter-2-freq" name="Fiter Freq" :min="0" :max="127" v-bind:value.sync="subtractor.filter2.freq" label="frFreq"></x-knob>
+        <x-knob id="filter-2-q" name="Fiter Q" :min="0" :max="100" v-bind:value.sync="subtractor.filter2.q"></x-knob>
+        <x-knob id="filter-2-gain" name="Fiter Gain" :min="-40" :max="40" v-bind:value.sync="subtractor.filter2.gain"></x-knob>  
       </div>
       <div>
         <h2>Filter 2 LFO</h2>
-        <x-knob id="lfo-1-type" name="LFO Type" value="1" min="1" max="4" observe="subtractor" bind="lfo1Type" label="frlfo1Type"></x-knob>
-        <x-knob id="lfo-1-freq" name="LFO Freq" value="1" min="1" max="2000" observe="subtractor" bind="lfo1Freq"></x-knob>
-        <x-knob id="lfo-1-amount" name="LFO Amount" value="0" min="0" max="1000" observe="subtractor" bind="lfo1Amount"></x-knob>
+        <x-knob id="lfo-1-type" name="LFO Type" :min="1" :max="4" v-bind:value.sync="subtractor.lfo1Type" label="frlfo1Type"></x-knob>
+        <x-knob id="lfo-1-freq" name="LFO Freq" :min="1" :max="2000" v-bind:value.sync="subtractor.lfo1Freq"></x-knob>
+        <x-knob id="lfo-1-amount" name="LFO Amount" :min="0" :max="1000" v-bind:value.sync="subtractor.lfo1Amount"></x-knob>
       </div>
     </section>
     <section>
       <h2>Amp Envelope</h2>
-      <x-knob id="gainenv-attack" name="Attack" value="0" min="0" max="127" observe="subtractor" bind="attack"></x-knob>
-      <x-knob id="gainenv-decay" name="Decay" value="40" min="0" max="127" observe="subtractor" bind="decay"></x-knob>
-      <x-knob id="gainenv-sustain" name="Sustain" value="0" min="0" max="127" observe="subtractor" bind="sustain"></x-knob>
-      <x-knob id="gainenv-release" name="Release" value="40" min="0" max="127" observe="subtractor" bind="release"></x-knob>
+      <x-knob id="gainenv-attack" name="Attack" :min="0" :max="127" v-bind:value.sync="subtractor.attack"></x-knob>
+      <x-knob id="gainenv-decay" name="Decay" :min="0" :max="127" v-bind:value.sync="subtractor.decay"></x-knob>
+      <x-knob id="gainenv-sustain" name="Sustain" :min="0" :max="127" v-bind:value.sync="subtractor.sustain"></x-knob>
+      <x-knob id="gainenv-release" name="Release" :min="0" :max="127" v-bind:value.sync="subtractor.release"></x-knob>
     </section>
     <section>
       <h2>Master</h2>
-      <x-fader id="master-gain" name="Gain" value="50" min="0" max="100" observe="subtractor" bind="gain"></x-fader>
+      <x-fader name="Gain" :min="0" :max="100" v-bind:value.sync="subtractor.gain"></x-fader>
     </section>
     <canvas id="oscilloscope" class="oscilloscope"></canvas>
-    <x-keyboard id="keyboard" name="Keyboard" observe="subtractor" bind="octave"></x-keyboard>
+    <x-keyboard :active-notes="activeNotes" v-bind:octave="subtractor.octave" v-bind:subtractor="subtractor"></x-keyboard>
   </div>
 </body>
 
