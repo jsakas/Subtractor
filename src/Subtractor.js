@@ -8,8 +8,6 @@ import { Envelope } from './Envelope';
 import { knobToSeconds, knobToFreq } from './utils/maths';
 import { intToFilter, renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
 
-import './Subtractor.scss';
-
 class Subtractor extends Observable {
   constructor() {
     super();
@@ -185,7 +183,7 @@ class Subtractor extends Observable {
     description = '',
     master = {
       gain: 50,
-      voices: 4,
+      voices: 1,
       glide: 0
     },
     ampEnv = {
@@ -206,6 +204,7 @@ class Subtractor extends Observable {
       waveform: 3,
       octave: 0,
       semi: 0,
+      voices: 1,
       detune: 0
     },
     osc2 = {
@@ -213,6 +212,7 @@ class Subtractor extends Observable {
       waveform: 3,
       octave: 0,
       semi: 0,
+      voices: 1,
       detune: 0
     },
     filter1 = {
@@ -253,11 +253,13 @@ class Subtractor extends Observable {
     this.osc1.octave = osc1.octave;
     this.osc1.semi = osc1.semi;
     this.osc1.detune = osc1.detune;
+    this.osc1.voices = osc1.voices;
     this.osc2.enabled = osc2.enabled;
     this.osc2.waveform = osc2.waveform;
     this.osc2.octave = osc2.octave;
     this.osc2.semi = osc2.semi;
     this.osc2.detune = osc2.detune;
+    this.osc2.voices = osc2.voices;
     this.filter1Type = filter1.type;
     this.filter1Freq = filter1.freq;
     this.filter1Q = filter1.q;
@@ -280,8 +282,6 @@ class Subtractor extends Observable {
       'description': this.description,
       'master': {
         'gain': this.gain,
-        'polyphony': this.polyphony,
-        'detune': this.detune,
         'voices': this.voices,
         'glide': this.glide,
       },
@@ -303,6 +303,7 @@ class Subtractor extends Observable {
         'waveform': this.osc1.waveform,
         'octave': this.osc1.octave,
         'semi': this.osc1.semi,
+        'voices': this.osc1.voices,
         'detune': this.osc1.detune
       },
       'osc2': {
@@ -310,6 +311,7 @@ class Subtractor extends Observable {
         'waveform': this.osc2.waveform,
         'octave': this.osc2.octave,
         'semi': this.osc2.semi,
+        'voices': this.osc2.voices,
         'detune': this.osc2.detune
       },
       'filter1': {

@@ -6,9 +6,13 @@ import initQuertyController from './core/QwertyController';
 import initMidiController from './core/MidiController';
 import { loadPresetFile, savePresetFile } from './core/PresetFileController';
 
+import defaultPreset from './presets/Init';
+
 import './components/Fader';
 import './components/Knob';
 import './components/Keyboard';
+
+import './Subtractor.scss';
 
 let subtractor = window.Subtractor = new Subtractor();
 
@@ -23,7 +27,7 @@ new Vue({
     subtractor.osc2.registerObserver(this);
     subtractor.filter1.registerObserver(this);
     subtractor.filter2.registerObserver(this);
-    subtractor.loadPreset({});
+    subtractor.loadPreset(defaultPreset);
   },
   methods: {
     forceUpdate() {

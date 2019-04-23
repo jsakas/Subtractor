@@ -4,8 +4,6 @@
  "description": "Replicating a 303 acid saw",
  "master": {
   "gain": 50,
-  "polyphony": 1,
-  "detune": 0,
   "voices": 1,
   "glide": 15
  },
@@ -27,6 +25,7 @@
   "waveform": 3,
   "octave": -2,
   "semi": 0,
+  "voices": 0,
   "detune": 0
  },
  "osc2": {
@@ -34,6 +33,7 @@
   "waveform": 4,
   "octave": 0,
   "semi": 0,
+  "voices": 0,
   "detune": 0
  },
  "filter1": {
