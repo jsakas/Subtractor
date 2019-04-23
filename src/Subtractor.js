@@ -87,7 +87,7 @@ class Subtractor extends Observable {
         if (!osc.enabled) { 
           return null;
         }
-        osc.start(note).map(o => this.pipeline(o, velocity));
+        osc.start(note).map(o => this.pipeline(o, velocity, osc.voices));
         return osc;
       }).reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {});
     }
@@ -118,10 +118,14 @@ class Subtractor extends Observable {
   // route an oscillator thru the pipeline of modifiers.
   // e.g. gains, filter, distortions etc.
   //
-  pipeline(osc, velocity) {
+  pipeline(osc, velocity = .7, voices = 1) {
     // create a velocity node
     const velocityGainNode = this.context.createGain();
     velocityGainNode.gain.value = velocity;
+
+    // create a gain node to normalize output of oscillator voices
+    const oscVoiceGainNode = this.context.createGain();
+    oscVoiceGainNode.gain.value = 1 - ((voices ** .25) % 1);
 
     // create a gain node for the envelope
     const ampEnvelopeGainNode = this.context.createGain();
@@ -158,7 +162,8 @@ class Subtractor extends Observable {
 
     // route the osc thru everything we just created 
     osc.connect(velocityGainNode);
-    velocityGainNode.connect(ampEnvelopeGainNode);
+    velocityGainNode.connect(oscVoiceGainNode);
+    oscVoiceGainNode.connect(ampEnvelopeGainNode);
     ampEnvelopeGainNode.connect(filter.filter);
     filter.filter.connect(this.filter2.filter);
 
@@ -183,7 +188,7 @@ class Subtractor extends Observable {
     description = '',
     master = {
       gain: 50,
-      voices: 1,
+      voices: 4,
       glide: 0
     },
     ampEnv = {
