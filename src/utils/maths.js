@@ -1,11 +1,14 @@
+// take a note, octave, and semi and shift it
+export const shiftNote = function(note, octave = 0, semi = 0) {
+  return note + (octave * 12) + semi;
+};
 
 // take a note (keyboard key) and return the frequency
 //
-export const getNoteFreq = function(note, octave = 0, semi = 0) {
-  const shiftedNote = note + (octave * 12) + semi;
+export const getNoteFreq = function(note) {
   // http://subsynth.sourceforge.net/midinote2freq.html
   const tune = 440;
-  return (tune / 32) * Math.pow(2, ((shiftedNote - 9) / 12));
+  return (tune / 32) * Math.pow(2, ((note - 9) / 12));
 };
 
 // take voices and detune value and return an array of detune values

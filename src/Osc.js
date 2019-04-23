@@ -1,4 +1,4 @@
-import { getNoteFreq, getDetuneSpread } from './utils/maths';
+import { shiftNote, getNoteFreq, getDetuneSpread } from './utils/maths';
 import { intToWaveform, waveformToInt } from './utils/helpers';
 import { Observable } from './Observe';
 
@@ -16,14 +16,16 @@ class Osc extends Observable {
     }
 
     start(note) {
-      const freq = getNoteFreq(note, this.octave, this.semi);
+      const shifted = shiftNote(note, this.octave, this.semi);
+      const freq = getNoteFreq(shifted);
       const detuneSpread = getDetuneSpread(this.voices, this.detune);
       this._oscs = detuneSpread.map(detune => this.startOscillator(freq, detune));
       return this._oscs;
     }
 
     move(note, time = 0) {
-      const freq = getNoteFreq(note, this.octave, this.semi);
+      const shifted = shiftNote(note, this.octave, this.semi);
+      const freq = getNoteFreq(shifted);
 
       this._oscs.forEach((osc, i) => {
         osc.frequency.linearRampToValueAtTime(
