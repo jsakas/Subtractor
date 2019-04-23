@@ -1,4 +1,4 @@
-import { getFrequencySpread, getNoteFreq } from './utils/maths';
+import { getNoteFreq, getDetuneSpread } from './utils/maths';
 import { intToWaveform, waveformToInt } from './utils/helpers';
 import { Observable } from './Observe';
 
@@ -11,36 +11,33 @@ class Osc extends Observable {
       this._octave = options.octave || 0;
       this._semi = options.semi || 0;
       this._detune = options.detune || 0;
+      this._voices = options.voices || 1;
       this._oscs = [];
     }
 
-    start(note, polyphony = 1, detune = 0) {
-      const shiftedNote = note + (this._octave * 12) + this._semi;
-      const baseFreq = getNoteFreq(shiftedNote);
-      const freqs = getFrequencySpread(baseFreq, polyphony, detune * (10 / polyphony));
-
-      this._oscs = freqs.map(this.startFreqOscillator.bind(this));
+    start(note) {
+      const freq = getNoteFreq(note, this.octave, this.semi);
+      const detuneSpread = getDetuneSpread(this.voices, this.detune);
+      this._oscs = detuneSpread.map(detune => this.startOscillator(freq, detune));
       return this._oscs;
     }
 
-    move(note, polyphony = 1, detune = 0, time = 0) {
-      const shiftedNote = note + (this._octave * 12) + this._semi;
-      const baseFreq = getNoteFreq(shiftedNote);
-      const freqs = getFrequencySpread(baseFreq, polyphony, detune * (10 / polyphony));
+    move(note, time = 0) {
+      const freq = getNoteFreq(note, this.octave, this.semi);
 
       this._oscs.forEach((osc, i) => {
         osc.frequency.linearRampToValueAtTime(
-          freqs[i],
+          freq,
           time
         );
       });
     }
 
-    startFreqOscillator(f) {
+    startOscillator(freq, detune) {
       const osc = this.audioContext.createOscillator();
       osc.type = this._waveform;
-      osc.frequency.value = f;
-      osc.detune.value = this._detune;
+      osc.frequency.value = freq;
+      osc.detune.value = detune;
       return osc;
     }
 
@@ -68,7 +65,7 @@ class Osc extends Observable {
     }
 
     set octave(value) {
-      this._octave = Number(value);
+      this._octave = Number(Number(value).toFixed());
       this.notifyObservers();
     }
 
@@ -77,7 +74,7 @@ class Osc extends Observable {
     }
 
     set semi(value) {
-      this._semi = Number(value);
+      this._semi = Number(Number(value).toFixed());
       this.notifyObservers();
     }
 
@@ -92,6 +89,14 @@ class Osc extends Observable {
 
     get detune() {
       return this._detune;
+    }
+
+    set voices(value) {
+      this._voices = Number(Number(value).toFixed());
+    }
+
+    get voices() {
+      return this._voices;
     }
 
     get oscs() {

@@ -35,11 +35,6 @@
     </div>
     <section>
       <div>
-        <h2>Super</h2>
-        <x-knob id="poly" name="Poly" :min="1" :max="8" v-bind:value.sync="subtractor.polyphony"></x-knob>
-        <x-knob id="detune" name="Detune" :min="0" :max="100" v-bind:value.sync="subtractor.detune"></x-knob>
-      </div>
-      <div>
         <h2>Voices</h2>
         <x-knob id="voices" name="Voices" :min="1" :max="8" v-bind:value.sync="subtractor.voices"></x-knob>
         <x-knob id="glide" name="Glide" :min="0" :max="127" v-bind:value.sync="subtractor.glide"></x-knob>
@@ -52,7 +47,8 @@
         <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc1.waveform" label="frWaveform"></x-knob> 
         <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc1.octave"></x-knob>
         <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc1.semi"></x-knob>
-        <x-knob id="cent" name="Cent" :min="0" :max="100" v-bind:value.sync="subtractor.osc1.detune"></x-knob>
+        <x-knob id="voices" name="Voices" :min="1" :max="10" v-bind:value.sync="subtractor.osc1.voices"></x-knob>
+        <x-knob id="detune" name="Detune" :min="0" :max="100" v-bind:value.sync="subtractor.osc1.detune"></x-knob>
       </div>
       <div>
         <h2>Osc 2</h2>
@@ -60,7 +56,8 @@
         <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc2.waveform" label="frWaveform"></x-knob> 
         <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc2.octave"></x-knob>
         <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc2.semi"></x-knob>
-        <x-knob id="cent" name="Cent" :min="0" :max="100" v-bind:value.sync="subtractor.osc2.detune"></x-knob>
+        <x-knob id="voices" name="Voices" :min="1" :max="10" v-bind:value.sync="subtractor.osc2.voices"></x-knob>
+        <x-knob id="detune" name="Detune" :min="0" :max="100" v-bind:value.sync="subtractor.osc2.detune"></x-knob>
       </div>
     </section>
      <section>

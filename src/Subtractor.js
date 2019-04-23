@@ -67,8 +67,6 @@ class Subtractor extends Observable {
         Object.keys(voice).forEach((v) => {
           voices[voice[v]].move(
             n2, 
-            this._polyphony, 
-            this._detune, 
             this.context.currentTime + knobToSeconds(this._glide)
           );
         });
@@ -91,7 +89,7 @@ class Subtractor extends Observable {
         if (!osc.enabled) { 
           return null;
         }
-        osc.start(note, this._polyphony, this._detune).map(o => this.pipeline(o, velocity));
+        osc.start(note).map(o => this.pipeline(o, velocity));
         return osc;
       }).reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {});
     }
@@ -187,8 +185,6 @@ class Subtractor extends Observable {
     description = '',
     master = {
       gain: 50,
-      polyphony: 1,
-      detune: 0,
       voices: 4,
       glide: 0
     },
@@ -221,7 +217,7 @@ class Subtractor extends Observable {
     },
     filter1 = {
       type: 1,
-      freq: 64,
+      freq: 127,
       q: 0.10,
       gain: 0
     },
@@ -241,10 +237,8 @@ class Subtractor extends Observable {
     this.author = author;
     this.description = description;
     this.gain = master.gain;
-    this.polyphony = master.polyphony;
     this.voices = master.voices;
     this.glide = master.glide;
-    this.detune = master.detune;
     this.attack = ampEnv.attack;
     this.decay = ampEnv.decay;
     this.sustain = ampEnv.sustain;
@@ -351,24 +345,6 @@ class Subtractor extends Observable {
     return this._octave;
   }
 
-  set polyphony(value) {
-    this._polyphony = parseInt(value);
-    this.notifyObservers();
-  }
-
-  get polyphony() {
-    return this._polyphony;
-  }
-
-  set detune(value) {
-    this._detune = value * .01;
-    this.notifyObservers();
-  }
-
-  get detune() {
-    return this._detune * 100;
-  }
-
   set gain(value) {
     this.masterGain.gain.value = value * .01;
     this.notifyObservers();
@@ -381,6 +357,7 @@ class Subtractor extends Observable {
   // amp envelope getter and setters
   set attack(value) {
     this._attack = value;
+    this.notifyObservers();
   }
 
   get attack() {
@@ -389,6 +366,7 @@ class Subtractor extends Observable {
 
   set decay(value) {
     this._decay = value;
+    this.notifyObservers();
   }
 
   get decay() {
@@ -397,6 +375,7 @@ class Subtractor extends Observable {
 
   set sustain(value) {
     this._sustain = value;
+    this.notifyObservers();
   }
 
   get sustain() {
@@ -405,6 +384,7 @@ class Subtractor extends Observable {
 
   set release(value) {
     this._release = value;
+    this.notifyObservers();
   }
 
   get release() {

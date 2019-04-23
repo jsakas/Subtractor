@@ -1,4 +1,18 @@
-import { getFrequencySpread, percentToPoint, pointToPercent } from '../../src/utils/maths';
+import { getFrequencySpread, percentToPoint, pointToPercent, getDetuneSpread } from '../../src/utils/maths';
+
+describe('getDetuneSpread', () => {
+  test('returns detune by default', () => {
+    expect(getDetuneSpread(1, 100)).toEqual([100]);
+  });
+
+  test('returns a proper spread for 2 voices', () => {
+    expect(getDetuneSpread(2, 100)).toEqual([100, -100]);
+  });
+
+  test('returns a proper spread for 3 voices', () => {
+    expect(getDetuneSpread(3, 100)).toEqual([100, 0, -100]);
+  });
+});
 
 describe('getFrequencySpread', () => {
   test('returns frequency by default', () => {
