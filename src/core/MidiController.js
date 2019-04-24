@@ -28,7 +28,6 @@ const initMidiController = (subtractor) => {
 
   navigator.requestMIDIAccess({ sysex: true })
     .then((midi) => {
-      console.log('got midi', midi);
       midi.onstatechange = handleMIDIStateChange;
 
       let inputs = midi.inputs.values();

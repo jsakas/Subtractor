@@ -59,6 +59,15 @@
         <x-knob id="voices" name="Voices" :min="1" :max="10" v-bind:value.sync="subtractor.osc2.voices"></x-knob>
         <x-knob id="detune" name="Detune" :min="0" :max="100" v-bind:value.sync="subtractor.osc2.detune"></x-knob>
       </div>
+      <div>
+        <h2>Osc 3</h2>
+        <x-knob id="enabled" name="On" :min="0" :max="1" v-bind:value.sync="subtractor.osc3.enabled"></x-knob>
+        <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc3.waveform" label="frWaveform"></x-knob> 
+        <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc3.octave"></x-knob>
+        <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc3.semi"></x-knob>
+        <x-knob id="voices" name="Voices" :min="1" :max="10" v-bind:value.sync="subtractor.osc3.voices"></x-knob>
+        <x-knob id="detune" name="Detune" :min="0" :max="100" v-bind:value.sync="subtractor.osc3.detune"></x-knob>
+      </div>
     </section>
      <section>
       <div>

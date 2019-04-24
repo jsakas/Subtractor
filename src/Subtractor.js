@@ -14,6 +14,7 @@ class Subtractor extends Observable {
     this.context    = new AudioContext();
     this.osc1       = new Osc();
     this.osc2       = new Osc();
+    this.osc3       = new Osc();
     this.filter1    = new Filter(this.context);
     this.filter2    = new Filter(this.context);
     this.dynamicFilters = [];
@@ -82,7 +83,8 @@ class Subtractor extends Observable {
     } else { 
       this._activeNotes[note] = [
         new Osc(this.context, this.osc1),
-        new Osc(this.context, this.osc2)
+        new Osc(this.context, this.osc2),
+        new Osc(this.context, this.osc3),
       ].map((osc) => {
         if (!osc.enabled) { 
           return null;
@@ -214,7 +216,15 @@ class Subtractor extends Observable {
     },
     osc2 = {
       enabled: 0,
-      waveform: 3,
+      waveform: 1,
+      octave: 0,
+      semi: 0,
+      voices: 1,
+      detune: 0
+    },
+    osc3 = {
+      enabled: 0,
+      waveform: 1,
       octave: 0,
       semi: 0,
       voices: 1,
@@ -265,6 +275,12 @@ class Subtractor extends Observable {
     this.osc2.semi = osc2.semi;
     this.osc2.detune = osc2.detune;
     this.osc2.voices = osc2.voices;
+    this.osc3.enabled = osc3.enabled;
+    this.osc3.waveform = osc3.waveform;
+    this.osc3.octave = osc3.octave;
+    this.osc3.semi = osc3.semi;
+    this.osc3.detune = osc3.detune;
+    this.osc3.voices = osc3.voices;
     this.filter1Type = filter1.type;
     this.filter1Freq = filter1.freq;
     this.filter1Q = filter1.q;
@@ -318,6 +334,14 @@ class Subtractor extends Observable {
         'semi': this.osc2.semi,
         'voices': this.osc2.voices,
         'detune': this.osc2.detune
+      },
+      'osc3': {
+        'enabled': this.osc3.enabled,
+        'waveform': this.osc3.waveform,
+        'octave': this.osc3.octave,
+        'semi': this.osc3.semi,
+        'voices': this.osc3.voices,
+        'detune': this.osc3.detune
       },
       'filter1': {
         'type': this.filter1Type,

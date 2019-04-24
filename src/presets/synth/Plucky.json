@@ -36,6 +36,14 @@
   "voices": 0,
   "detune": 17
  },
+ "osc3": {
+  "enabled": 0,
+  "waveform": 1,
+  "octave": 0,
+  "semi": 0,
+  "voices": 1,
+  "detune": 0
+ },
  "filter1": {
   "type": 1,
   "freq": 10,
