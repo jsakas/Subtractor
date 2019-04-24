@@ -12,21 +12,10 @@
       <h1 class="logo">Subtractor</h1>
       <div class="preset">
         <h3>Preset</h3>
-        <select class="preset-select" @change="setPresetFromSelect($event)">
-          <option value="Init">Init</option>
-          <optgroup label="Synth">
-            <option value="Acid">Acid</option>
-            <option value="Plucky">Plucky</option>
-          </optgroup>
-          <optgroup label="Bass">
-            <option value="ElectroFifth">Electro Fifth</option>
-            <option value="Reese">Reese</option>
-          </optgroup>
-          <optgroup label="Pad">
-            <option value="Mellow">Mellow</option>
-          </optgroup>
-          <optgroup label="Pluck">
-            <option value="BellsOfGuidia">Bells of Guidia</option>
+        <select class="preset-select" v-model="preset" @change="setPreset($event)">
+          <option :value="defaultPreset">Init</option>
+          <optgroup v-for="(group, key) in presets" :value="key" :label="key">
+            <option v-for="(preset, key) in group" :value="preset">{{ preset.name }}</option>
           </optgroup>
         </select>
         <button v-on:click="loadPreset">Load</button>

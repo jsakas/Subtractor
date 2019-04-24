@@ -6,7 +6,8 @@ import initQuertyController from './core/QwertyController';
 import initMidiController from './core/MidiController';
 import { loadPresetFile, savePresetFile } from './core/PresetFileController';
 
-import defaultPreset from './presets/Init';
+import presets from './presets';
+import defaultPreset from './presets/default';
 
 import './components/Fader';
 import './components/Knob';
@@ -43,14 +44,17 @@ new Vue({
     loadPreset() {
       loadPresetFile(subtractor);
     },
-    setPresetFromSelect(e) {
-      subtractor.setPresetFromSelect(e.target.value);
+    setPreset(e) {
+      subtractor.loadPreset(this.preset);
       e.target.blur();
     }
   },
   data() {
     return {
       subtractor,
+      presets,
+      defaultPreset,
+      preset: defaultPreset,
       componentKey: 0,
       activeNotes: [],
     };

@@ -1,6 +1,3 @@
-import * as Presets from './presets';
-
-
 import { Observable } from './Observe';
 import { Osc } from './Osc';
 import { Filter } from './Filter';
@@ -176,10 +173,6 @@ class Subtractor extends Observable {
     // start and return the osc
     osc.start();
     return osc;
-  }
-
-  setPresetFromSelect(preset) {
-    this.loadPreset(Presets[preset]);
   }
 
   // take a preset object and load it into the synth
