@@ -10,13 +10,6 @@ module.exports = {
   devtool: 'eval',
   entry: {
     main: [
-      // 'custom-elements',
-      // 'shadydom',
-      // './src/Subtractor.js',
-      // './src/components/Fader.js',
-      // './src/components/FaderVue.js',
-      // './src/components/Keyboard.js',
-      // './src/components/Knob.js'
       './src/main',
     ]
   },
@@ -28,8 +21,6 @@ module.exports = {
   resolve: {
     alias: {
       'web-audio-test-api': path.resolve(__dirname, 'node_modules/web-audio-test-api'),
-      'custom-elements': path.resolve(__dirname, 'node_modules/@webcomponents/custom-elements/custom-elements.min'),
-      'shadydom': path.resolve(__dirname, 'node_modules/@webcomponents/shadydom/shadydom.min'),
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
