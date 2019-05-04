@@ -54,4 +54,18 @@ class Oscilloscope {
     }
 }
 
+const initOscilloscope = (subtractor, canvas) => {
+  try {
+    const oscilloscope = new Oscilloscope(
+      subtractor.context, 
+      canvas
+    );
+    subtractor.masterGain.connect(oscilloscope.analyzer);
+    oscilloscope.start();
+  } catch (e) {
+    console.warn('Failed to start Oscilloscope', e);
+  }
+};
+
+export default initOscilloscope;
 export { Oscilloscope };

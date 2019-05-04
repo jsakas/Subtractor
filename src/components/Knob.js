@@ -1,115 +1,107 @@
+import Vue from 'vue';
 import { percentToPoint, pointToPercent } from '../utils/maths';
-import styles from '!css-loader!sass-loader?modules!./Knob.scss';
 
-class Knob extends HTMLElement {
-  connectedCallback() {
-    // if observable and bind attributes are preset, register this element as an observer
-    this.observable = eval(this.getAttribute('observe'));
-    this.bind = this.getAttribute('bind');
-    this.label = this.getAttribute('label');
+import './Knob.scss';
 
-    if (this.observable && this.bind) {
-      this.observable.registerObserver(this);
-    }
+Vue.component('x-knob', {
+  mounted() {
+    let refs = this.$refs;
+    this.knobRect = refs.knobKnob.getBoundingClientRect();
+    this.setRotation();
+  },
+  beforeUpdate() {
+    this.setRotation();
+  },
+  props: {
+    name: {
+      type: String,
+      required: true,
+      default: '',
+    },
+    min: { 
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    max: { 
+      type: Number,
+      required: true,
+      default: 127, 
+    },
+    value: { 
+      type: Number,
+      required: true,
+      default: 0,
+    },
+  },
+  methods: {
+    mousedown (e) {
+      let refs = this.$refs;
 
-    this.id = this.getAttribute('id');
-    this.name = this.getAttribute('name');
-    this.min = this.getAttribute('min');
-    this.max = this.getAttribute('max');
-    this.value = this.getAttribute('value');
-    this.template = `
-      <label for="knob__input" class="knob" id="knob">
-        <input class="knob__input" id="knob__input" type="range" 
-          min="${this.min}" max="${this.max}" value="${this.value}" 
-        />
-        <div class="knob__control" id="knob__control">
-          <div class="knob__knob" id="knob__knob"></div>
-        </div>
-        <div class="knob__name" id="knob__name">${this.name}</div>
-        <div class="knob__value" id="knob__value"></div>
-      </label>
-    `;
-
-    // create shadow dom
-    this.shadow = this.attachShadow({ 'mode': 'open' });
-    
-    // create style sheet node
-    this.stylesheet = document.createElement('style');
-    this.stylesheet.type = 'text/css';
-    this.stylesheet.textContent = styles.toString();
-
-    // create dom nodes from template
-    this.templateDOM = document.createRange().createContextualFragment(this.template);
-
-    // inject nodes into shadow dom
-    this.shadow.appendChild(this.stylesheet);
-    this.shadow.appendChild(this.templateDOM);
-    // ^^ DOM is now constructed
-
-    this.knob = this.shadow.getElementById('knob');
-    this.knobControl = this.shadow.getElementById('knob__control');
-    this.knobKnob = this.shadow.getElementById('knob__knob');
-    this.knobInput = this.shadow.getElementById('knob__input');
-    this.knobValue = this.shadow.getElementById('knob__value');
-
-    this.knobRect = this.knobKnob.getBoundingClientRect();
-
-    this.setupEvents();
-  }
-
-  setupEvents() {
-    this.knobKnob.addEventListener('mousedown', (e) => {
-      this.knobInput.dispatchEvent(new Event('focus'));
-      this.knobKnob.style.transition = 'none';
-      const currentValue = parseInt(this.knobInput.value);
+      // refs.knobInput.dispatchEvent(new Event('focus'));
+      refs.knobKnob.style.transition = 'none';
+      const currentValue = parseInt(refs.knobInput.value);
       const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentValue);
       document.addEventListener('mousemove', boundMousemove);
       document.addEventListener('mouseup', () => {
-        this.knobKnob.style.transition = '';
+        refs.knobKnob.style.transition = '';
         document.removeEventListener('mousemove', boundMousemove);
       });
-    });
+    },
+    mousemove (_this, x, y, oldValue, e) {
+      const yDiff = (e.clientY - parseInt(y));
+      const range = _this.max - _this.min;
+      const changeInterval = range / 100;
+  
+      let value = oldValue - (changeInterval * yDiff);
+      if (value > _this.max) { 
+        value = _this.max; 
+      }
+      if (value < _this.min) { 
+        value = _this.min; 
+      }
 
-    this.knobInput.addEventListener('input', (e) => {
-      const inputValue = parseInt(e.target.value);
-      this.setRotation(inputValue);
-      this.knobValue.innerText = this.observable[this.label] || parseInt(inputValue);
-      this.observable[this.bind] = parseInt(inputValue);
-    });
-  }
+      // refs.knobInput.value = Number(value);
+      this.$emit('update:value', value);
+    },
+    onInput (e) {
+      // let value = Number(e.target.value);
+      // this.$emit('update:value', value);
+    },
+    setRotation(value = this.value) {
+      let refs = this.$refs;
 
-  notify() {
-    this.knobInput.value = this.observable[this.bind];
-    this.knobValue.innerText = this.observable[this.label] || parseInt(this.observable[this.bind]);
-    this.setRotation(this.observable[this.bind]);
-  }
-
-  setRotation(inputValue) {
-    const inputMax = parseInt(this.knobInput.max);
-    const inputMin = parseInt(this.knobInput.min);
-
-    const percent = pointToPercent(inputMin, inputMax, inputValue);
-    const degree = percentToPoint(-150, 150, percent);
-
-    this.knobKnob.style.transform = `rotateZ(${parseInt(degree)}deg)`;
-  }
-
-  mousemove (_this, x, y, oldValue, e) {
-    const yDiff = (e.clientY - parseInt(y));
-    const range = _this.max - _this.min;
-    const changeInterval = range / 100;
-
-    let newValue = oldValue - (changeInterval * yDiff);
-    if (newValue > _this.max) { 
-      newValue = _this.max; 
-    }
-    if (newValue < _this.min) { 
-      newValue = _this.min; 
-    }
-
-    _this.knobInput.value = newValue;
-    _this.knobInput.dispatchEvent(new Event('input'));
-  }
-}
-
-window.customElements.define('x-knob', Knob);
+      const inputMax = parseInt(this.max);
+      const inputMin = parseInt(this.min);
+  
+      const percent = pointToPercent(inputMin, inputMax, value);
+      const degree = percentToPoint(-150, 150, percent);
+  
+      refs.knobKnob.style.transform = `rotateZ(${parseInt(degree)}deg)`;
+    },
+  },
+  filters: {
+    label (value) {
+      return parseInt(value).toFixed(0);
+    },
+  },
+  template: `
+    <label for="knob__input" class="knob" id="knob">
+      <input 
+        class="knob__input"
+        id="knob__input"
+        ref="knobInput"
+        type="range" 
+        :min="min"
+        :max="max"
+        :value="value"
+        v-on:input="onInput"
+      />
+      <div class="knob__control" id="knob__control" ref="knobControl">
+        <div class="knob__knob" id="knob__knob" v-on:mousedown="this.mousedown" ref="knobKnob"></div>
+      </div>
+      <div class="knob__name" id="knob__name">{{ name }}</div>
+      <div class="knob__value" id="knob__value" ref="knobValue">{{ value | label }}</div>
+    </label>
+  `
+});
