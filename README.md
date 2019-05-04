@@ -48,4 +48,4 @@ yarn test
 
 # About
 
-This project is an experiment in audio synthesis and web technologies by the engineering team at [Beatport](https://www.beatport.com)
+This project is an experiment in audio synthesis and sound design using the web audio API.
