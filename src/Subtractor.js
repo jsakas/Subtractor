@@ -1,6 +1,3 @@
-import * as Presets from './presets';
-
-
 import { Observable } from './Observe';
 import { Osc } from './Osc';
 import { Filter } from './Filter';
@@ -8,14 +5,13 @@ import { Envelope } from './Envelope';
 import { knobToSeconds, knobToFreq } from './utils/maths';
 import { intToFilter, renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
 
-import './Subtractor.scss';
-
 class Subtractor extends Observable {
   constructor() {
     super();
     this.context    = new AudioContext();
     this.osc1       = new Osc();
     this.osc2       = new Osc();
+    this.osc3       = new Osc();
     this.filter1    = new Filter(this.context);
     this.filter2    = new Filter(this.context);
     this.dynamicFilters = [];
@@ -67,8 +63,6 @@ class Subtractor extends Observable {
         Object.keys(voice).forEach((v) => {
           voices[voice[v]].move(
             n2, 
-            this._polyphony, 
-            this._detune, 
             this.context.currentTime + knobToSeconds(this._glide)
           );
         });
@@ -86,12 +80,13 @@ class Subtractor extends Observable {
     } else { 
       this._activeNotes[note] = [
         new Osc(this.context, this.osc1),
-        new Osc(this.context, this.osc2)
+        new Osc(this.context, this.osc2),
+        new Osc(this.context, this.osc3),
       ].map((osc) => {
         if (!osc.enabled) { 
           return null;
         }
-        osc.start(note, this._polyphony, this._detune).map(o => this.pipeline(o, velocity));
+        osc.start(note).map(o => this.pipeline(o, velocity, osc.voices));
         return osc;
       }).reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {});
     }
@@ -122,10 +117,14 @@ class Subtractor extends Observable {
   // route an oscillator thru the pipeline of modifiers.
   // e.g. gains, filter, distortions etc.
   //
-  pipeline(osc, velocity) {
+  pipeline(osc, velocity = .7, voices = 1) {
     // create a velocity node
     const velocityGainNode = this.context.createGain();
     velocityGainNode.gain.value = velocity;
+
+    // create a gain node to normalize output of oscillator voices
+    const oscVoiceGainNode = this.context.createGain();
+    oscVoiceGainNode.gain.value = 1 - ((voices ** .25) % 1);
 
     // create a gain node for the envelope
     const ampEnvelopeGainNode = this.context.createGain();
@@ -162,7 +161,8 @@ class Subtractor extends Observable {
 
     // route the osc thru everything we just created 
     osc.connect(velocityGainNode);
-    velocityGainNode.connect(ampEnvelopeGainNode);
+    velocityGainNode.connect(oscVoiceGainNode);
+    oscVoiceGainNode.connect(ampEnvelopeGainNode);
     ampEnvelopeGainNode.connect(filter.filter);
     filter.filter.connect(this.filter2.filter);
 
@@ -175,10 +175,6 @@ class Subtractor extends Observable {
     return osc;
   }
 
-  setPresetFromSelect(preset) {
-    this.loadPreset(Presets[preset]);
-  }
-
   // take a preset object and load it into the synth
   //
   loadPreset({
@@ -187,8 +183,6 @@ class Subtractor extends Observable {
     description = '',
     master = {
       gain: 50,
-      polyphony: 1,
-      detune: 0,
       voices: 4,
       glide: 0
     },
@@ -210,18 +204,28 @@ class Subtractor extends Observable {
       waveform: 3,
       octave: 0,
       semi: 0,
+      voices: 1,
       detune: 0
     },
     osc2 = {
       enabled: 0,
-      waveform: 3,
+      waveform: 1,
       octave: 0,
       semi: 0,
+      voices: 1,
+      detune: 0
+    },
+    osc3 = {
+      enabled: 0,
+      waveform: 1,
+      octave: 0,
+      semi: 0,
+      voices: 1,
       detune: 0
     },
     filter1 = {
       type: 1,
-      freq: 64,
+      freq: 127,
       q: 0.10,
       gain: 0
     },
@@ -241,10 +245,8 @@ class Subtractor extends Observable {
     this.author = author;
     this.description = description;
     this.gain = master.gain;
-    this.polyphony = master.polyphony;
     this.voices = master.voices;
     this.glide = master.glide;
-    this.detune = master.detune;
     this.attack = ampEnv.attack;
     this.decay = ampEnv.decay;
     this.sustain = ampEnv.sustain;
@@ -259,11 +261,19 @@ class Subtractor extends Observable {
     this.osc1.octave = osc1.octave;
     this.osc1.semi = osc1.semi;
     this.osc1.detune = osc1.detune;
+    this.osc1.voices = osc1.voices;
     this.osc2.enabled = osc2.enabled;
     this.osc2.waveform = osc2.waveform;
     this.osc2.octave = osc2.octave;
     this.osc2.semi = osc2.semi;
     this.osc2.detune = osc2.detune;
+    this.osc2.voices = osc2.voices;
+    this.osc3.enabled = osc3.enabled;
+    this.osc3.waveform = osc3.waveform;
+    this.osc3.octave = osc3.octave;
+    this.osc3.semi = osc3.semi;
+    this.osc3.detune = osc3.detune;
+    this.osc3.voices = osc3.voices;
     this.filter1Type = filter1.type;
     this.filter1Freq = filter1.freq;
     this.filter1Q = filter1.q;
@@ -286,8 +296,6 @@ class Subtractor extends Observable {
       'description': this.description,
       'master': {
         'gain': this.gain,
-        'polyphony': this.polyphony,
-        'detune': this.detune,
         'voices': this.voices,
         'glide': this.glide,
       },
@@ -309,6 +317,7 @@ class Subtractor extends Observable {
         'waveform': this.osc1.waveform,
         'octave': this.osc1.octave,
         'semi': this.osc1.semi,
+        'voices': this.osc1.voices,
         'detune': this.osc1.detune
       },
       'osc2': {
@@ -316,7 +325,16 @@ class Subtractor extends Observable {
         'waveform': this.osc2.waveform,
         'octave': this.osc2.octave,
         'semi': this.osc2.semi,
+        'voices': this.osc2.voices,
         'detune': this.osc2.detune
+      },
+      'osc3': {
+        'enabled': this.osc3.enabled,
+        'waveform': this.osc3.waveform,
+        'octave': this.osc3.octave,
+        'semi': this.osc3.semi,
+        'voices': this.osc3.voices,
+        'detune': this.osc3.detune
       },
       'filter1': {
         'type': this.filter1Type,
@@ -351,24 +369,6 @@ class Subtractor extends Observable {
     return this._octave;
   }
 
-  set polyphony(value) {
-    this._polyphony = parseInt(value);
-    this.notifyObservers();
-  }
-
-  get polyphony() {
-    return this._polyphony;
-  }
-
-  set detune(value) {
-    this._detune = value * .01;
-    this.notifyObservers();
-  }
-
-  get detune() {
-    return this._detune * 100;
-  }
-
   set gain(value) {
     this.masterGain.gain.value = value * .01;
     this.notifyObservers();
@@ -381,6 +381,7 @@ class Subtractor extends Observable {
   // amp envelope getter and setters
   set attack(value) {
     this._attack = value;
+    this.notifyObservers();
   }
 
   get attack() {
@@ -389,6 +390,7 @@ class Subtractor extends Observable {
 
   set decay(value) {
     this._decay = value;
+    this.notifyObservers();
   }
 
   get decay() {
@@ -397,6 +399,7 @@ class Subtractor extends Observable {
 
   set sustain(value) {
     this._sustain = value;
+    this.notifyObservers();
   }
 
   get sustain() {
@@ -405,6 +408,7 @@ class Subtractor extends Observable {
 
   set release(value) {
     this._release = value;
+    this.notifyObservers();
   }
 
   get release() {

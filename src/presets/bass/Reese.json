@@ -4,8 +4,6 @@
  "description": "",
  "master": {
   "gain": 34.00000035762787,
-  "polyphony": 1,
-  "detune": 0,
   "voices": 1,
   "glide": 26
  },
@@ -27,6 +25,7 @@
   "waveform": 3,
   "octave": -2,
   "semi": 0,
+  "voices": 0,
   "detune": 0
  },
  "osc2": {
@@ -34,7 +33,16 @@
   "waveform": 3,
   "octave": -2,
   "semi": 0,
+  "voices": 0,
   "detune": 44
+ },
+ "osc3": {
+  "enabled": 0,
+  "waveform": 1,
+  "octave": 0,
+  "semi": 0,
+  "voices": 1,
+  "detune": 0
  },
  "filter1": {
   "type": 1,

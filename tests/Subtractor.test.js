@@ -21,21 +21,25 @@ describe('Subtractor', () => {
       'master': { 
         'gain': 75,
         'polyphony': 3,
-        'detune': 1
+        'detune': 1,
+        'voices': 3,
+        'glide': 42,
       },
       'osc1': {
         'enabled': 0,
         'waveform': 3,
         'octave': -2,
         'semi': 3,
-        'detune': 27
+        'detune': 27,
+        'voices': 2,
       },
       'osc2': {
         'enabled': 1,
         'waveform': 2,
         'octave': -1,
         'semi': 5,
-        'detune': 23
+        'detune': 23,
+        'voices': 3,
       },
       'filter1': {
         'type': 2,
@@ -66,12 +70,12 @@ describe('Subtractor', () => {
     });
 
     // super
-    test('sets polyphony', () => {
-      expect(subtractor.polyphony).toBe(3);
+    test('sets master voices', () => {
+      expect(subtractor.voices).toBe(3);
     });
 
-    test('sets detune', () => {
-      expect(subtractor.detune).toBe(1);
+    test('sets master glide', () => {
+      expect(subtractor.glide).toBe(42);
     });
 
     // osc 1
@@ -95,6 +99,10 @@ describe('Subtractor', () => {
       expect(subtractor.osc1.detune).toBe(27);
     });
 
+    test('sets osc1->voices', () => {
+      expect(subtractor.osc1.voices).toBe(2);
+    });
+
     // osc 2
     test('sets osc2->enabled', () => {
       expect(subtractor.osc2.enabled).toBe(1);
@@ -114,6 +122,10 @@ describe('Subtractor', () => {
 
     test('sets osc2->detune', () => {
       expect(subtractor.osc2.detune).toBe(23);
+    });
+
+    test('sets osc2->voices', () => {
+      expect(subtractor.osc2.voices).toBe(3);
     });
 
     // filter

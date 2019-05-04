@@ -1,4 +1,34 @@
-import { getFrequencySpread, percentToPoint, pointToPercent } from '../../src/utils/maths';
+import { 
+  getFrequencySpread,
+  percentToPoint, 
+  pointToPercent, 
+  getDetuneSpread,
+  shiftNote
+} from '../../src/utils/maths';
+
+describe('shiftNote', () => {
+  test('shifts notes by octave and semi', () => {
+    expect(shiftNote(30)).toEqual(30);
+    expect(shiftNote(30, 1)).toEqual(42);
+    expect(shiftNote(30, -1)).toEqual(18);
+    expect(shiftNote(30, 1, -5)).toEqual(37);
+    expect(shiftNote(30, -1, 5)).toEqual(23);
+  });
+});
+
+describe('getDetuneSpread', () => {
+  test('returns detune by default', () => {
+    expect(getDetuneSpread(1, 100)).toEqual([100]);
+  });
+
+  test('returns a proper spread for 2 voices', () => {
+    expect(getDetuneSpread(2, 100)).toEqual([100, -100]);
+  });
+
+  test('returns a proper spread for 3 voices', () => {
+    expect(getDetuneSpread(3, 100)).toEqual([100, 0, -100]);
+  });
+});
 
 describe('getFrequencySpread', () => {
   test('returns frequency by default', () => {

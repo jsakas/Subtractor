@@ -12,21 +12,10 @@
       <h1 class="logo">Subtractor</h1>
       <div class="preset">
         <h3>Preset</h3>
-        <select class="preset-select" @change="setPresetFromSelect($event)">
-          <option value="Init">Init</option>
-          <optgroup label="Synth">
-            <option value="Acid">Acid</option>
-            <option value="Plucky">Plucky</option>
-          </optgroup>
-          <optgroup label="Bass">
-            <option value="ElectroFifth">Electro Fifth</option>
-            <option value="Reese">Reese</option>
-          </optgroup>
-          <optgroup label="Pad">
-            <option value="Mellow">Mellow</option>
-          </optgroup>
-          <optgroup label="Pluck">
-            <option value="BellsOfGuidia">Bells of Guidia</option>
+        <select class="preset-select" v-model="preset" @change="setPreset($event)">
+          <option :value="defaultPreset">Init</option>
+          <optgroup v-for="(group, key) in presets" :value="key" :label="key">
+            <option v-for="(preset, key) in group" :value="preset">{{ preset.name }}</option>
           </optgroup>
         </select>
         <button v-on:click="loadPreset">Load</button>
@@ -34,11 +23,6 @@
       </div>
     </div>
     <section>
-      <div>
-        <h2>Super</h2>
-        <x-knob id="poly" name="Poly" :min="1" :max="8" v-bind:value.sync="subtractor.polyphony"></x-knob>
-        <x-knob id="detune" name="Detune" :min="0" :max="100" v-bind:value.sync="subtractor.detune"></x-knob>
-      </div>
       <div>
         <h2>Voices</h2>
         <x-knob id="voices" name="Voices" :min="1" :max="8" v-bind:value.sync="subtractor.voices"></x-knob>
@@ -52,7 +36,8 @@
         <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc1.waveform" label="frWaveform"></x-knob> 
         <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc1.octave"></x-knob>
         <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc1.semi"></x-knob>
-        <x-knob id="cent" name="Cent" :min="0" :max="100" v-bind:value.sync="subtractor.osc1.detune"></x-knob>
+        <x-knob id="voices" name="Voices" :min="1" :max="10" v-bind:value.sync="subtractor.osc1.voices"></x-knob>
+        <x-knob id="detune" name="Detune" :min="0" :max="100" v-bind:value.sync="subtractor.osc1.detune"></x-knob>
       </div>
       <div>
         <h2>Osc 2</h2>
@@ -60,7 +45,17 @@
         <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc2.waveform" label="frWaveform"></x-knob> 
         <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc2.octave"></x-knob>
         <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc2.semi"></x-knob>
-        <x-knob id="cent" name="Cent" :min="0" :max="100" v-bind:value.sync="subtractor.osc2.detune"></x-knob>
+        <x-knob id="voices" name="Voices" :min="1" :max="10" v-bind:value.sync="subtractor.osc2.voices"></x-knob>
+        <x-knob id="detune" name="Detune" :min="0" :max="100" v-bind:value.sync="subtractor.osc2.detune"></x-knob>
+      </div>
+      <div>
+        <h2>Osc 3</h2>
+        <x-knob id="enabled" name="On" :min="0" :max="1" v-bind:value.sync="subtractor.osc3.enabled"></x-knob>
+        <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc3.waveform" label="frWaveform"></x-knob> 
+        <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc3.octave"></x-knob>
+        <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc3.semi"></x-knob>
+        <x-knob id="voices" name="Voices" :min="1" :max="10" v-bind:value.sync="subtractor.osc3.voices"></x-knob>
+        <x-knob id="detune" name="Detune" :min="0" :max="100" v-bind:value.sync="subtractor.osc3.detune"></x-knob>
       </div>
     </section>
      <section>
