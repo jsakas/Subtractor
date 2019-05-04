@@ -1,5 +1,3 @@
-
-
 const parseMIDIMessage = message => ({
   command: message.data[0],
   note: message.data[1],
@@ -7,9 +5,14 @@ const parseMIDIMessage = message => ({
 });
 
 const initMidiController = (subtractor) => {
+  if (!navigator || typeof navigator.requestMIDIAccess !== 'function') {
+    console.warn('navigator.requestMIDIAccess is not supported in this browser.');
+    return;
+  }
+
   const handleMIDIStateChange = (e) => {
     // print information about the (dis)connected MIDI controller
-    console.log(e.port.name, e.port.manufacturer, e.port.state);
+    console.warn(e.port.name, e.port.manufacturer, e.port.state);
   };
 
   const handleMIDIMessage = (message) => {
