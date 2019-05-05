@@ -9,12 +9,11 @@ module.exports = {
   mode,
   devtool: 'eval',
   entry: {
-    main: [
-      './src/main',
-    ]
+    main: ['./src/main'],
+    test: ['./mocha/test'],
   },
   output: {
-    filename: 'subtractor.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'build', 'static'),
     publicPath: '/static/',
   },
@@ -31,6 +30,13 @@ module.exports = {
       inject: 'body',
       alwaysWriteToDisk: true,
     }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'mocha', 'index.html'),
+      filename: '../mocha.html',
+      body: ['test'],
+      inject: false,
+      alwaysWriteToDisk: true,
+    }),
     new HtmlWebpackHarddiskPlugin(),
     new ExtractCssChunks(),
   ],
@@ -44,9 +50,56 @@ module.exports = {
   },
   module: {
     rules: [
+      // mocha test runner
       {
         test: /\.js$/,
-        include: [path.resolve(__dirname, 'src')],
+        include: [
+          path.resolve(__dirname, 'node_modules', 'mocha'),
+          path.resolve(__dirname, 'node_modules', 'chai'),
+        ],
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+            },
+          }
+        ],
+      },
+      // {
+      //   test: /\.js$/,
+      //   include: [path.resolve(__dirname, 'mocha'),],
+      //   use: [
+      //     {
+      //       loader: 'file-loader',
+      //       options: {
+      //         name: '[name].[ext]',
+      //       },
+      //     },
+      //     {
+      //       loader: 'babel-loader',
+      //     }
+      //   ],
+      // },
+      {
+        test: /\.css$/,
+        include: [path.resolve(__dirname, 'node_modules', 'mocha')],
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+            },
+          }
+        ],
+      },
+      // website
+      {
+        test: /\.js$/,
+        include: [
+          path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, 'mocha'),
+        ],
         loader: 'babel-loader'
       },
       {

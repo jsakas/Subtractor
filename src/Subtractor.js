@@ -52,6 +52,8 @@ class Subtractor extends Observable {
     this.masterGain.connect(this.context.destination);
 
     this.pipeline = this.pipeline.bind(this);
+
+    this.loadPreset({});
   }
   
   moveNote(n1, n2) {
