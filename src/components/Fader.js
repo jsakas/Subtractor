@@ -31,11 +31,20 @@ Vue.component('x-fader', {
       required: true,
       default: 127, 
     },
+    step: {
+      type: Number,
+      required: false,
+      default: 1,
+    },
     value: { 
       type: Number,
       required: true,
       default: 0,
     },
+    valueFmt: {
+      type: Function,
+      required: false,
+    }
   },
   methods: {
     mousedown(e) {
@@ -67,7 +76,7 @@ Vue.component('x-fader', {
         value = _this.min; 
       }
   
-      refs.faderInput.value = Number(value);
+      refs.faderInput.value = value;
       this.$emit('update:value', value);
     },
     onInput (e) {
@@ -84,9 +93,10 @@ Vue.component('x-fader', {
       let refs = this.$refs;
       refs.faderKnob.style.top = `${top}px`;
     },
-  },
-  filters: {
     label (value) {
+      if (this.valueFmt && typeof this.valueFmt == 'function') {
+        return this.valueFmt(value);
+      }
       return parseInt(value).toFixed(0);
     },
   },
@@ -99,6 +109,7 @@ Vue.component('x-fader', {
         type="range"
         :min="min"
         :max="max"
+        :step="step"
         :value="value"
         v-on:input="onInput"
       />
@@ -109,7 +120,7 @@ Vue.component('x-fader', {
       <div class="fader__name" id="fader__name">
         {{ name }}
       </div>
-      <div ref="faderValue" class="fader__value" id="fader__value">{{ value | label }}</div>
+      <div ref="faderValue" class="fader__value" id="fader__value">{{ this.label(value) }}</div>
     </label>
   `
 });

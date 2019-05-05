@@ -5,6 +5,8 @@ import initOscilloscope from './Oscilloscope';
 import initQuertyController from './core/QwertyController';
 import initMidiController from './core/MidiController';
 import { loadPresetFile, savePresetFile } from './core/PresetFileController';
+import { intToWaveform, intToFilter } from './utils/helpers';
+import { knobToFreq } from './utils/maths';
 
 import presets from './presets';
 import defaultPreset from './presets/default';
@@ -47,7 +49,10 @@ new Vue({
     setPreset(e) {
       subtractor.loadPreset(this.preset);
       e.target.blur();
-    }
+    },
+    intToFilter,
+    intToWaveform,
+    knobToFreq,
   },
   data() {
     return {
