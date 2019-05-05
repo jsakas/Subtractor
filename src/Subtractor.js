@@ -3,7 +3,7 @@ import { Osc } from './Osc';
 import { Filter } from './Filter';
 import { Envelope } from './Envelope';
 import { knobToSeconds, knobToFreq } from './utils/maths';
-import { intToFilter, renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
+import { renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
 
 class Subtractor extends Observable {
   constructor() {
@@ -142,7 +142,7 @@ class Subtractor extends Observable {
 
     // create a filter, base it on the global filter
     const filter = new Filter(this.context);
-    filter.type = this.filter1.frType;
+    filter.type = this.filter1.type;
     filter.freq = this.filter1.freq;
     filter.q = this.filter1.q;
     filter.gain = this.filter1.gain;
@@ -417,18 +417,14 @@ class Subtractor extends Observable {
 
   // filter 1
   set filter1Type(value) {
-    this.filter1.type = intToFilter(value);
+    this.filter1.type = value;
     this.dynamicFilters.forEach((filter) => { 
-      filter.type = intToFilter(value); 
+      filter.type = value; 
     });
   }
 
   get filter1Type() {
     return this.filter1.type;
-  }
-
-  get filter1FrType() {
-    return this.filter1.frType;
   }
 
   set filter1Freq(value) {
@@ -440,10 +436,6 @@ class Subtractor extends Observable {
 
   get filter1Freq() {
     return this.filter1.freq;
-  }
-
-  get filter1FrFreq() {
-    return this.filter1.frFreq;
   }
 
   set filter1Q(value) {

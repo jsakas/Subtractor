@@ -28,17 +28,25 @@ Vue.component('x-knob', {
       required: true,
       default: 127, 
     },
+    step: {
+      type: Number,
+      required: false,
+      default: 1,
+    },
     value: { 
       type: Number,
       required: true,
       default: 0,
     },
+    valueFmt: {
+      type: Function,
+      required: false,
+    }
   },
   methods: {
     mousedown (e) {
       let refs = this.$refs;
 
-      // refs.knobInput.dispatchEvent(new Event('focus'));
       refs.knobKnob.style.transition = 'none';
       const currentValue = parseInt(refs.knobInput.value);
       const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentValue);
@@ -49,6 +57,8 @@ Vue.component('x-knob', {
       });
     },
     mousemove (_this, x, y, oldValue, e) {
+      let refs = _this.$refs;
+
       const yDiff = (e.clientY - parseInt(y));
       const range = _this.max - _this.min;
       const changeInterval = range / 100;
@@ -61,12 +71,12 @@ Vue.component('x-knob', {
         value = _this.min; 
       }
 
-      // refs.knobInput.value = Number(value);
+      refs.knobInput.value = value;
       this.$emit('update:value', value);
     },
     onInput (e) {
-      // let value = Number(e.target.value);
-      // this.$emit('update:value', value);
+      let value = Number(e.target.value);
+      this.$emit('update:value', value);
     },
     setRotation(value = this.value) {
       let refs = this.$refs;
@@ -79,9 +89,10 @@ Vue.component('x-knob', {
   
       refs.knobKnob.style.transform = `rotateZ(${parseInt(degree)}deg)`;
     },
-  },
-  filters: {
     label (value) {
+      if (this.valueFmt && typeof this.valueFmt == 'function') {
+        return this.valueFmt(value);
+      }
       return parseInt(value).toFixed(0);
     },
   },
@@ -94,6 +105,7 @@ Vue.component('x-knob', {
         type="range" 
         :min="min"
         :max="max"
+        :step="step"
         :value="value"
         v-on:input="onInput"
       />
@@ -101,7 +113,7 @@ Vue.component('x-knob', {
         <div class="knob__knob" id="knob__knob" v-on:mousedown="this.mousedown" ref="knobKnob"></div>
       </div>
       <div class="knob__name" id="knob__name">{{ name }}</div>
-      <div class="knob__value" id="knob__value" ref="knobValue">{{ value | label }}</div>
+      <div class="knob__value" id="knob__value" ref="knobValue">{{ this.label(value) }}</div>
     </label>
   `
 });

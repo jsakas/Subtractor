@@ -67,7 +67,7 @@ export const knobToSeconds = function(value) {
 };
 
 export const knobToFreq = function(value) {
-  return Math.pow(value, 2);
+  return Number(Math.pow(value, 2).toFixed());
 };
 
 export const freqToKnob = function(value) {

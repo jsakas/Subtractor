@@ -62,10 +62,6 @@ class Osc extends Observable {
       return waveformToInt(this._waveform);
     }
 
-    get frWaveform() {
-      return this._waveform;
-    }
-
     set octave(value) {
       this._octave = Number(Number(value).toFixed());
       this.notifyObservers();
