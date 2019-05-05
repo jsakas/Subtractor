@@ -16,7 +16,6 @@ class Filter extends Observable {
     }
 
     set type(value) {
-      console.log('set type', value);
       this._filter.type = intToFilter(value);
       this.notifyObservers();
     }
@@ -26,7 +25,6 @@ class Filter extends Observable {
     }
 
     set freq(value) {
-      console.log('set freq', value);
       this._filter.frequency.value = knobToFreq(value);
       this.notifyObservers();
     }
