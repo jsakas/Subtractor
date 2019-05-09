@@ -9,9 +9,9 @@ class Subtractor extends Observable {
   constructor() {
     super();
     this.context    = new AudioContext();
-    this.osc1       = new Osc();
-    this.osc2       = new Osc();
-    this.osc3       = new Osc();
+    this.osc1       = new Osc(this.context);
+    this.osc2       = new Osc(this.context);
+    this.osc3       = new Osc(this.context);
     this.filter1    = new Filter(this.context);
     this.filter2    = new Filter(this.context);
     this.dynamicFilters = [];
@@ -82,16 +82,18 @@ class Subtractor extends Observable {
         new Osc(this.context, this.osc1),
         new Osc(this.context, this.osc2),
         new Osc(this.context, this.osc3),
-      ].map((osc) => {
+      ]
+      .map((osc) => {
         if (!osc.enabled) { 
           return null;
         }
-        osc.start(note).map(o => this.pipeline(o, velocity, osc.voices));
+        osc.start(note);
+        this.pipeline(osc, velocity, osc.voices);
         return osc;
-      }).reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {});
+      })
+      .reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {});
     }
     this.notifyObservers();
-    // this.emit(EVENTS.NOTE_CHANGED, note);
   }
 
   noteOff(note) {
@@ -101,11 +103,10 @@ class Subtractor extends Observable {
       Object.keys(oscs)
         .filter(i => oscs[i])
         .forEach((oscKey) => {
-          oscs[oscKey].oscs.forEach((o) => {
-            o.oscEnvelope.reset();
-            o.filterEnvelope.reset();
-            o.stop(this.context.currentTime + knobToSeconds(this.release));
-          });
+          let osc = oscs[oscKey];
+          osc.oscEnvelope.reset();
+          osc.filterEnvelope.reset();
+          osc.stop(this.context.currentTime + knobToSeconds(this.release));
         });
       
       delete this._activeNotes[note];
@@ -159,32 +160,16 @@ class Subtractor extends Observable {
     filterEnvelope.amount = this.filterAmount;
     filterEnvelope.schedule();
 
-    // create stereo effect, split -> delay -> merge
-    const splitter = this.context.createChannelSplitter(2);
-    const merger = this.context.createChannelMerger(2);
-    const delay = this.context.createDelay();
-    delay.delayTime.setValueAtTime(0.005, this.context.currentTime);
-
-    // route the osc thru everything we just created 
-    osc.connect(splitter);
-    splitter.connect(merger, 0);
-    splitter.connect(delay, 0);
-    delay.connect(merger, 0, 1);
-
-    merger
+    osc.output
       .connect(velocityGainNode)
       .connect(oscVoiceGainNode)
       .connect(ampEnvelopeGainNode)
       .connect(filter.filter)
       .connect(this.filter2.filter);
 
-    // attach the envelopes to the osc the gain node so it can be reset on noteOff
+    // attach the envelopes to the osc so it can be reset on noteOff
     osc.oscEnvelope = oscEnvelope;
     osc.filterEnvelope = filterEnvelope;
-    
-    // start and return the osc
-    osc.start();
-    return osc;
   }
 
   // take a preset object and load it into the synth
