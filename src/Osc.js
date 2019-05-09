@@ -30,10 +30,12 @@ class Osc extends Observable {
       const freq = getNoteFreq(shifted);
       const detuneSpread = getDetuneSpread(this.voices, this.detune);
       this._oscs = detuneSpread.map(detune => this.startOscillator(freq, detune));
+      return this;
     }
 
     stop(time) {
       this._oscs.forEach(osc => osc.stop(time || this.audioContext.currentTime));
+      return this;
     }
 
     move(note, time = 0) {
@@ -46,6 +48,7 @@ class Osc extends Observable {
           time
         );
       });
+      return this;
     }
 
     startOscillator(freq, detune) {

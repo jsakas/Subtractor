@@ -55,19 +55,15 @@ class Subtractor extends Observable {
   }
   
   moveNote(n1, n2) {
-    const voices = this._activeNotes[n1];
+    const oscs = this._activeNotes[n1];
 
-    Object.keys(voices)
-      .filter(i => voices[i])
-      .forEach((voice) => {
-        Object.keys(voice).forEach((v) => {
-          voices[voice[v]].move(
-            n2, 
-            this.context.currentTime + knobToSeconds(this._glide)
-          );
-        });
-      });
-      
+    oscs.forEach((osc) => {
+      osc.move(
+        n2, 
+        this.context.currentTime + knobToSeconds(this._glide)
+      );
+    });
+
     renameObjectKey(this._activeNotes, n1, n2);
     this.notifyObservers();
   }
@@ -78,36 +74,30 @@ class Subtractor extends Observable {
     if (activeNoteKeys.length >= this._voices) {
       this.moveNote(activeNoteKeys[0], note);
     } else { 
-      this._activeNotes[note] = [
-        new Osc(this.context, this.osc1),
-        new Osc(this.context, this.osc2),
-        new Osc(this.context, this.osc3),
-      ]
-      .map((osc) => {
-        if (!osc.enabled) { 
-          return null;
-        }
-        osc.start(note);
-        this.pipeline(osc, velocity, osc.voices);
-        return osc;
-      })
-      .reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {});
+      this._activeNotes[note] = 
+        [
+          this.osc1,
+          this.osc2,
+          this.osc3,
+        ]
+        .filter(osc => osc.enabled)
+        .map(osc => new Osc(this.context, osc))
+        .map(osc => osc.start(note))
+        .map(osc => this.pipeline(osc, velocity, osc.voices));
     }
+
     this.notifyObservers();
   }
 
   noteOff(note) {
     if (this._activeNotes[note]) {
       const oscs = this._activeNotes[note];
-      
-      Object.keys(oscs)
-        .filter(i => oscs[i])
-        .forEach((oscKey) => {
-          let osc = oscs[oscKey];
-          osc.oscEnvelope.reset();
-          osc.filterEnvelope.reset();
-          osc.stop(this.context.currentTime + knobToSeconds(this.release));
-        });
+
+      oscs.forEach((osc) => {
+        osc.oscEnvelope.reset();
+        osc.filterEnvelope.reset();
+        osc.stop(this.context.currentTime + knobToSeconds(this.release));
+      });
       
       delete this._activeNotes[note];
 
@@ -170,6 +160,8 @@ class Subtractor extends Observable {
     // attach the envelopes to the osc so it can be reset on noteOff
     osc.oscEnvelope = oscEnvelope;
     osc.filterEnvelope = filterEnvelope;
+
+    return osc;
   }
 
   // take a preset object and load it into the synth
@@ -508,7 +500,7 @@ class Subtractor extends Observable {
   }
 
   set voices(value) {
-    this._voices = Number(value);
+    this._voices = Number(Number(value).toFixed());
   }
 
   get glide() {
