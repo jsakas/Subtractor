@@ -159,12 +159,24 @@ class Subtractor extends Observable {
     filterEnvelope.amount = this.filterAmount;
     filterEnvelope.schedule();
 
+    // create stereo effect, split -> delay -> merge
+    const splitter = this.context.createChannelSplitter(2);
+    const merger = this.context.createChannelMerger(2);
+    const delay = this.context.createDelay();
+    delay.delayTime.setValueAtTime(0.005, this.context.currentTime);
+
     // route the osc thru everything we just created 
-    osc.connect(velocityGainNode);
-    velocityGainNode.connect(oscVoiceGainNode);
-    oscVoiceGainNode.connect(ampEnvelopeGainNode);
-    ampEnvelopeGainNode.connect(filter.filter);
-    filter.filter.connect(this.filter2.filter);
+    osc.connect(splitter);
+    splitter.connect(merger, 0);
+    splitter.connect(delay, 0);
+    delay.connect(merger, 0, 1);
+
+    merger
+      .connect(velocityGainNode)
+      .connect(oscVoiceGainNode)
+      .connect(ampEnvelopeGainNode)
+      .connect(filter.filter)
+      .connect(this.filter2.filter);
 
     // attach the envelopes to the osc the gain node so it can be reset on noteOff
     osc.oscEnvelope = oscEnvelope;
