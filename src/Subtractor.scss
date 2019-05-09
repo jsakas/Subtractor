@@ -39,14 +39,18 @@ section {
   vertical-align: top;
 }
 
-.preset {
+.preset,
+.midi {
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.preset h3,
+.midi h3 {
   display: inline-block;
 }
 
-.preset h3 {
-  display: inline-block;
-}
-
-.preset .preset-select {
+.preset .preset-select,
+.midi .midi-select {
   display: inline-block;
 }

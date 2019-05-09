@@ -10,6 +10,13 @@
   <div class="subtractor" id="subtractor">
     <div class="top">
       <h1 class="logo">Subtractor</h1>
+      <div class="midi">
+        <h3>Midi In</h3>
+        <select class="midi-select" @change="midi.useInput($event.target.value)">
+          <option value="off">---</option>
+          <option v-for="(input, key) in midi.inputs" :value="input.id">{{ input.name }}</option>
+        </select>
+      </div>
       <div class="preset">
         <h3>Preset</h3>
         <select class="preset-select" v-model="preset" @change="setPreset($event)">

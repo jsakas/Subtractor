@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Subtractor from './Subtractor';
 import initOscilloscope from './Oscilloscope';
 import initQuertyController from './core/QwertyController';
-import initMidiController from './core/MidiController';
+import MidiController from './core/MidiController';
 import { loadPresetFile, savePresetFile } from './core/PresetFileController';
 import { intToWaveform, intToFilter } from './utils/helpers';
 import { knobToFreq } from './utils/maths';
@@ -17,13 +17,28 @@ import './components/Keyboard';
 
 import './Subtractor.scss';
 
-let subtractor = window.Subtractor = new Subtractor();
+let subtractor = new Subtractor();
+let midi = new MidiController();
 
-new Vue({ 
+const handleMIDIMessage = (message) => {
+  switch (message.command) {
+    case 144:
+    subtractor.noteOn(message.note, message.velocity);
+    break;
+    case 128:
+    subtractor.noteOff(message.note, message.velocity);
+    break;
+    default:
+    break;
+  }
+};
+
+midi.handleMIDIMessage = handleMIDIMessage;
+
+const vm = new Vue({ 
   el: '#subtractor',
   mounted() {
     initQuertyController(subtractor);
-    initMidiController(subtractor);
     initOscilloscope(subtractor, document.getElementById('oscilloscope'));
     subtractor.registerObserver(this);
     subtractor.osc1.registerObserver(this);
@@ -58,6 +73,7 @@ new Vue({
     return {
       subtractor,
       presets,
+      midi,
       defaultPreset,
       preset: defaultPreset,
       componentKey: 0,
@@ -66,3 +82,4 @@ new Vue({
   },
 });
 
+midi.on('update', vm.forceUpdate);
