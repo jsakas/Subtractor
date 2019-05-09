@@ -194,7 +194,8 @@ class Subtractor extends Observable {
       octave: 0,
       semi: 0,
       voices: 1,
-      detune: 0
+      detune: 0,
+      stereo: 100,
     },
     osc2 = {
       enabled: 0,
@@ -202,7 +203,8 @@ class Subtractor extends Observable {
       octave: 0,
       semi: 0,
       voices: 1,
-      detune: 0
+      detune: 0,
+      stereo: 100,
     },
     osc3 = {
       enabled: 0,
@@ -210,7 +212,8 @@ class Subtractor extends Observable {
       octave: 0,
       semi: 0,
       voices: 1,
-      detune: 0
+      detune: 0,
+      stereo: 100,
     },
     filter1 = {
       type: 1,
@@ -225,9 +228,9 @@ class Subtractor extends Observable {
       gain: 0
     },
     lfo1 = {
-      'type': 1,
-      'freq': 1,
-      'amount': 0
+      type: 1,
+      freq: 1,
+      amount: 0
     }
   }) {
     this.name = name;
@@ -251,18 +254,21 @@ class Subtractor extends Observable {
     this.osc1.semi = osc1.semi;
     this.osc1.detune = osc1.detune;
     this.osc1.voices = osc1.voices;
+    this.osc1.stereo = osc1.stereo;
     this.osc2.enabled = osc2.enabled;
     this.osc2.waveform = osc2.waveform;
     this.osc2.octave = osc2.octave;
     this.osc2.semi = osc2.semi;
     this.osc2.detune = osc2.detune;
     this.osc2.voices = osc2.voices;
+    this.osc2.stereo = osc2.stereo;
     this.osc3.enabled = osc3.enabled;
     this.osc3.waveform = osc3.waveform;
     this.osc3.octave = osc3.octave;
     this.osc3.semi = osc3.semi;
     this.osc3.detune = osc3.detune;
     this.osc3.voices = osc3.voices;
+    this.osc3.stereo = osc3.stereo;
     this.filter1Type = filter1.type;
     this.filter1Freq = filter1.freq;
     this.filter1Q = filter1.q;
@@ -307,7 +313,8 @@ class Subtractor extends Observable {
         'octave': this.osc1.octave,
         'semi': this.osc1.semi,
         'voices': this.osc1.voices,
-        'detune': this.osc1.detune
+        'detune': this.osc1.detune,
+        'stereo': this.osc1.stereo,
       },
       'osc2': {
         'enabled': this.osc2.enabled,
@@ -315,7 +322,8 @@ class Subtractor extends Observable {
         'octave': this.osc2.octave,
         'semi': this.osc2.semi,
         'voices': this.osc2.voices,
-        'detune': this.osc2.detune
+        'detune': this.osc2.detune,
+        'stereo': this.osc2.stereo
       },
       'osc3': {
         'enabled': this.osc3.enabled,
@@ -323,7 +331,8 @@ class Subtractor extends Observable {
         'octave': this.osc3.octave,
         'semi': this.osc3.semi,
         'voices': this.osc3.voices,
-        'detune': this.osc3.detune
+        'detune': this.osc3.detune,
+        'stereo': this.osc3.stereo
       },
       'filter1': {
         'type': this.filter1Type,

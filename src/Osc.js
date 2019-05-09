@@ -2,8 +2,8 @@ import { shiftNote, getNoteFreq, getDetuneSpread } from './utils/maths';
 import { intToWaveform, waveformToInt } from './utils/helpers';
 import { Observable } from './Observe';
 
-const knobToStereo = v => v / 5000;
-const stereoToKnob = v => v * 5000;
+const knobToStereo = (v = 0) => v / 5000;
+const stereoToKnob = (v = 0) => v * 5000;
 
 class Osc extends Observable {
     constructor(audioContext, options = {}) {
