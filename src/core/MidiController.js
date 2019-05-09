@@ -18,7 +18,8 @@ class MidiController extends EventEmitter {
     this.configureMIDI = this.configureMIDI.bind(this);
     this.handleMIDIStateChange = this.handleMIDIStateChange.bind(this);
 
-    navigator.requestMIDIAccess({ sysex: true })
+    if (navigator.requestMIDIAccess) {
+      navigator.requestMIDIAccess({ sysex: true })
       .then(this.configureMIDI)
       .then(this.getMIDIInputs)
       .then(this.getMIDIOutputs)
@@ -26,7 +27,7 @@ class MidiController extends EventEmitter {
       .catch((e) => {
         console.warn('Failed to initialize MidiController.', e);
       });
-
+    }
   }
 
   get inputs() {

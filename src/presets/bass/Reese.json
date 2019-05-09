@@ -25,16 +25,18 @@
   "waveform": 3,
   "octave": -2,
   "semi": 0,
-  "voices": 0,
-  "detune": 0
+  "voices": 1,
+  "detune": 0,
+  "stereo": 100
  },
  "osc2": {
   "enabled": 1,
   "waveform": 3,
   "octave": -2,
   "semi": 0,
-  "voices": 0,
-  "detune": 44
+  "voices": 1,
+  "detune": 44,
+  "stereo": 100
  },
  "osc3": {
   "enabled": 0,
@@ -42,7 +44,8 @@
   "octave": 0,
   "semi": 0,
   "voices": 1,
-  "detune": 0
+  "detune": 0,
+  "stereo": 100
  },
  "filter1": {
   "type": 1,
