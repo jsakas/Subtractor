@@ -1,6 +1,7 @@
 import Vue from 'vue';
 
 import Subtractor from './Subtractor';
+import { EnvelopeGraph } from './Envelope';
 import initOscilloscope from './Oscilloscope';
 import initQuertyController from './core/QwertyController';
 import MidiController from './core/MidiController';
@@ -46,6 +47,20 @@ const vm = new Vue({
     subtractor.filter1.registerObserver(this);
     subtractor.filter2.registerObserver(this);
     subtractor.loadPreset(defaultPreset);
+
+    new EnvelopeGraph(() => ({
+      attack: subtractor.filterAttack,
+      decay: subtractor.filterDecay,
+      sustain: subtractor.filterSustain,
+      release: subtractor.filterRelease,
+    }), document.getElementById('filterenv-graph'));
+
+    new EnvelopeGraph(() => ({
+      attack: subtractor.attack,
+      decay: subtractor.decay,
+      sustain: subtractor.sustain,
+      release: subtractor.release,
+    }), document.getElementById('ampenv-graph'));
   },
   methods: {
     forceUpdate() {
