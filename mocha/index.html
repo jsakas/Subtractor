@@ -7,18 +7,19 @@
     <link rel="stylesheet" href="<%= require('../node_modules/mocha/mocha.css') %>" />
   </head>
   <body>
+    <div style="width: 100%; height: 50px">
+      <button onclick="mocha.run();">Start Tests</button>
+    </div>
     <div id="mocha"></div>
     <script src="<%= require('../node_modules/chai/chai.js') %>"></script>
     <script src="<%= require('../node_modules/mocha/mocha.js') %>"></script>
 
     <script class="mocha-init">
       mocha.setup('bdd');
+      mocha.timeout(20000);
     </script>
     <% for (var chunk in htmlWebpackPlugin.options.body) { %>
       <script src="<%= htmlWebpackPlugin.files.chunks[htmlWebpackPlugin.options.body[chunk]].entry %>"></script>
     <% } %>
-    <script class="mocha-exec">
-      mocha.run();
-    </script>
   </body>
 </html>

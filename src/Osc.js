@@ -1,4 +1,4 @@
-import { shiftNote, getNoteFreq, getDetuneSpread } from './utils/maths';
+import { shiftNote, getNoteFreq, getDetuneSpread, changeFreqBySemitones } from './utils/maths';
 import { intToWaveform, waveformToInt } from './utils/helpers';
 import { Observable } from './Observe';
 
@@ -79,6 +79,10 @@ class Osc extends Observable {
     set waveform(value) {
       this._waveform = intToWaveform(Number(value).toFixed());
 
+      this.oscs.forEach((osc, i) => {
+        osc.type = this._waveform;
+      });
+
       this.notifyObservers();
     }
 
@@ -86,8 +90,15 @@ class Osc extends Observable {
       return waveformToInt(this._waveform);
     }
 
-    set octave(value) {
-      this._octave = Number(Number(value).toFixed());
+    set octave(v) {
+      let value = Number(Number(v).toFixed());
+      let change = (value - this.octave) * 12;
+      this._octave = value;
+      this.oscs.forEach((osc, i) => {
+        let freq = osc.frequency.value;
+        let updated = changeFreqBySemitones(freq, change);
+        osc.frequency.value = updated;
+      });
       this.notifyObservers();
     }
 
@@ -95,8 +106,15 @@ class Osc extends Observable {
       return this._octave;
     }
 
-    set semi(value) {
-      this._semi = Number(Number(value).toFixed());
+    set semi(v) {
+      let value = Number(Number(v).toFixed());
+      let change = (value - this.semi);
+      this._semi = value;
+      this.oscs.forEach((osc, i) => {
+        let freq = osc.frequency.value;
+        let updated = changeFreqBySemitones(freq, change);
+        osc.frequency.value = updated;
+      });
       this.notifyObservers();
     }
 
@@ -104,8 +122,13 @@ class Osc extends Observable {
       return this._semi;
     }
 
-    set detune(value) {
-      this._detune = Number(value);
+    set detune(v) {
+      this._detune = Number(v);
+      const detuneSpread = getDetuneSpread(this.voices, this.detune);
+      this.oscs.forEach((osc, i) => {
+        osc.detune.value = detuneSpread[i];
+      });
+
       this.notifyObservers();
     }
 

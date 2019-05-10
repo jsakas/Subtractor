@@ -1,14 +1,22 @@
+// global tuning
+const TUNE = 440;
+
 // take a note, octave, and semi and shift it
 export const shiftNote = function(note, octave = 0, semi = 0) {
   return note + (octave * 12) + semi;
 };
 
 // take a note (keyboard key) and return the frequency
+// http://subsynth.sourceforge.net/midinote2freq.html
 //
 export const getNoteFreq = function(note) {
-  // http://subsynth.sourceforge.net/midinote2freq.html
-  const tune = 440;
-  return (tune / 32) * Math.pow(2, ((note - 9) / 12));
+  return (TUNE / 32) * Math.pow(2, ((note - 9) / 12));
+};
+
+// take a frequency and change it by n semitones
+// https://music.stackexchange.com/a/17567
+export const changeFreqBySemitones = function(freq, semitones) {
+  return Math.pow(2, semitones / 12) * freq;
 };
 
 // take voices and detune value and return an array of detune values
