@@ -1,5 +1,5 @@
 import { Observable } from './Observe';
-import { knobToSeconds } from './utils/maths';
+import { knobToAttack, knobToDecay, knobToRelease } from './utils/maths';
 
 class Envelope extends Observable {
     constructor(context, audioParam) {
@@ -34,14 +34,14 @@ class Envelope extends Observable {
       // ramp up
       this.audioParam.linearRampToValueAtTime(
         rampTo, 
-        this.context.currentTime + knobToSeconds(this.attack)
+        this.context.currentTime + knobToAttack(this.attack)
       );
 
       // ramp down to sustain value
       this.audioParam.linearRampToValueAtTime(
         sustainTo, 
         // we have to add an imperceptible amount of time (.01) for this to work properly when decay is 0
-        this.context.currentTime + knobToSeconds(this.attack) + .01 + knobToSeconds(this.decay)
+        this.context.currentTime + knobToAttack(this.attack) + .01 + knobToDecay(this.decay)
       );
     }
 
@@ -56,7 +56,7 @@ class Envelope extends Observable {
       }
 
       // start decay from current value to min
-      this.audioParam.linearRampToValueAtTime(this.startValue, this.context.currentTime + knobToSeconds(this._release));
+      this.audioParam.linearRampToValueAtTime(this.startValue, this.context.currentTime + knobToRelease(this._release));
     }
 
     set attack(value) {
