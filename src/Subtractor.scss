@@ -39,6 +39,14 @@ section {
   vertical-align: top;
 }
 
+.filterenv-graph,
+.ampenv-graph {
+  margin-top: 10px;
+  display: block;
+  width: 100%;
+  height: 25px;
+}
+
 .preset,
 .midi {
   display: inline-block;

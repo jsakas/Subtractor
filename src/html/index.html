@@ -83,6 +83,7 @@
         <x-knob id="filterenv-sustain" name="Sustain" :min="0" :max="127" v-bind:value.sync="subtractor.filterSustain"></x-knob>
         <x-knob id="filterenv-release" name="Release" :min="0" :max="127" v-bind:value.sync="subtractor.filterRelease"></x-knob>
         <x-knob id="filterenv-amount" name="Amount" :min="0" :max="127" v-bind:value.sync="subtractor.filterAmount"></x-knob>
+        <canvas id="filterenv-graph" class="filterenv-graph" width="100" height="25"></canvas>
       </div>
     </section>
     <section>
@@ -106,6 +107,7 @@
       <x-knob id="gainenv-decay" name="Decay" :min="0" :max="127" v-bind:value.sync="subtractor.decay"></x-knob>
       <x-knob id="gainenv-sustain" name="Sustain" :min="0" :max="127" v-bind:value.sync="subtractor.sustain"></x-knob>
       <x-knob id="gainenv-release" name="Release" :min="0" :max="127" v-bind:value.sync="subtractor.release"></x-knob>
+      <canvas id="ampenv-graph" class="ampenv-graph" width="100" height="25"></canvas>
     </section>
     <section>
       <h2>Master</h2>
