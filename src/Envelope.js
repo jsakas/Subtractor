@@ -38,7 +38,7 @@ class Envelope extends Observable {
       );
 
       // ramp down to sustain value
-      this.audioParam.linearRampToValueAtTime(
+      this.audioParam.exponentialRampToValueAtTime(
         sustainTo, 
         // we have to add an imperceptible amount of time (.01) for this to work properly when decay is 0
         this.context.currentTime + knobToAttack(this.attack) + .01 + knobToDecay(this.decay)
@@ -56,7 +56,8 @@ class Envelope extends Observable {
       }
 
       // start decay from current value to min
-      this.audioParam.linearRampToValueAtTime(this.startValue, this.context.currentTime + knobToRelease(this._release));
+
+      this.audioParam.exponentialRampToValueAtTime(this.startValue + 0.01, this.context.currentTime + knobToRelease(this._release));
     }
 
     set attack(value) {
