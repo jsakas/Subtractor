@@ -16,11 +16,7 @@ class Filter extends Observable {
     }
 
     set type(value) {
-      if (typeof value == 'string') {
-        this._filter.type = value;
-      } else if (typeof value == 'number') {
-        this._filter.type = intToFilter(value);
-      }
+      this._filter.type = intToFilter(value);
       this.notifyObservers();
     }
 
@@ -28,21 +24,17 @@ class Filter extends Observable {
       return filterToInt(this._filter.type);
     }
 
-    get frType() {
-      return this._filter.type;
-    }
-
     set freq(value) {
-      this._filter.frequency.value = knobToFreq(value);
+      let f = knobToFreq(value);
+      if (f < 1) {
+        f = 1;
+      }
+      this._filter.frequency.value = f;
       this.notifyObservers();
     }
 
     get freq() {
       return freqToKnob(this._filter.frequency.value);
-    }
-
-    get frFreq() {
-      return this._filter.frequency.value;
     }
 
     set q(value) {

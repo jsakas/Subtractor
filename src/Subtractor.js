@@ -3,15 +3,15 @@ import { Osc } from './Osc';
 import { Filter } from './Filter';
 import { Envelope } from './Envelope';
 import { knobToSeconds, knobToFreq } from './utils/maths';
-import { intToFilter, renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
+import { renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
 
 class Subtractor extends Observable {
   constructor() {
     super();
     this.context    = new AudioContext();
-    this.osc1       = new Osc();
-    this.osc2       = new Osc();
-    this.osc3       = new Osc();
+    this.osc1       = new Osc(this.context);
+    this.osc2       = new Osc(this.context);
+    this.osc3       = new Osc(this.context);
     this.filter1    = new Filter(this.context);
     this.filter2    = new Filter(this.context);
     this.dynamicFilters = [];
@@ -57,19 +57,15 @@ class Subtractor extends Observable {
   }
   
   moveNote(n1, n2) {
-    const voices = this._activeNotes[n1];
+    const oscs = this._activeNotes[n1];
 
-    Object.keys(voices)
-      .filter(i => voices[i])
-      .forEach((voice) => {
-        Object.keys(voice).forEach((v) => {
-          voices[voice[v]].move(
-            n2, 
-            this.context.currentTime + knobToSeconds(this._glide)
-          );
-        });
-      });
-      
+    oscs.forEach((osc) => {
+      osc.move(
+        n2, 
+        this.context.currentTime + knobToSeconds(this._glide)
+      );
+    });
+
     renameObjectKey(this._activeNotes, n1, n2);
     this.notifyObservers();
   }
@@ -80,35 +76,30 @@ class Subtractor extends Observable {
     if (activeNoteKeys.length >= this._voices) {
       this.moveNote(activeNoteKeys[0], note);
     } else { 
-      this._activeNotes[note] = [
-        new Osc(this.context, this.osc1),
-        new Osc(this.context, this.osc2),
-        new Osc(this.context, this.osc3),
-      ].map((osc) => {
-        if (!osc.enabled) { 
-          return null;
-        }
-        osc.start(note).map(o => this.pipeline(o, velocity, osc.voices));
-        return osc;
-      }).reduce((acc, cur, i) => Object.assign(acc, { [i + 1]: cur }), {});
+      this._activeNotes[note] = 
+        [
+          this.osc1,
+          this.osc2,
+          this.osc3,
+        ]
+        .filter(osc => osc.enabled)
+        .map(osc => new Osc(this.context, osc))
+        .map(osc => osc.start(note))
+        .map(osc => this.pipeline(osc, velocity, osc.voices));
     }
+
     this.notifyObservers();
-    // this.emit(EVENTS.NOTE_CHANGED, note);
   }
 
   noteOff(note) {
     if (this._activeNotes[note]) {
       const oscs = this._activeNotes[note];
-      
-      Object.keys(oscs)
-        .filter(i => oscs[i])
-        .forEach((oscKey) => {
-          oscs[oscKey].oscs.forEach((o) => {
-            o.oscEnvelope.reset();
-            o.filterEnvelope.reset();
-            o.stop(this.context.currentTime + knobToSeconds(this.release));
-          });
-        });
+
+      oscs.forEach((osc) => {
+        osc.oscEnvelope.reset();
+        osc.filterEnvelope.reset();
+        osc.stop(this.context.currentTime + knobToSeconds(this.release));
+      });
       
       delete this._activeNotes[note];
 
@@ -144,7 +135,7 @@ class Subtractor extends Observable {
 
     // create a filter, base it on the global filter
     const filter = new Filter(this.context);
-    filter.type = this.filter1.frType;
+    filter.type = this.filter1.type;
     filter.freq = this.filter1.freq;
     filter.q = this.filter1.q;
     filter.gain = this.filter1.gain;
@@ -161,19 +152,17 @@ class Subtractor extends Observable {
     filterEnvelope.amount = this.filterAmount;
     filterEnvelope.schedule();
 
-    // route the osc thru everything we just created 
-    osc.connect(velocityGainNode);
-    velocityGainNode.connect(oscVoiceGainNode);
-    oscVoiceGainNode.connect(ampEnvelopeGainNode);
-    ampEnvelopeGainNode.connect(filter.filter);
-    filter.filter.connect(this.filter2.filter);
+    osc.output
+      .connect(velocityGainNode)
+      .connect(oscVoiceGainNode)
+      .connect(ampEnvelopeGainNode)
+      .connect(filter.filter)
+      .connect(this.filter2.filter);
 
-    // attach the envelopes to the osc the gain node so it can be reset on noteOff
+    // attach the envelopes to the osc so it can be reset on noteOff
     osc.oscEnvelope = oscEnvelope;
     osc.filterEnvelope = filterEnvelope;
-    
-    // start and return the osc
-    osc.start();
+
     return osc;
   }
 
@@ -207,7 +196,8 @@ class Subtractor extends Observable {
       octave: 0,
       semi: 0,
       voices: 1,
-      detune: 0
+      detune: 0,
+      stereo: 100,
     },
     osc2 = {
       enabled: 0,
@@ -215,7 +205,8 @@ class Subtractor extends Observable {
       octave: 0,
       semi: 0,
       voices: 1,
-      detune: 0
+      detune: 0,
+      stereo: 100,
     },
     osc3 = {
       enabled: 0,
@@ -223,7 +214,8 @@ class Subtractor extends Observable {
       octave: 0,
       semi: 0,
       voices: 1,
-      detune: 0
+      detune: 0,
+      stereo: 100,
     },
     filter1 = {
       type: 1,
@@ -238,9 +230,9 @@ class Subtractor extends Observable {
       gain: 0
     },
     lfo1 = {
-      'type': 1,
-      'freq': 1,
-      'amount': 0
+      type: 1,
+      freq: 1,
+      amount: 0
     }
   }) {
     this.name = name;
@@ -264,18 +256,21 @@ class Subtractor extends Observable {
     this.osc1.semi = osc1.semi;
     this.osc1.detune = osc1.detune;
     this.osc1.voices = osc1.voices;
+    this.osc1.stereo = osc1.stereo;
     this.osc2.enabled = osc2.enabled;
     this.osc2.waveform = osc2.waveform;
     this.osc2.octave = osc2.octave;
     this.osc2.semi = osc2.semi;
     this.osc2.detune = osc2.detune;
     this.osc2.voices = osc2.voices;
+    this.osc2.stereo = osc2.stereo;
     this.osc3.enabled = osc3.enabled;
     this.osc3.waveform = osc3.waveform;
     this.osc3.octave = osc3.octave;
     this.osc3.semi = osc3.semi;
     this.osc3.detune = osc3.detune;
     this.osc3.voices = osc3.voices;
+    this.osc3.stereo = osc3.stereo;
     this.filter1Type = filter1.type;
     this.filter1Freq = filter1.freq;
     this.filter1Q = filter1.q;
@@ -320,7 +315,8 @@ class Subtractor extends Observable {
         'octave': this.osc1.octave,
         'semi': this.osc1.semi,
         'voices': this.osc1.voices,
-        'detune': this.osc1.detune
+        'detune': this.osc1.detune,
+        'stereo': this.osc1.stereo,
       },
       'osc2': {
         'enabled': this.osc2.enabled,
@@ -328,7 +324,8 @@ class Subtractor extends Observable {
         'octave': this.osc2.octave,
         'semi': this.osc2.semi,
         'voices': this.osc2.voices,
-        'detune': this.osc2.detune
+        'detune': this.osc2.detune,
+        'stereo': this.osc2.stereo
       },
       'osc3': {
         'enabled': this.osc3.enabled,
@@ -336,7 +333,8 @@ class Subtractor extends Observable {
         'octave': this.osc3.octave,
         'semi': this.osc3.semi,
         'voices': this.osc3.voices,
-        'detune': this.osc3.detune
+        'detune': this.osc3.detune,
+        'stereo': this.osc3.stereo
       },
       'filter1': {
         'type': this.filter1Type,
@@ -419,18 +417,14 @@ class Subtractor extends Observable {
 
   // filter 1
   set filter1Type(value) {
-    this.filter1.type = intToFilter(value);
+    this.filter1.type = value;
     this.dynamicFilters.forEach((filter) => { 
-      filter.type = intToFilter(value); 
+      filter.type = value; 
     });
   }
 
   get filter1Type() {
     return this.filter1.type;
-  }
-
-  get filter1FrType() {
-    return this.filter1.frType;
   }
 
   set filter1Freq(value) {
@@ -442,10 +436,6 @@ class Subtractor extends Observable {
 
   get filter1Freq() {
     return this.filter1.freq;
-  }
-
-  get filter1FrFreq() {
-    return this.filter1.frFreq;
   }
 
   set filter1Q(value) {
@@ -521,7 +511,7 @@ class Subtractor extends Observable {
   }
 
   set voices(value) {
-    this._voices = Number(value);
+    this._voices = Number(Number(value).toFixed());
   }
 
   get glide() {

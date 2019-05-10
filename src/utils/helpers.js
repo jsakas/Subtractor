@@ -1,6 +1,7 @@
+const whole = n => Number(Number(n).toFixed());
 
 const intToWaveform = function(i) {
-  return ['sine', 'square', 'sawtooth', 'triangle'][i - 1] || 'sine';
+  return ['sine', 'square', 'sawtooth', 'triangle'][whole(i) - 1] || 'sine';
 };
 
 const waveformToInt = function(w) {
@@ -17,7 +18,7 @@ const intToFilter = function(i) {
     'peaking',
     'notch',
     'allpass'
-  ][i - 1] || 'lowpass';
+  ][whole(i).toFixed() - 1] || 'lowpass';
 };
 
 const filterToInt = function(f) {

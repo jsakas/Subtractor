@@ -66,8 +66,20 @@ export const knobToSeconds = function(value) {
   return Math.pow(value, 2) / 1000;
 };
 
+export const knobToAttack = function(value) {
+  return Math.pow(value, 2) / 1000;
+};
+
+export const knobToDecay = function(value) {
+  return Math.pow(value, 1.4) / 1000;
+};
+
+export const knobToRelease = function(value) {
+  return Math.pow(value, 2) / 1000;
+};
+
 export const knobToFreq = function(value) {
-  return Math.pow(value, 2);
+  return Number(Math.pow(value, 2).toFixed());
 };
 
 export const freqToKnob = function(value) {
