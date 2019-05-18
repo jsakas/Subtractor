@@ -15,10 +15,9 @@ class Oscilloscope {
 
       this.analyzer.getByteTimeDomainData(this.analyzerDataArray);
 
-      canvasContext.fillStyle = 'rgb(255, 255, 255)';
-      canvasContext.fillRect(0, 0, this.width, this.height);
-      canvasContext.lineWidth = 2;
-      canvasContext.strokeStyle = 'rgb(0, 0, 0)';
+      canvasContext.clearRect(0, 0, this.width, this.height);
+      canvasContext.lineWidth = 1;
+      canvasContext.strokeStyle = '#141414';
       canvasContext.beginPath();
 
       let sliceWidth = Number(this.width) * 1.0 / this.analyzerBufferLength;

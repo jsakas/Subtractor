@@ -1,3 +1,5 @@
+@import '../style/theme.scss';
+
 .keyboard {
   display: block;
   box-sizing: border-box;
@@ -7,28 +9,28 @@
   position: relative;
 
   &__key-white {
-    fill: white;
-    stroke: black;
+    fill: $color-100;
+    stroke: $color-000;
     stroke-width: .2;
     position: relative;
     z-index: 2;
   }
 
   &__key-black {
-    fill: rgb(70,70,100);
-    stroke: black;
+    fill: $color-000;
+    stroke: $color-000;
     stroke-width: .2;
     z-index: 2;
     position: relative;
   }
 
   &__key--active {
-    fill: rgb(194, 211, 176);
+    fill: $color-004;
   }
-  
+
   &__octave-indicator {
-    fill: rgb(232, 241, 224);
-    stroke: green;
+    stroke: $color-000;
+    fill: $color-000;
     stroke-width: .2;
   }
 }

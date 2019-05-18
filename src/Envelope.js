@@ -172,7 +172,7 @@ class EnvelopeGraph {
 
     context.clearRect(0, 0, w, h);
     
-    context.strokeStyle = '#000';
+    context.strokeStyle = '#141414';
     context.beginPath();
     context.moveTo(0, h);
     context.lineTo(ap, 0);

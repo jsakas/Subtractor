@@ -20,6 +20,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      'style': path.resolve(__dirname, 'src', 'style'),
       'web-audio-test-api': path.resolve(__dirname, 'node_modules/web-audio-test-api'),
       'vue$': 'vue/dist/vue.esm.js'
     }
@@ -56,7 +57,7 @@ module.exports = {
           'css-loader',
           'sass-loader',
         ]
-      }
+      },
     ]
   },
 };

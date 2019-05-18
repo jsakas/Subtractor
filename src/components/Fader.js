@@ -47,10 +47,10 @@ Vue.component('x-fader', {
     }
   },
   methods: {
-    mousedown(e) {
+    mousedown (e) {
       let refs = this.$refs;
 
-      refs.faderInput.dispatchEvent(new Event('focus'));
+      // refs.faderInput.focus();
       refs.faderKnob.style.transition = 'none';
       const currentValue = parseInt(refs.faderInput.value);
 
