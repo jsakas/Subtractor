@@ -26,6 +26,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      'images': path.resolve(__dirname, 'src', 'images'),
       'style': path.resolve(__dirname, 'src', 'style'),
       'web-audio-test-api': path.resolve(__dirname, 'node_modules/web-audio-test-api'),
       'vue$': 'vue/dist/vue.esm.js'
@@ -60,6 +61,16 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.(png|jpe?g|gif|json|ico)$/,
+        include: [path.resolve(__dirname, 'src', 'images')],
+        use: [
+          {
+            loader: 'file-loader',
+            options: {},
+          },
+        ],
+      },
       {
         test: /\.js$/,
         include: [path.resolve(__dirname, 'src')],
