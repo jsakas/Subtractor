@@ -5,6 +5,8 @@ import { Envelope } from './Envelope';
 import { knobToSeconds, knobToFreq } from './utils/maths';
 import { renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
 
+import merge from 'lodash.merge';
+
 class Subtractor extends Observable {
   constructor() {
     super();
@@ -166,125 +168,136 @@ class Subtractor extends Observable {
 
   // take a preset object and load it into the synth
   //
-  loadPreset({
-    name = 'init',
-    author = '',
-    description = '',
-    master = {
-      gain: 50,
-      voices: 4,
-      glide: 0
-    },
-    ampEnv = {
-      attack: 0,
-      decay: 100,
-      sustain: 64,
-      release: 10
-    },
-    filterEnv = {
-      attack: 0,
-      decay: 40,
-      sustain: 0,
-      release: 40,
-      amount: 0
-    },
-    osc1 = {
-      enabled: 1,
-      waveform: 3,
-      octave: 0,
-      semi: 0,
-      voices: 1,
-      detune: 0,
-      stereo: 100,
-    },
-    osc2 = {
-      enabled: 0,
-      waveform: 1,
-      octave: 0,
-      semi: 0,
-      voices: 1,
-      detune: 0,
-      stereo: 100,
-    },
-    osc3 = {
-      enabled: 0,
-      waveform: 1,
-      octave: 0,
-      semi: 0,
-      voices: 1,
-      detune: 0,
-      stereo: 100,
-    },
-    filter1 = {
-      type: 1,
-      freq: 127,
-      q: 0.10,
-      gain: 0
-    },
-    filter2 = {
-      type: 1,
-      freq: 127,
-      q: 0.10,
-      gain: 0
-    },
-    lfo1 = {
-      type: 1,
-      freq: 1,
-      amount: 0
-    }
-  }) {
-    this.name = name;
-    this.author = author;
-    this.description = description;
-    this.gain = master.gain;
-    this.voices = master.voices;
-    this.glide = master.glide;
-    this.attack = ampEnv.attack;
-    this.decay = ampEnv.decay;
-    this.sustain = ampEnv.sustain;
-    this.release = ampEnv.release;
-    this.filterAttack = filterEnv.attack;
-    this.filterDecay = filterEnv.decay;
-    this.filterSustain = filterEnv.sustain;
-    this.filterRelease = filterEnv.release;
-    this.filterAmount = filterEnv.amount;
-    this.osc1.enabled = osc1.enabled;
-    this.osc1.waveform = osc1.waveform;
-    this.osc1.octave = osc1.octave;
-    this.osc1.semi = osc1.semi;
-    this.osc1.detune = osc1.detune;
-    this.osc1.voices = osc1.voices;
-    this.osc1.stereo = osc1.stereo;
-    this.osc2.enabled = osc2.enabled;
-    this.osc2.waveform = osc2.waveform;
-    this.osc2.octave = osc2.octave;
-    this.osc2.semi = osc2.semi;
-    this.osc2.detune = osc2.detune;
-    this.osc2.voices = osc2.voices;
-    this.osc2.stereo = osc2.stereo;
-    this.osc3.enabled = osc3.enabled;
-    this.osc3.waveform = osc3.waveform;
-    this.osc3.octave = osc3.octave;
-    this.osc3.semi = osc3.semi;
-    this.osc3.detune = osc3.detune;
-    this.osc3.voices = osc3.voices;
-    this.osc3.stereo = osc3.stereo;
-    this.filter1Type = filter1.type;
-    this.filter1Freq = filter1.freq;
-    this.filter1Q = filter1.q;
-    this.filter1Gain = filter1.gain;
-    this.filter2.type = filter2.type;
-    this.filter2.freq = filter2.freq;
-    this.filter2.q = filter2.q;
-    this.filter2.gain = filter2.gain;
-    this.lfo1Type = lfo1.type;
-    this.lfo1Freq = lfo1.freq;
-    this.lfo1Amount = lfo1.amount;
+  loadPreset(preset = {}) {
+    const defaults= {
+      name: 'init',
+      author: '',
+      description: '',
+      master: {
+        gain: 50,
+        voices: 4,
+        glide: 0
+      },
+      ampEnv: {
+        attack: 0,
+        decay: 100,
+        sustain: 64,
+        release: 10
+      },
+      filterEnv: {
+        attack: 0,
+        decay: 40,
+        sustain: 0,
+        release: 40,
+        amount: 0
+      },
+      osc1: {
+        enabled: 1,
+        waveform: 3,
+        octave: 0,
+        semi: 0,
+        voices: 1,
+        detune: 0,
+        stereo: 100,
+        gain: 75,
+      },
+      osc2: {
+        enabled: 0,
+        waveform: 1,
+        octave: 0,
+        semi: 0,
+        voices: 1,
+        detune: 0,
+        stereo: 100,
+        gain: 75,
+      },
+      osc3: {
+        enabled: 0,
+        waveform: 1,
+        octave: 0,
+        semi: 0,
+        voices: 1,
+        detune: 0,
+        stereo: 100,
+        gain: 75,
+      },
+      filter1: {
+        type: 1,
+        freq: 127,
+        q: 0.10,
+        gain: 0
+      },
+      filter2: {
+        type: 1,
+        freq: 127,
+        q: 0.10,
+        gain: 0
+      },
+      lfo1: {
+        type: 1,
+        freq: 1,
+        amount: 0
+      }
+    };
+
+    const p = merge(defaults, preset);
+
+    this.name = p.name;
+    this.author = p.author;
+    this.description = p.description;
+    this.gain = p.master.gain;
+    this.voices = p.master.voices;
+    this.glide = p.master.glide;
+    this.attack = p.ampEnv.attack;
+    this.decay = p.ampEnv.decay;
+    this.sustain = p.ampEnv.sustain;
+    this.release = p.ampEnv.release;
+    this.filterAttack = p.filterEnv.attack;
+    this.filterDecay = p.filterEnv.decay;
+    this.filterSustain = p.filterEnv.sustain;
+    this.filterRelease = p.filterEnv.release;
+    this.filterAmount = p.filterEnv.amount;
+    this.osc1.enabled = p.osc1.enabled;
+    this.osc1.waveform = p.osc1.waveform;
+    this.osc1.octave = p.osc1.octave;
+    this.osc1.semi = p.osc1.semi;
+    this.osc1.detune = p.osc1.detune;
+    this.osc1.voices = p.osc1.voices;
+    this.osc1.stereo = p.osc1.stereo;
+    this.osc1.gain = p.osc1.gain;
+    this.osc2.enabled = p.osc2.enabled;
+    this.osc2.waveform = p.osc2.waveform;
+    this.osc2.octave = p.osc2.octave;
+    this.osc2.semi = p.osc2.semi;
+    this.osc2.detune = p.osc2.detune;
+    this.osc2.voices = p.osc2.voices;
+    this.osc2.stereo = p.osc2.stereo;
+    this.osc2.gain = p.osc2.gain;
+    this.osc3.enabled = p.osc3.enabled;
+    this.osc3.waveform = p.osc3.waveform;
+    this.osc3.octave = p.osc3.octave;
+    this.osc3.semi = p.osc3.semi;
+    this.osc3.detune = p.osc3.detune;
+    this.osc3.voices = p.osc3.voices;
+    this.osc3.stereo = p.osc3.stereo;
+    this.osc3.gain = p.osc3.gain;
+    this.filter1Type = p.filter1.type;
+    this.filter1Freq = p.filter1.freq;
+    this.filter1Q = p.filter1.q;
+    this.filter1Gain = p.filter1.gain;
+    this.filter2.type = p.filter2.type;
+    this.filter2.freq = p.filter2.freq;
+    this.filter2.q = p.filter2.q;
+    this.filter2.gain = p.filter2.gain;
+    this.lfo1Type = p.lfo1.type;
+    this.lfo1Freq = p.lfo1.freq;
+    this.lfo1Amount = p.lfo1.amount;
   }
 
   // take the current synth settings and return an object
   //
   getPreset() {
+    console.log('getPreset', this.osc1.gain);
     return {
       'name': this.name,
       'author': this.author,
@@ -315,6 +328,7 @@ class Subtractor extends Observable {
         'voices': this.osc1.voices,
         'detune': this.osc1.detune,
         'stereo': this.osc1.stereo,
+        'gain': this.osc1.gain,
       },
       'osc2': {
         'enabled': this.osc2.enabled,
@@ -323,7 +337,8 @@ class Subtractor extends Observable {
         'semi': this.osc2.semi,
         'voices': this.osc2.voices,
         'detune': this.osc2.detune,
-        'stereo': this.osc2.stereo
+        'stereo': this.osc2.stereo,
+        'gain': this.osc2.gain,
       },
       'osc3': {
         'enabled': this.osc3.enabled,
@@ -332,7 +347,8 @@ class Subtractor extends Observable {
         'semi': this.osc3.semi,
         'voices': this.osc3.voices,
         'detune': this.osc3.detune,
-        'stereo': this.osc3.stereo
+        'stereo': this.osc3.stereo,
+        'gain': this.osc3.gain,
       },
       'filter1': {
         'type': this.filter1Type,

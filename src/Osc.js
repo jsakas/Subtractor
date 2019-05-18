@@ -6,23 +6,39 @@ const knobToStereo = (v = 0) => v / 5000;
 const stereoToKnob = (v = 0) => v * 5000;
 
 class Osc extends Observable {
-    constructor(audioContext, options = {}) {
+    constructor(audioContext, {
+      enabled = 0,
+      waveform = 0,
+      octave = 0,
+      semi = 0,
+      detune = 0,
+      voices = 1,
+      stereo = 0,
+      gain = 75,
+    } = {}) {
       super();
       this.audioContext = audioContext;
-      this._enabled = options.enabled || 0;
-      this._waveform = intToWaveform(options.waveform) || 'sine';
-      this._octave = options.octave || 0;
-      this._semi = options.semi || 0;
-      this._detune = options.detune || 0;
-      this._voices = options.voices || 1;
+      this._enabled = enabled;
+      this._waveform = intToWaveform(waveform);
+      this._octave = octave;
+      this._semi = semi;
+      this._detune = detune;
+      this._voices = voices;
+      this._stereo = knobToStereo(stereo);
+      this._gain = gain;
+      
       this._oscs = [];
 
-      this._stereo = knobToStereo(options.stereo || 0);
-
       this.splitter = this.audioContext.createChannelSplitter(2);
-      this.output = this.audioContext.createChannelMerger(2);
+      this.merger = this.audioContext.createChannelMerger(2);
+      
       this.delay = this.audioContext.createDelay();
       this.delay.delayTime.setValueAtTime(this._stereo, this.audioContext.currentTime);
+
+      this.gainNode = this.audioContext.createGain();
+      this.gainNode.gain.setValueAtTime(this._gain / 100, this.audioContext.currentTime);
+
+      this.output = this.gainNode;
     }
 
     start(note) {
@@ -59,8 +75,9 @@ class Osc extends Observable {
 
       osc.connect(this.splitter);
       this.splitter.connect(this.delay, 0);
-      this.splitter.connect(this.output, 0);
-      this.delay.connect(this.output, 0, 1);
+      this.splitter.connect(this.merger, 0);
+      this.delay.connect(this.merger, 0, 1);
+      this.merger.connect(this.gainNode);
 
       osc.start();
 
@@ -128,6 +145,15 @@ class Osc extends Observable {
 
     get stereo () {
       return stereoToKnob(this._stereo);
+    }
+
+    set gain (value) {
+      this._gain = value;
+      this.gainNode.gain.value = this._gain / 100;
+    }
+
+    get gain () {
+      return this._gain;
     }
 
     get oscs() {
