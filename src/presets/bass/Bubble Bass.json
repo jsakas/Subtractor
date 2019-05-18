@@ -1,29 +1,29 @@
 {
- "name": "Init",
- "author": "",
+ "name": "Bubble Bass",
+ "author": "Jon Sakas",
  "description": "",
  "master": {
   "gain": 50,
-  "voices": 4,
-  "glide": 0
+  "voices": 3,
+  "glide": 39.37
  },
  "ampEnv": {
   "attack": 0,
-  "decay": 100,
-  "sustain": 64,
+  "decay": 127,
+  "sustain": 127,
   "release": 10
  },
  "filterEnv": {
-  "attack": 0,
-  "decay": 40,
+  "attack": 27.14,
+  "decay": 48.86,
   "sustain": 0,
-  "release": 40,
-  "amount": 0
+  "release": 26.03,
+  "amount": 39.39
  },
  "osc1": {
-  "enabled": 1,
-  "waveform": 3,
-  "octave": 0,
+  "enabled": 0.44999999999999996,
+  "waveform": 2,
+  "octave": -1,
   "semi": 0,
   "voices": 1,
   "detune": 0,
@@ -31,13 +31,13 @@
   "gain": 75
  },
  "osc2": {
-  "enabled": 0,
+  "enabled": 1,
   "waveform": 3,
-  "octave": 0,
+  "octave": -1,
   "semi": 0,
   "voices": 1,
-  "detune": 0,
-  "stereo": 100,
+  "detune": 8,
+  "stereo": 43,
   "gain": 75
  },
  "osc3": {
@@ -52,19 +52,19 @@
  },
  "filter1": {
   "type": 1,
-  "freq": 127,
-  "q": 0.1,
+  "freq": 7.14142842854285,
+  "q": 91.00000381469727,
   "gain": 0
  },
  "filter2": {
   "type": 1,
   "freq": 127,
-  "q": 0.1,
+  "q": 0,
   "gain": 0
  },
  "lfo1": {
   "type": 1,
-  "freq": 1,
+  "freq": 0.9999999776482582,
   "amount": 0
  }
 }

@@ -297,7 +297,6 @@ class Subtractor extends Observable {
   // take the current synth settings and return an object
   //
   getPreset() {
-    console.log('getPreset', this.osc1.gain);
     return {
       'name': this.name,
       'author': this.author,
