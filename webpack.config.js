@@ -3,6 +3,7 @@ const { DefinePlugin } = require('webpack');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
+const SentryCliPlugin = require('@sentry/webpack-plugin');
 
 const MODE = process.env.WEBPACK_MODE || 'production';
 const PRODUCTION = MODE === 'production';
@@ -46,7 +47,7 @@ module.exports = {
     new ExtractCssChunks(),
     PRODUCTION &&
     SENTRY_AUTH_TOKEN && 
-    new SentryWebpackPlugin({
+    new SentryCliPlugin({
       include: '.',
       ignore: ['node_modules', 'webpack.config.js'],
     })
