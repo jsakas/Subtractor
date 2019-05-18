@@ -1,15 +1,21 @@
 const path = require('path');
+const { DefinePlugin } = require('webpack');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
-const mode = process.env.WEBPACK_MODE || 'production';
+const MODE = process.env.WEBPACK_MODE || 'production';
+const PRODUCTION = MODE === 'production';
+const DEVTOOL = PRODUCTION ? 'source-map' : 'eval';
+
+const { SENTRY_AUTH_TOKEN } = process.env;
 
 module.exports = {
-  mode,
-  devtool: 'eval',
+  mode: MODE,
+  devtool: DEVTOOL,
   entry: {
     main: [
+      './src/sentry',
       './src/main',
     ]
   },
@@ -26,6 +32,9 @@ module.exports = {
     }
   },
   plugins: [
+    new DefinePlugin({
+      'SENTRY_ENABLED': JSON.stringify(PRODUCTION),
+    }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'html', 'index.html'),
       filename: '../index.html',
@@ -34,7 +43,13 @@ module.exports = {
     }),
     new HtmlWebpackHarddiskPlugin(),
     new ExtractCssChunks(),
-  ],
+    PRODUCTION &&
+    SENTRY_AUTH_TOKEN && 
+    new SentryWebpackPlugin({
+      include: '.',
+      ignore: ['node_modules', 'webpack.config.js'],
+    })
+  ].filter(o => o),
   devServer: {
     host: '0.0.0.0',
     port: 7200,
