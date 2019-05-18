@@ -15,8 +15,9 @@ import defaultPreset from './presets/default';
 import './components/Fader';
 import './components/Knob';
 import './components/Keyboard';
+import './components/Button';
 
-import './Subtractor.scss';
+import './style/base.scss';
 
 let subtractor = new Subtractor();
 let midi = new MidiController();

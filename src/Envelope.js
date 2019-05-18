@@ -1,6 +1,9 @@
 import { Observable } from './Observe';
 import { knobToAttack, knobToDecay, knobToRelease } from './utils/maths';
 
+// some web audio api params fail if you try to modulate them to zero.
+const NO_ZERO = 0.00001;
+
 class Envelope extends Observable {
     constructor(context, audioParam) {
       super();
@@ -21,10 +24,10 @@ class Envelope extends Observable {
     //
     schedule() {
       const baseValue = this.startValue;
-
+      
       const amount = (this.amount / 127);
       const sustainAmount = this.sustain * (100 / 127) * .01;
-
+      
       const rampTo = baseValue + ((this.maxValue - baseValue) * amount);
       const sustainTo = baseValue + ((this.maxValue - baseValue) * sustainAmount);
 
@@ -39,10 +42,13 @@ class Envelope extends Observable {
 
       // ramp down to sustain value
       this.audioParam.exponentialRampToValueAtTime(
-        sustainTo, 
-        // we have to add an imperceptible amount of time (.01) for this to work properly when decay is 0
-        this.context.currentTime + knobToAttack(this.attack) + .01 + knobToDecay(this.decay)
+        sustainTo + NO_ZERO, 
+        this.context.currentTime + knobToAttack(this.attack) + knobToDecay(this.decay)
       );
+
+      if (sustainTo === 0) {
+        this.audioParam.setValueAtTime(sustainTo, this.context.currentTime + knobToAttack(this.attack) + knobToDecay(this.decay)); 
+      }
     }
 
     // reset handles the R of the ADSR envelope
@@ -56,8 +62,10 @@ class Envelope extends Observable {
       }
 
       // start decay from current value to min
-
-      this.audioParam.exponentialRampToValueAtTime(this.startValue + 0.01, this.context.currentTime + knobToRelease(this._release));
+      this.audioParam.exponentialRampToValueAtTime(this.startValue + NO_ZERO, this.context.currentTime + knobToRelease(this._release));
+      if (this.startValue === 0) {
+        this.audioParam.setValueAtTime(this.startValue, this.context.currentTime + knobToRelease(this._release)); 
+      }
     }
 
     set attack(value) {
@@ -131,9 +139,7 @@ class EnvelopeGraph {
     this.draw = this.draw.bind(this);
     this.draw();
 
-
     window.addEventListener('resize', () => this.getRect());
-
   }
 
   values () {
@@ -172,7 +178,7 @@ class EnvelopeGraph {
 
     context.clearRect(0, 0, w, h);
     
-    context.strokeStyle = '#000';
+    context.strokeStyle = '#141414';
     context.beginPath();
     context.moveTo(0, h);
     context.lineTo(ap, 0);

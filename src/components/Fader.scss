@@ -1,17 +1,18 @@
+@import '../style/theme';
+@import '../style/mixins';
+
 .fader {
+  @include bordered;
+  @include control;
+
   $width: 20px;
   $height: 100px;
   display: inline-flex;
   align-items: center;
   flex-direction: column;
   position: relative;
-  border: 1px solid black;
   border-radius: 3px;
   padding: 3px;
-
-  &__input:focus + &__control &__knob {
-    background: rgba(#94d500, 1);
-  }
 
   &__control {
     position: relative;
@@ -27,7 +28,6 @@
     left: 50%;
     transform: translateX(-50%);
     height: $height;
-    background: black;
   }
 
   &__knob {
@@ -37,25 +37,6 @@
     width: $width;
     height: 10px;
     border-radius: 3px;
-    border: 1px solid black;
-    background: white;
     box-sizing: border-box;
-  }
-
-  &__name, &__value {
-    font-family: sans-serif;
-    font-size: 10px;
-
-    &::selection {
-      background: none;
-    }
-  }
-
-  &__input {
-    // the browser won't tab focus hidden fields, so we fake hide it
-    opacity: 0;
-    width: 0;
-    height: 0;
-    overflow: hidden;
   }
 }

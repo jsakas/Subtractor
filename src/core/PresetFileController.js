@@ -22,11 +22,15 @@
   //
   export const savePresetFile = (subtractor) => {
     const preset = subtractor.getPreset();
+    const presetName = prompt('Preset name', preset.name || '');
+    const presetAuthor = prompt('Preset author', preset.author || '');
+
+    preset.name = presetName;
+    preset.author = presetAuthor;
+
     const json = JSON.stringify(preset, null, ' ');
     const blob = new Blob([json], { 'type': 'application/json' });
     const objectURL = URL.createObjectURL(blob);
-
-    const presetName = prompt('Preset name', preset.name || '');
 
     const a = document.createElement('a');
     a.download = `${presetName}.json`;

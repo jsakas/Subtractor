@@ -1,67 +1,70 @@
 {
- "name": "Init",
- "author": "Subtractor Team",
- "description": "",
- "master": {
-  "gain": 50,
-  "voices": 4,
-  "glide": 0
- },
- "ampEnv": {
-  "attack": 0,
-  "decay": 100,
-  "sustain": 64,
-  "release": 10
- },
- "filterEnv": {
-  "attack": 0,
-  "decay": 40,
-  "sustain": 0,
-  "release": 40,
-  "amount": 0
- },
- "osc1": {
-  "enabled": 1,
-  "waveform": 3,
-  "octave": 0,
-  "semi": 0,
-  "voices": 1,
-  "detune": 0,
-  "stereo": 100
- },
- "osc2": {
-  "enabled": 0,
-  "waveform": 3,
-  "octave": 0,
-  "semi": 0,
-  "voices": 1,
-  "detune": 0,
-  "stereo": 100
- },
- "osc3": {
-  "enabled": 0,
-  "waveform": 1,
-  "octave": 0,
-  "semi": 0,
-  "voices": 1,
-  "detune": 0,
-  "stereo": 100
- },
- "filter1": {
-  "type": 1,
-  "freq": 127,
-  "q": 0.1,
-  "gain": 0
- },
- "filter2": {
-  "type": 1,
-  "freq": 127,
-  "q": 0.1,
-  "gain": 0
- },
- "lfo1": {
-  "type": 1,
-  "freq": 1,
-  "amount": 0
- }
+  "name": "init",
+  "author": "",
+  "description": "",
+  "master": {
+    "gain": 75,
+    "voices": 4,
+    "glide": 0
+  },
+  "ampEnv": {
+    "attack": 0,
+    "decay": 100,
+    "sustain": 64,
+    "release": 10
+  },
+  "filterEnv": {
+    "attack": 0,
+    "decay": 40,
+    "sustain": 0,
+    "release": 40,
+    "amount": 0
+  },
+  "osc1": {
+    "enabled": 1,
+    "waveform": 3,
+    "octave": 0,
+    "semi": 0,
+    "voices": 1,
+    "detune": 0,
+    "stereo": 100,
+    "gain": 75
+  },
+  "osc2": {
+    "enabled": 0,
+    "waveform": 3,
+    "octave": 0,
+    "semi": 0,
+    "voices": 1,
+    "detune": 0,
+    "stereo": 100,
+    "gain": 75
+  },
+  "osc3": {
+    "enabled": 0,
+    "waveform": 1,
+    "octave": 0,
+    "semi": 0,
+    "voices": 1,
+    "detune": 0,
+    "stereo": 100,
+    "gain": 75
+  },
+  "filter1": {
+    "type": 1,
+    "freq": 127,
+    "q": 0.1,
+    "gain": 0
+  },
+  "filter2": {
+    "type": 1,
+    "freq": 127,
+    "q": 0.1,
+    "gain": 0
+  },
+  "lfo1": {
+    "type": 1,
+    "freq": 1,
+    "amount": 0
+  }
 }

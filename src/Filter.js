@@ -26,7 +26,7 @@ class Filter extends Observable {
 
     set freq(value) {
       let f = knobToFreq(value);
-      if (f < 1 ) {
+      if (f < 1) {
         f = 1;
       }
       this._filter.frequency.value = f;

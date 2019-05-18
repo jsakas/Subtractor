@@ -45,8 +45,11 @@ Vue.component('x-knob', {
   },
   methods: {
     mousedown (e) {
+      e.preventDefault();
+      
       let refs = this.$refs;
 
+      // refs.knobInput.focus();
       refs.knobKnob.style.transition = 'none';
       const currentValue = parseInt(refs.knobInput.value);
       const boundMousemove = this.mousemove.bind(e, this, e.clientX, e.clientY, currentValue);

@@ -1,67 +1,70 @@
 {
- "name": "Reese",
- "author": "Jon Sakas",
- "description": "",
- "master": {
-  "gain": 34.00000035762787,
-  "voices": 1,
-  "glide": 26
- },
- "ampEnv": {
-  "attack": 0,
-  "decay": 100,
-  "sustain": 64,
-  "release": 10
- },
- "filterEnv": {
-  "attack": 0,
-  "decay": 40,
-  "sustain": 0,
-  "release": 40,
-  "amount": 0
- },
- "osc1": {
-  "enabled": 1,
-  "waveform": 3,
-  "octave": -2,
-  "semi": 0,
-  "voices": 1,
-  "detune": 0,
-  "stereo": 100
- },
- "osc2": {
-  "enabled": 1,
-  "waveform": 3,
-  "octave": -2,
-  "semi": 0,
-  "voices": 1,
-  "detune": 44,
-  "stereo": 100
- },
- "osc3": {
-  "enabled": 0,
-  "waveform": 1,
-  "octave": 0,
-  "semi": 0,
-  "voices": 1,
-  "detune": 0,
-  "stereo": 100
- },
- "filter1": {
-  "type": 1,
-  "freq": 64,
-  "q": 0.09999999776482582,
-  "gain": 0
- },
- "filter2": {
-  "type": 1,
-  "freq": 42,
-  "q": 25,
-  "gain": 0
- },
- "lfo1": {
-  "type": 4,
-  "freq": 640.9999847412109,
-  "amount": 600
- }
+  "name": "Reese",
+  "author": "Jon Sakas",
+  "description": "",
+  "master": {
+    "gain": 75,
+    "voices": 1,
+    "glide": 26
+  },
+  "ampEnv": {
+    "attack": 0,
+    "decay": 100,
+    "sustain": 64,
+    "release": 10
+  },
+  "filterEnv": {
+    "attack": 0,
+    "decay": 40,
+    "sustain": 0,
+    "release": 40,
+    "amount": 0
+  },
+  "osc1": {
+    "enabled": 1,
+    "waveform": 3,
+    "octave": -2,
+    "semi": 0,
+    "voices": 1,
+    "detune": 0,
+    "stereo": 100,
+    "gain": 75
+  },
+  "osc2": {
+    "enabled": 1,
+    "waveform": 3,
+    "octave": -2,
+    "semi": 0,
+    "voices": 1,
+    "detune": 44,
+    "stereo": 100,
+    "gain": 75
+  },
+  "osc3": {
+    "enabled": 0,
+    "waveform": 1,
+    "octave": 0,
+    "semi": 0,
+    "voices": 1,
+    "detune": 0,
+    "stereo": 100,
+    "gain": 75
+  },
+  "filter1": {
+    "type": 1,
+    "freq": 64,
+    "q": 0.09999999776482582,
+    "gain": 0
+  },
+  "filter2": {
+    "type": 1,
+    "freq": 42,
+    "q": 25,
+    "gain": 0
+  },
+  "lfo1": {
+    "type": 4,
+    "freq": 640.9999847412109,
+    "amount": 600
+  }
 }
