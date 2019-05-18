@@ -27,7 +27,7 @@ const fromDir = (startPath, filter) => {
           subtractor.loadPreset(preset);
 
           let updated = subtractor.getPreset();
-          fs.writeFileSync(filename, JSON.stringify(updated, null, ' '));
+          fs.writeFileSync(filename, JSON.stringify(updated, null, '  '));
         }
     }
 };

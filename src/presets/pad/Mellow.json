@@ -1,70 +1,70 @@
 {
- "name": "Mellow",
- "author": "Jon Sakas",
- "description": "",
- "master": {
-  "gain": 50,
-  "voices": 8,
-  "glide": 0
- },
- "ampEnv": {
-  "attack": 0,
-  "decay": 12,
-  "sustain": 24,
-  "release": 69
- },
- "filterEnv": {
-  "attack": 127,
-  "decay": 14,
-  "sustain": 0,
-  "release": 94,
-  "amount": 115
- },
- "osc1": {
-  "enabled": 1,
-  "waveform": 3,
-  "octave": 0,
-  "semi": 0,
-  "voices": 4,
-  "detune": 43,
-  "stereo": 100,
-  "gain": 75
- },
- "osc2": {
-  "enabled": 1,
-  "waveform": 3,
-  "octave": 0,
-  "semi": 7,
-  "voices": 4,
-  "detune": 17,
-  "stereo": 100,
-  "gain": 75
- },
- "osc3": {
-  "enabled": 0,
-  "waveform": 1,
-  "octave": 0,
-  "semi": 0,
-  "voices": 1,
-  "detune": 0,
-  "stereo": 100,
-  "gain": 75
- },
- "filter1": {
-  "type": 1,
-  "freq": 1,
-  "q": 0.09999999776482582,
-  "gain": 0
- },
- "filter2": {
-  "type": 1,
-  "freq": 127,
-  "q": 0.09999999776482582,
-  "gain": 0
- },
- "lfo1": {
-  "type": 1,
-  "freq": 0.9999999776482582,
-  "amount": 0
- }
+  "name": "Mellow",
+  "author": "Jon Sakas",
+  "description": "",
+  "master": {
+    "gain": 75,
+    "voices": 8,
+    "glide": 0
+  },
+  "ampEnv": {
+    "attack": 0,
+    "decay": 12,
+    "sustain": 24,
+    "release": 69
+  },
+  "filterEnv": {
+    "attack": 127,
+    "decay": 14,
+    "sustain": 0,
+    "release": 94,
+    "amount": 115
+  },
+  "osc1": {
+    "enabled": 1,
+    "waveform": 3,
+    "octave": 0,
+    "semi": 0,
+    "voices": 4,
+    "detune": 43,
+    "stereo": 100,
+    "gain": 75
+  },
+  "osc2": {
+    "enabled": 1,
+    "waveform": 3,
+    "octave": 0,
+    "semi": 7,
+    "voices": 4,
+    "detune": 17,
+    "stereo": 100,
+    "gain": 75
+  },
+  "osc3": {
+    "enabled": 0,
+    "waveform": 1,
+    "octave": 0,
+    "semi": 0,
+    "voices": 1,
+    "detune": 0,
+    "stereo": 100,
+    "gain": 75
+  },
+  "filter1": {
+    "type": 1,
+    "freq": 1,
+    "q": 0.09999999776482582,
+    "gain": 0
+  },
+  "filter2": {
+    "type": 1,
+    "freq": 127,
+    "q": 0.09999999776482582,
+    "gain": 0
+  },
+  "lfo1": {
+    "type": 1,
+    "freq": 0.9999999776482582,
+    "amount": 0
+  }
 }
