@@ -7,6 +7,13 @@ export class Observable {
     this.observers.push(observer);
   }
 
+  unregisterObserver(observer) {
+    let index = this.observers.indexOf(observer);
+    if (index > -1) {
+      this.observers.splice(index, 1);
+    }
+  }
+
   notifyObservers(message = null) {
     this.observers.forEach((observer) => {
       observer.notify(message || this);
@@ -16,7 +23,9 @@ export class Observable {
 
 export class Observer {
   constructor(observable) {
-    observable.registerObserver(this);
+    if (observable && typeof observable.registerObserver ===  'function') {
+      observable.registerObserver(this);
+    }
   }
 
   notify(observable) {
