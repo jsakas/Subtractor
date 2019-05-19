@@ -17,6 +17,7 @@ describe('Osc', () => {
 
     test('calls maths.getNoteFreq with 43 when note is 36, octave is 0, and semi is 7', () => {
       new Osc(audioContext, {
+        enabled: true,
         octave: 0,
         semi: 7
       }).start(36);
@@ -26,6 +27,7 @@ describe('Osc', () => {
 
     test('calls maths.getNoteFreq with 55 when note is 36, octave is 1, and semi is 7', () => {
       new Osc(audioContext, {
+        enabled: true,
         octave: 1,
         semi: 7
       }).start(36);
@@ -35,6 +37,7 @@ describe('Osc', () => {
 
     test('calls maths.getNoteFreq with 60 when note is 36, octave is 2, and semi is 0', () => {
       new Osc(audioContext, {
+        enabled: true,
         octave: 2,
         semi: 0
       }).start(36);
@@ -44,6 +47,7 @@ describe('Osc', () => {
 
     test('calls maths.getNoteFreq with 0 when note is 36, octave is -3, and semi is 0', () => {
       new Osc(audioContext, {
+        enabled: true,
         octave: -3,
         semi: 0
       }).start(36);
