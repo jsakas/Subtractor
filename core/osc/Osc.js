@@ -36,6 +36,11 @@ export default class Osc extends Observable {
       this.gainNode = this.audioContext.createGain();
       this.gainNode.gain.setValueAtTime(this._gain / 100, this.audioContext.currentTime);
 
+      this.splitter.connect(this.delay, 0);
+      this.splitter.connect(this.merger, 0);
+      this.delay.connect(this.merger, 0, 1);
+      this.merger.connect(this.gainNode);
+
       this.output = this.gainNode;
     }
 
@@ -48,6 +53,10 @@ export default class Osc extends Observable {
       this.voices = osc.voices;
       this.stereo = osc.stereo;
       this.gain = osc.gain;
+    }
+
+    connect(destination) {
+      return this.output.connect(destination);
     }
 
     start(note) {
@@ -90,11 +99,6 @@ export default class Osc extends Observable {
       osc.detune.value = detune;
 
       osc.connect(this.splitter);
-      this.splitter.connect(this.delay, 0);
-      this.splitter.connect(this.merger, 0);
-      this.delay.connect(this.merger, 0, 1);
-      this.merger.connect(this.gainNode);
-
       osc.start();
 
       return osc;

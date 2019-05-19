@@ -3,7 +3,7 @@ import Filter from './filter';
 import Envelope from './envelope';
 import { Observable } from './observable';
 import { knobToSeconds, knobToFreq } from './utils/maths';
-import { renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
+import { renameObjectKey, intToWaveform, waveformToInt, whole } from './utils/helpers';
 
 import merge from 'lodash.merge';
 
@@ -94,9 +94,17 @@ class Subtractor extends Observable {
     if (this._activeNotes[note]) {
       const oscs = this._activeNotes[note];
 
-      oscs.forEach((osc) => {
+      oscs.forEach((osc, i) => {
         osc.oscEnvelope.reset();
         osc.filterEnvelope.reset();
+        osc.oscs.forEach((o) => {
+          o.onended = () => {
+            this[`osc${i+1}`].unregisterObserver(osc);
+            osc.output.disconnect();
+            o.disconnect();
+          };
+        });
+
         osc.stop(this.context.currentTime + knobToSeconds(this.release));
       });
       
@@ -523,7 +531,7 @@ class Subtractor extends Observable {
   }
 
   set voices(value) {
-    this._voices = Number(Number(value).toFixed());
+    this._voices = whole(value);
   }
 
   get glide() {
@@ -539,7 +547,7 @@ class Subtractor extends Observable {
   }
 
   set lfo1Type(value) {
-    this.lfo1Node.type = intToWaveform(Number(Number(value).toFixed()));
+    this.lfo1Node.type = intToWaveform(whole(value));
     this.notifyObservers();
   }
 
