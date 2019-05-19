@@ -7,7 +7,7 @@
     "start": "WEBPACK_MODE=development webpack-dev-server",
     "build": "WEBPACK_MODE=production webpack",
     "test": "jest --coverage",
-    "lint": "eslint src tests",
+    "lint": "eslint .",
     "presets": "babel-node scripts/refresh-presets.js",
     "postinstall": "ln -sfv $PWD/hooks/* $PWD/.git/hooks/ || exit 0"
   },

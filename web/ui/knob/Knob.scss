@@ -1,0 +1,43 @@
+@import 'web/style/theme';
+@import 'web/style/mixins';
+
+.knob {
+  @include bordered;
+  @include control;
+
+  $width: 30px;
+  $height: 30px;
+  display: inline-flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  border-radius: 3px;
+  padding: 3px;
+
+  &__control {
+    position: relative;
+    width: $width;
+    height: $height;
+  }
+
+  &__knob {
+    position: absolute;
+    top: 0;
+    transition: transform .3s;
+    width: $width;
+    height: $height;
+    border-radius: 50%;
+    box-sizing: border-box;
+
+    &:before {
+      content: '';
+      display: block;
+      width: 3px;
+      height: 10px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+}

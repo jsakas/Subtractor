@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Subtractor</title>
+
+  <link rel="apple-touch-icon" sizes="57x57" href="<%= require('images/favicon/apple-icon-57x57.png') %>">
+  <link rel="apple-touch-icon" sizes="60x60" href="<%= require('images/favicon/apple-icon-60x60.png') %>">
+  <link rel="apple-touch-icon" sizes="72x72" href="<%= require('images/favicon/apple-icon-72x72.png') %>">
+  <link rel="apple-touch-icon" sizes="76x76" href="<%= require('images/favicon/apple-icon-76x76.png') %>">
+  <link rel="apple-touch-icon" sizes="114x114" href="<%= require('images/favicon/apple-icon-114x114.png') %>">
+  <link rel="apple-touch-icon" sizes="120x120" href="<%= require('images/favicon/apple-icon-120x120.png') %>">
+  <link rel="apple-touch-icon" sizes="144x144" href="<%= require('images/favicon/apple-icon-144x144.png') %>">
+  <link rel="apple-touch-icon" sizes="152x152" href="<%= require('images/favicon/apple-icon-152x152.png') %>">
+  <link rel="apple-touch-icon" sizes="180x180" href="<%= require('images/favicon/apple-icon-180x180.png') %>">
+  <link rel="icon" type="image/png" sizes="192x192"  href="<%= require('images/favicon/android-icon-192x192.png') %>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<%= require('images/favicon/favicon-32x32.png') %>">
+  <link rel="icon" type="image/png" sizes="96x96" href="<%= require('images/favicon/favicon-96x96.png') %>">
+  <link rel="icon" type="image/png" sizes="16x16" href="<%= require('images/favicon/favicon-16x16.png') %>">
+  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="msapplication-TileImage" content="<%= require('images/favicon/ms-icon-144x144.png') %>">
+  <meta name="theme-color" content="#000000">
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="subtractor" id="subtractor">
+      <div class="top">
+        <h1 class="logo">Subtractor</h1>
+        <div class="midi">
+          <h3>Midi In</h3>
+          <select class="midi-select" @change="midi.useInput($event.target.value)">
+            <option value="off">---</option>
+            <option v-for="(input, key) in midi.inputs" :value="input.id">{{ input.name }}</option>
+          </select>
+        </div>
+        <div class="preset">
+          <h3>Preset</h3>
+          <select class="preset-select" v-model="preset" @change="setPreset($event)">
+            <option :value="defaultPreset">Init</option>
+            <optgroup v-for="(group, key) in presets" :value="key" :label="key">
+              <option v-for="(preset, key) in group" :value="preset">{{ preset.name }}</option>
+            </optgroup>
+          </select>
+          <button v-on:click="loadPreset">Load</button>
+          <button v-on:click="savePreset">Save</button>
+        </div>
+      </div>
+      <section>
+        <div>
+          <h2>Voices</h2>
+          <x-knob id="voices" name="Voices" :min="1" :max="8" v-bind:value.sync="subtractor.voices"></x-knob>
+          <x-knob id="glide" name="Glide" :min="0" :max="127" v-bind:value.sync="subtractor.glide"></x-knob>
+        </div>
+      </section>
+    <section>
+        <div>
+          <header>
+            <h2>Osc 1</h2>
+            <x-button label="Enabled" v-bind:on.sync="subtractor.osc1.enabled"></x-button>
+          </header>
+          <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc1.waveform" :value-fmt="intToWaveform"></x-knob> 
+          <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc1.octave"></x-knob>
+          <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc1.semi"></x-knob>
+          <x-knob id="voices" name="Voices" :min="1" :max="10" v-bind:value.sync="subtractor.osc1.voices"></x-knob>
+          <x-knob id="detune" name="Detune" :min="-50" :max="50" v-bind:value.sync="subtractor.osc1.detune"></x-knob>
+          <x-knob id="stereo" name="Stereo" :min="0" :max="100" v-bind:value.sync="subtractor.osc1.stereo"></x-knob>
+          <x-knob id="gain" name="Gain" :min="0" :max="100" v-bind:value.sync="subtractor.osc1.gain"></x-knob>
+        </div>
+        <div>
+          <header>
+            <h2>Osc 2</h2>
+            <x-button label="Enabled" v-bind:on.sync="subtractor.osc2.enabled"></x-button>
+          </header>
+          <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc2.waveform" :value-fmt="intToWaveform"></x-knob> 
+          <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc2.octave"></x-knob>
+          <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc2.semi"></x-knob>
+          <x-knob id="voices" name="Voices" :min="1" :max="10" v-bind:value.sync="subtractor.osc2.voices"></x-knob>
+          <x-knob id="detune" name="Detune" :min="-50" :max="50" v-bind:value.sync="subtractor.osc2.detune"></x-knob>
+          <x-knob id="stereo" name="Stereo" :min="0" :max="100" v-bind:value.sync="subtractor.osc2.stereo"></x-knob>
+          <x-knob id="gain" name="Gain" :min="0" :max="100" v-bind:value.sync="subtractor.osc2.gain"></x-knob>
+        </div>
+        <div>
+          <header>
+            <h2>Osc 3</h2>
+            <x-button label="Enabled" v-bind:on.sync="subtractor.osc3.enabled"></x-button>
+          </header>
+          <x-knob id="waveform" name="Waveform" :min="1" :max="4" v-bind:value.sync="subtractor.osc3.waveform" :value-fmt="intToWaveform"></x-knob> 
+          <x-knob id="octave" name="Octave" :min="-5" :max="5" v-bind:value.sync="subtractor.osc3.octave"></x-knob>
+          <x-knob id="semi" name="Semi" :min="-12" :max="12" v-bind:value.sync="subtractor.osc3.semi"></x-knob>
+          <x-knob id="voices" name="Voices" :min="1" :max="10" v-bind:value.sync="subtractor.osc3.voices"></x-knob>
+          <x-knob id="detune" name="Detune" :min="-50" :max="50" v-bind:value.sync="subtractor.osc3.detune"></x-knob>
+          <x-knob id="stereo" name="Stereo" :min="0" :max="100" v-bind:value.sync="subtractor.osc3.stereo"></x-knob>
+          <x-knob id="gain" name="Gain" :min="0" :max="100" v-bind:value.sync="subtractor.osc3.gain"></x-knob>
+        </div>
+      </section>
+      <section>
+        <div>
+          <h2>Filter 1</h2>
+          <x-knob id="filter-type" name="Fiter Type" :min="1" :max="8" v-bind:value.sync="subtractor.filter1Type" :value-fmt="intToFilter"></x-knob>
+          <x-knob id="filter-freq" name="Fiter Freq" :min="0" :max="127" v-bind:value.sync="subtractor.filter1Freq" :value-fmt="knobToFreq"></x-knob>
+          <x-knob id="filter-q" name="Fiter Q" :min="0" :max="100" v-bind:value.sync="subtractor.filter1Q"></x-knob>
+          <x-knob id="filter-gain" name="Fiter Gain" :min="-40" :max="40" v-bind:value.sync="subtractor.filter1Gain"></x-knob>
+        </div>
+        <div>
+          <h2>Filter Envelope</h2>
+          <x-knob id="filterenv-attack" name="Attack" :min="0" :max="127" v-bind:value.sync="subtractor.filterAttack"></x-knob>
+          <x-knob id="filterenv-decay" name="Decay" :min="0" :max="127" v-bind:value.sync="subtractor.filterDecay"></x-knob>
+          <x-knob id="filterenv-sustain" name="Sustain" :min="0" :max="127" v-bind:value.sync="subtractor.filterSustain"></x-knob>
+          <x-knob id="filterenv-release" name="Release" :min="0" :max="127" v-bind:value.sync="subtractor.filterRelease"></x-knob>
+          <x-knob id="filterenv-amount" name="Amount" :min="0" :max="127" v-bind:value.sync="subtractor.filterAmount"></x-knob>
+          <canvas id="filterenv-graph" class="filterenv-graph" width="100" height="25"></canvas>
+        </div>
+      </section>
+      <section>
+        <div>
+          <h2>Filter 2</h2>
+          <x-knob id="filter-2-type" name="Fiter Type" :min="1" :max="8" v-bind:value.sync="subtractor.filter2.type" :value-fmt="intToFilter"></x-knob>
+          <x-knob id="filter-2-freq" name="Fiter Freq" :min="0" :max="127" v-bind:value.sync="subtractor.filter2.freq" :value-fmt="knobToFreq"></x-knob>
+          <x-knob id="filter-2-q" name="Fiter Q" :min="0" :max="100" v-bind:value.sync="subtractor.filter2.q"></x-knob>
+          <x-knob id="filter-2-gain" name="Fiter Gain" :min="-40" :max="40" v-bind:value.sync="subtractor.filter2.gain"></x-knob>  
+        </div>
+        <div>
+          <h2>Filter 2 LFO</h2>
+          <x-knob id="lfo-1-type" name="LFO Type" :min="1" :max="4" v-bind:value.sync="subtractor.lfo1Type" :value-fmt="intToWaveform"></x-knob>
+          <x-knob id="lfo-1-freq" name="LFO Freq" :min="1" :max="2000" v-bind:value.sync="subtractor.lfo1Freq"></x-knob>
+          <x-knob id="lfo-1-amount" name="LFO Amount" :min="0" :max="1000" v-bind:value.sync="subtractor.lfo1Amount"></x-knob>
+        </div>
+      </section>
+      <section>
+        <h2>Amp Envelope</h2>
+        <x-knob id="gainenv-attack" name="Attack" :min="0" :max="127" v-bind:value.sync="subtractor.attack"></x-knob>
+        <x-knob id="gainenv-decay" name="Decay" :min="0" :max="127" v-bind:value.sync="subtractor.decay"></x-knob>
+        <x-knob id="gainenv-sustain" name="Sustain" :min="0" :max="127" v-bind:value.sync="subtractor.sustain"></x-knob>
+        <x-knob id="gainenv-release" name="Release" :min="0" :max="127" v-bind:value.sync="subtractor.release"></x-knob>
+        <canvas id="ampenv-graph" class="ampenv-graph" width="100" height="25"></canvas>
+      </section>
+      <section>
+        <h2>Master</h2>
+        <x-fader name="Gain" :min="0" :max="100" v-bind:value.sync="subtractor.gain"></x-fader>
+      </section>
+      <canvas id="oscilloscope" class="oscilloscope"></canvas>
+      <x-keyboard :active-notes="activeNotes" v-bind:octave="subtractor.octave" v-bind:subtractor="subtractor"></x-keyboard>
+    </div>
+    <footer class="footer">
+      v<%= require('root/package.json').version %> :: Created by&nbsp;<a href="https://github.com/jsakas" target="_blank">Jon Sakas</a>
+    </div>
+  </div>
+</body>
+
+</html>
