@@ -82,7 +82,6 @@ class Subtractor extends Observable {
           this.osc2,
           this.osc3,
         ]
-        .filter(osc => osc.enabled)
         .map(osc => new Osc(this.context, osc))
         .map(osc => osc.start(note))
         .map(osc => this.pipeline(osc, velocity, osc.voices));
