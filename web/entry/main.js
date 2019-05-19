@@ -43,8 +43,6 @@ const vm = new Vue({
     initQwertyController(subtractor);
     initOscilloscope(subtractor, document.getElementById('oscilloscope'));
     subtractor.registerObserver(this);
-    subtractor.osc1.registerObserver(this);
-    subtractor.osc2.registerObserver(this);
     subtractor.filter1.registerObserver(this);
     subtractor.filter2.registerObserver(this);
     subtractor.loadPreset(defaultPreset);
