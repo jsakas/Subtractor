@@ -1,6 +1,6 @@
 import { keyboardKeys } from '../utils/keyboard';
 
-const initQuertyController = (subtractor) =>  {
+const initQwertyController = (subtractor) =>  {
   let keyWasPressed = [];
   let noteWasPressed = [];
 
@@ -40,4 +40,4 @@ const initQuertyController = (subtractor) =>  {
   });
 };
 
-export default initQuertyController;
+export default initQwertyController;

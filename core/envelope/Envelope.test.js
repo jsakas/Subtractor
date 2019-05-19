@@ -1,5 +1,5 @@
 import 'web-audio-test-api';
-import { Envelope } from '../src/Envelope';
+import Envelope from './Envelope';
 
 
 describe('Envelope', () => {

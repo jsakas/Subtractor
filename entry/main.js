@@ -1,23 +1,23 @@
 import Vue from 'vue';
 
-import Subtractor from './Subtractor';
-import { EnvelopeGraph } from './Envelope';
-import initOscilloscope from './Oscilloscope';
-import initQuertyController from './core/QwertyController';
-import MidiController from './core/MidiController';
-import { loadPresetFile, savePresetFile } from './core/PresetFileController';
-import { intToWaveform, intToFilter } from './utils/helpers';
-import { knobToFreq } from './utils/maths';
+import Subtractor from 'core/Subtractor';
+import EnvelopeGraph from 'core/envelope/EnvelopeGraph';
+import initQwertyController from 'core/qwerty';
+import MidiController from 'core/midi';
+import { loadPresetFile, savePresetFile } from 'core/preset';
+import { intToWaveform, intToFilter } from 'core/utils/helpers';
+import { knobToFreq } from 'core/utils/maths';
 
-import presets from './presets';
-import defaultPreset from './presets/default';
+import presets from 'presets';
+import defaultPreset from 'presets/default';
 
-import './components/Fader';
-import './components/Knob';
-import './components/Keyboard';
-import './components/Button';
+import initOscilloscope from 'ui/oscilloscope';
+import 'ui/fader';
+import 'ui/knob';
+import 'ui/keyboard';
+import 'ui/button';
 
-import './style/base.scss';
+import 'style/base.scss';
 
 let subtractor = new Subtractor();
 let midi = new MidiController();
@@ -40,7 +40,7 @@ midi.handleMIDIMessage = handleMIDIMessage;
 const vm = new Vue({ 
   el: '#subtractor',
   mounted() {
-    initQuertyController(subtractor);
+    initQwertyController(subtractor);
     initOscilloscope(subtractor, document.getElementById('oscilloscope'));
     subtractor.registerObserver(this);
     subtractor.osc1.registerObserver(this);

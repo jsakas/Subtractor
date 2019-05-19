@@ -16,8 +16,8 @@ module.exports = {
   devtool: DEVTOOL,
   entry: {
     main: [
-      './src/sentry',
-      './src/main',
+      './entry/sentry',
+      './entry/main',
     ]
   },
   output: {
@@ -27,8 +27,11 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'images': path.resolve(__dirname, 'src', 'images'),
-      'style': path.resolve(__dirname, 'src', 'style'),
+      'core': path.resolve(__dirname, 'core'),
+      'images': path.resolve(__dirname, 'images'),
+      'presets': path.resolve(__dirname, 'presets'),
+      'style': path.resolve(__dirname, 'style'),
+      'ui': path.resolve(__dirname, 'ui'),
       'web-audio-test-api': path.resolve(__dirname, 'node_modules/web-audio-test-api'),
       'vue$': 'vue/dist/vue.esm.js'
     }
@@ -38,7 +41,7 @@ module.exports = {
       'SENTRY_ENABLED': JSON.stringify(PRODUCTION),
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'html', 'index.html'),
+      template: path.join(__dirname, 'html', 'index.html'),
       filename: '../index.html',
       inject: 'body',
       alwaysWriteToDisk: true,
@@ -64,7 +67,7 @@ module.exports = {
     rules: [
       {
         test: /\.(png|jpe?g|gif|json|ico)$/,
-        include: [path.resolve(__dirname, 'src', 'images')],
+        include: [path.resolve(__dirname, 'images')],
         use: [
           {
             loader: 'file-loader',
@@ -74,7 +77,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        include: [path.resolve(__dirname, 'src')],
+        exclude: [/node_modules/,],
         loader: 'babel-loader'
       },
       {

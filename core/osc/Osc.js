@@ -1,11 +1,11 @@
-import { shiftNote, getNoteFreq, getDetuneSpread } from './utils/maths';
-import { intToWaveform, waveformToInt } from './utils/helpers';
-import { Observable } from './Observe';
+import { shiftNote, getNoteFreq, getDetuneSpread } from '../utils/maths';
+import { intToWaveform, waveformToInt } from '../utils/helpers';
+import { Observable } from '../observable';
 
 const knobToStereo = (v = 0) => v / 5000;
 const stereoToKnob = (v = 0) => v * 5000;
 
-class Osc extends Observable {
+export default class Osc extends Observable {
     constructor(audioContext, {
       enabled = 0,
       waveform = 0,
@@ -160,5 +160,3 @@ class Osc extends Observable {
       return this._oscs;
     }
 }
-
-export { Osc };

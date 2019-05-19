@@ -1,5 +1,5 @@
 import 'web-audio-test-api';
-import { Filter } from '../src/Filter';
+import Filter from './Filter';
 
 test('Filter default type is lowpass', () => {
   const context = new AudioContext(); 

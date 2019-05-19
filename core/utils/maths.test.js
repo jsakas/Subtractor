@@ -4,7 +4,7 @@ import {
   pointToPercent, 
   getDetuneSpread,
   shiftNote
-} from '../../src/utils/maths';
+} from './maths';
 
 describe('shiftNote', () => {
   test('shifts notes by octave and semi', () => {

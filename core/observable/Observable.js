@@ -1,4 +1,4 @@
-class Observable {
+export class Observable {
   constructor() {
     this.observers = [];
   }
@@ -14,7 +14,7 @@ class Observable {
   }
 }
 
-class Observer {
+export class Observer {
   constructor(observable) {
     observable.registerObserver(this);
   }
@@ -23,5 +23,3 @@ class Observer {
     console.log('Got update from', observable);
   }
 }
-
-export { Observable, Observer };

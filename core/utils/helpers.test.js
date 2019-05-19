@@ -1,4 +1,4 @@
-import { renameObjectKey } from '../../src/utils/helpers';
+import { renameObjectKey } from './helpers';
 
 describe('renameObjectKey', () => {
   test('renames an object key', () => {

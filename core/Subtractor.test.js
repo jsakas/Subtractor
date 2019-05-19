@@ -1,5 +1,5 @@
 import 'web-audio-test-api';
-import Subtractor from '../src/Subtractor';
+import Subtractor from './Subtractor';
 
 
 describe('Subtractor', () => {

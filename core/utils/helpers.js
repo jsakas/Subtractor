@@ -1,14 +1,14 @@
-const whole = n => Number(Number(n).toFixed());
+export const whole = n => Number(Number(n).toFixed());
 
-const intToWaveform = function(i) {
+export const intToWaveform = function(i) {
   return ['sine', 'square', 'sawtooth', 'triangle'][whole(i) - 1] || 'sine';
 };
 
-const waveformToInt = function(w) {
+export const waveformToInt = function(w) {
   return ['sine', 'square', 'sawtooth', 'triangle'].indexOf(w) + 1;
 };
 
-const intToFilter = function(i) {
+export const intToFilter = function(i) {
   return [
     'lowpass',
     'highpass',
@@ -21,7 +21,7 @@ const intToFilter = function(i) {
   ][whole(i).toFixed() - 1] || 'lowpass';
 };
 
-const filterToInt = function(f) {
+export const filterToInt = function(f) {
   return [
     'lowpass',
     'highpass',
@@ -34,10 +34,8 @@ const filterToInt = function(f) {
   ].indexOf(f) + 1;
 };
 
-const renameObjectKey = (obj, oldKey, newKey) => {
+export const renameObjectKey = (obj, oldKey, newKey) => {
   obj[newKey] = obj[oldKey];
   delete obj[oldKey];
   return obj;
 };
-
-export { intToWaveform, waveformToInt, intToFilter, filterToInt, renameObjectKey };

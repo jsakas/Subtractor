@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { percentToPoint, pointToPercent } from '../utils/maths';
+import { percentToPoint, pointToPercent } from 'core/utils/maths';
 
 import './Knob.scss';
 

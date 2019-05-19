@@ -1,6 +1,6 @@
 import 'web-audio-test-api';
-import * as maths from '../src/utils/maths';
-import { Osc } from '../src/Osc';
+import * as maths from '../utils/maths';
+import Osc from './Osc';
 
 
 describe('Osc', () => {

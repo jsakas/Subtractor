@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { pointToPercent } from '../utils/maths';
+import { pointToPercent } from 'core/utils/maths';
 
 import './Fader.scss';
 

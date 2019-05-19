@@ -1,7 +1,7 @@
-import { Observable } from './Observe';
-import { Osc } from './Osc';
-import { Filter } from './Filter';
-import { Envelope } from './Envelope';
+import Osc from './osc';
+import Filter from './filter';
+import Envelope from './envelope';
+import { Observable } from './observable';
 import { knobToSeconds, knobToFreq } from './utils/maths';
 import { renameObjectKey, intToWaveform, waveformToInt } from './utils/helpers';
 

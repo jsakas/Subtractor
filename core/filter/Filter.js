@@ -1,8 +1,8 @@
-import { intToFilter, filterToInt } from './utils/helpers';
-import { knobToFreq, freqToKnob } from './utils/maths';
-import { Observable } from './Observe';
+import { intToFilter, filterToInt } from '../utils/helpers';
+import { knobToFreq, freqToKnob } from '../utils/maths';
+import { Observable } from '../observable';
 
-class Filter extends Observable {
+export default class Filter extends Observable {
     constructor(context) {
       super();
       this.context = context;
@@ -55,5 +55,3 @@ class Filter extends Observable {
       return this._filter.gain.value;
     }
 }
-
-export { Filter };

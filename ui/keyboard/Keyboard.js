@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { BLACK, WHITE, WHITE_KEY_WIDTH, keyboardFactory } from '../utils/keyboard';
+import { BLACK, WHITE, WHITE_KEY_WIDTH, keyboardFactory } from 'core/utils/keyboard';
 
 import './Keyboard.scss';
 
