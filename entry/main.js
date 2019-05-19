@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
 import Subtractor from 'core/Subtractor';
-import EnvelopeGraph from 'core/envelope/EnvelopeGraph';
 import initQwertyController from 'core/qwerty';
 import MidiController from 'core/midi';
 import { loadPresetFile, savePresetFile } from 'core/preset';
@@ -11,6 +10,7 @@ import { knobToFreq } from 'core/utils/maths';
 import presets from 'presets';
 import defaultPreset from 'presets/default';
 
+import EnvelopeGraph from 'ui/env-graph';
 import initOscilloscope from 'ui/oscilloscope';
 import 'ui/fader';
 import 'ui/knob';

@@ -1,5 +1,7 @@
 
-class EnvelopeGraph {
+import { knobToAttack, knobToDecay, knobToRelease } from 'core/utils/maths';
+
+export default class EnvelopeGraph {
     constructor(envelope, canvas) {
       this.envelope = envelope;
       this.canvas = canvas;
@@ -65,5 +67,3 @@ class EnvelopeGraph {
       this.canvas.setAttribute('height', this.height);
     }
 }
-
-export default EnvelopeGraph;

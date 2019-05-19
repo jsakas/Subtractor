@@ -1,5 +1,5 @@
-@import '../style/theme';
-@import '../style/mixins';
+@import 'style/theme';
+@import 'style/mixins';
 
 .button {
   @include control;
