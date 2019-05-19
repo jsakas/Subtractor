@@ -1,4 +1,4 @@
-import { Observer, Observable } from '../Observable';
+import { Observer, Observable } from './Observable';
 
 describe('Observable', () => {
   test('notifies Observers of a property change', () => {
