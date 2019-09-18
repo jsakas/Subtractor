@@ -74,7 +74,7 @@ export default class Osc extends Observable {
       const shifted = shiftNote(note, this.octave, this.semi);
       const freq = getNoteFreq(shifted);
 
-      this._oscs.forEach((osc, i) => {
+      this._oscs.forEach((osc) => {
         osc.frequency.linearRampToValueAtTime(
           freq,
           time
@@ -113,7 +113,7 @@ export default class Osc extends Observable {
     set waveform(value) {
       this._waveform = intToWaveform(Number(value).toFixed());
 
-      this.oscs.forEach((osc, i) => {
+      this.oscs.forEach((osc) => {
         osc.type = this._waveform;
       });
 
@@ -128,7 +128,7 @@ export default class Osc extends Observable {
       let value = whole(v);
       let change = (value - this.octave) * 12;
       this._octave = value;
-      this.oscs.forEach((osc, i) => {
+      this.oscs.forEach((osc) => {
         let freq = osc.frequency.value;
         let updated = changeFreqBySemitones(freq, change);
         osc.frequency.value = updated;
@@ -144,7 +144,7 @@ export default class Osc extends Observable {
       let value = whole(v);
       let change = (value - this.semi);
       this._semi = value;
-      this.oscs.forEach((osc, i) => {
+      this.oscs.forEach((osc) => {
         let freq = osc.frequency.value;
         let updated = changeFreqBySemitones(freq, change);
         osc.frequency.value = updated;
