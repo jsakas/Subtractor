@@ -84,11 +84,11 @@ class MidiController extends EventEmitter {
       });
   }
 
-  useOutput (id) {
+  useOutput (id) { // eslint-disable-line no-unused-vars
     // need to figure out how to properly route midi output
   }
 
-  handleMIDIMessage (message) {
+  handleMIDIMessage (message) { // eslint-disable-line no-unused-vars
     // this should be implemented by the user on the midi controller instance
   }
 }

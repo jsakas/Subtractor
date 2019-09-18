@@ -82,7 +82,7 @@ export const keyboardFactory = (numberOfOctaves) => {
   let count = 12;
   let currentPosition = 0;
   for (let i = 0; i < numberOfOctaves; i++) {
-    keyboardOctave.forEach((key, index) => {
+    keyboardOctave.forEach((key) => {
       let note = key.note;
       let type = key.type;
       let height, width, x, y;
